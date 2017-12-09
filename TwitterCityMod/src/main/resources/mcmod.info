@@ -1,0 +1,17 @@
+[
+{
+  "modid": "tc",
+  "name": "Twitter City",
+  "description": "For every single one Tweet refers building a house, a block will be spawned in your world structuring a house!",
+  "version": "{1.0}",
+  "mcversion": "{mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [],
+  "credits": "",
+  "logoFile": "",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
