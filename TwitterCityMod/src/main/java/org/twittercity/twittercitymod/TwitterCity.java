@@ -1,6 +1,6 @@
-package org.twittercity.twittercity;
+package org.twittercity.twittercitymod;
 
-import org.twittercity.twittercity.proxy.CommonProxy;
+import org.twittercity.twittercitymod.proxy.CommonProxy;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;

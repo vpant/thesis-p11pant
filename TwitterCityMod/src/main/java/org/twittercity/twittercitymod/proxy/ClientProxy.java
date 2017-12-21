@@ -1,4 +1,4 @@
-package org.twittercity.twittercity.proxy;
+package org.twittercity.twittercitymod.proxy;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
