@@ -1,6 +1,6 @@
-package org.twittercity.twittercity.blocks;
+package org.twittercity.twittercity.twittercitymod.blocks;
 
-import org.twittercity.twittercity.TwitterCity;
+import org.twittercity.twittercitymod.TwitterCity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

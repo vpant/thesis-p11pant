@@ -1,6 +1,6 @@
-package org.twittercity.twittercity.items;
+package org.twittercity.twittercity.twittercitymod.items;
 
-import org.twittercity.twittercity.TwitterCity;
+import org.twittercity.twittercitymod.TwitterCity;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

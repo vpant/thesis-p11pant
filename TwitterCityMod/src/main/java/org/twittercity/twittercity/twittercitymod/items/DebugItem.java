@@ -1,4 +1,4 @@
-package org.twittercity.twittercity.items;
+package org.twittercity.twittercity.twittercitymod.items;
 
 public class DebugItem extends ItemBase{
 

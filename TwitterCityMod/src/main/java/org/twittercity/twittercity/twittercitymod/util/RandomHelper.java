@@ -1,4 +1,4 @@
-package org.twittercity.twittercity.util;
+package org.twittercity.twittercity.twittercitymod.util;
 
 import java.util.Random;
 

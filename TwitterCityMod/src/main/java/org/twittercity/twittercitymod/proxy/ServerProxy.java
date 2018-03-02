@@ -1,42 +1,33 @@
-package org.twittercity.twittercity.proxy;
+package org.twittercity.twittercitymod.proxy;
 
-import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 /**
- * Code executes Both Client and Server side.
+ * Code executes only in Server Side
  */
-public class CommonProxy {
+public class ServerProxy extends CommonProxy {
 
+	@Override
     public void preInit(FMLPreInitializationEvent e) {
-
+        super.preInit(e);
     }
 
-    /**
-     * Calls the {@link RegisterHelper#initRegister()} to register the blocks items. It registers the {@link GuiHandler} class as well.
-     */
+    @Override
     public void init(FMLInitializationEvent e) {
+        super.init(e);
     }
-    
-    /**
-     * Registers the {@link EventsHandler} class.
-     */
+
+    @Override
     public void postInit(FMLPostInitializationEvent e) {
-    	
+        super.postInit(e);
     }
     
-    /**
-     * Register the {@link TeleportCommand} class.
-     */
+    @Override
 	public void serverLoad (FMLServerStartingEvent e)
 	{
-		
-	}
-	
-	public void registerItemRenderer(Item item, int meta, String id) {
-		
+		super.serverLoad(e);
 	}
 }

@@ -1,4 +1,4 @@
-package org.twittercity.twittercity;
+package org.twittercity.twittercitymod;
 /**
  * This class fields holds important information for our mod.
  */
