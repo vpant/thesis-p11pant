@@ -1,4 +1,4 @@
-package org.twittercity.twittercity.twittercitymod.items;
+package org.twittercity.twittercitymod.items;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistry;

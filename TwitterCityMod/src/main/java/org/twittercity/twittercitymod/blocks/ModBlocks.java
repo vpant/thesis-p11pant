@@ -1,4 +1,4 @@
-package org.twittercity.twittercity.twittercitymod.blocks;
+package org.twittercity.twittercitymod.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;

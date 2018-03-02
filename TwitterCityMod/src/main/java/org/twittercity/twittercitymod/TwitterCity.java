@@ -1,8 +1,8 @@
 package org.twittercity.twittercitymod;
 
 import org.apache.logging.log4j.Logger;
-import org.twittercity.twittercity.twittercitymod.blocks.ModBlocks;
-import org.twittercity.twittercity.twittercitymod.items.ModItems;
+import org.twittercity.twittercitymod.blocks.ModBlocks;
+import org.twittercity.twittercitymod.items.ModItems;
 import org.twittercity.twittercitymod.proxy.CommonProxy;
 
 import net.minecraft.block.Block;

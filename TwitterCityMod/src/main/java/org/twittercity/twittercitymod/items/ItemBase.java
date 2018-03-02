@@ -1,4 +1,4 @@
-package org.twittercity.twittercity.twittercitymod.items;
+package org.twittercity.twittercitymod.items;
 
 import org.twittercity.twittercitymod.TwitterCity;
 
