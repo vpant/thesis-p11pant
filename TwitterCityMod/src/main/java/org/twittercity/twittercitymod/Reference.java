@@ -10,8 +10,8 @@ public class Reference {
 	/** Our mod's version. */
 	public static final String VERSION = "1.0";
 	/** Our mod's client proxy package path. */
-	public static final String CLIENT_PROXY_CLASS = "org.twittercity.twittercity.proxy.ClientProxy";
+	public static final String CLIENT_PROXY_CLASS = "org.twittercity.twittercitymod.proxy.ClientProxy";
 	/** Our mod's server proxy package path. */
-	public static final String SERVER_PROXY_CLASS = "org.twittercity.proxy.ServerProxy";
+	public static final String SERVER_PROXY_CLASS = "org.twittercity.twittercitymod.proxy.ServerProxy";
 }
 
