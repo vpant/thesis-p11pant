@@ -55,17 +55,15 @@ public class DebugData {
 		int building = 0;
 		boolean valid;
 		
-		do
-		{
-			if (++fail >= 100)
-			{
+		do {
+			if (++fail >= 100) {
 				frequency = RandomHelper.randomWeightedNumber(frequencyWeights);
 				fail = 0;
 			}
 			building = RandomHelper.nextInt(buildings.length);
 			
 			valid = buildings[building].getFrequency() == frequencies[frequency];
-		}while(!valid);
+		} while(!valid);
 		
 		return buildings[building];
 	}
