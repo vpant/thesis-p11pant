@@ -33,10 +33,8 @@ public class ArrayUtils {
 		}
 		
 		
-		for (int i = 0; i < array2D.length; i++)
-		{
-			for (int y = 0; y < array2D[1].length; y++)
-			{
+		for (int i = 0; i < array2D.length; i++) {
+			for (int y = 0; y < array2D[1].length; y++) {
 				//System.out.print(array2D[i][y] + " ");
 				try {
 					candidateOutput.write(array2D[i][y] + " ");
@@ -47,42 +45,33 @@ public class ArrayUtils {
 			try {
 				candidateOutput.write(System.getProperty("line.separator"));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		try {
 			candidateOutput.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public static int[][] rotateArray (int[][] array, int rotate)
 	{
-		if (rotate == 0)
-		{
+		if (rotate == 0) {
 			return array;
 		}
-		else
-		{
+		else {
 			int[][] newArray;
-			if(rotate == 2)
-			{
+			if(rotate == 2) {
 				newArray = new int[array.length][array[1].length];
 			}
-			else
-			{
+			else {
 				newArray = new int[array[1].length][array.length];
 			}
 			
-			for (int x = 0; x < array.length; x++)
-			{
-				for (int y = 0; y < array[1].length; y++)
-				{
-					switch (rotate)
-					{
+			for (int x = 0; x < array.length; x++) {
+				for (int y = 0; y < array[1].length; y++) {
+					switch (rotate) {
 						case 1:
 							newArray[y][x] = array[x][y];
 							break;
@@ -103,12 +92,9 @@ public class ArrayUtils {
 
 	public static boolean isArraySectionAllZeros2D(int[][] array, int x1, int y1, int x2, int y2) {
 		boolean valid = true;
-		for (int a = x1; a <= x2 && valid; a++)
-		{
-			for (int b = y1; b <= y2 && valid; b++)
-			{
-				if(array[a][b] > 0)
-				{
+		for (int a = x1; a <= x2 && valid; a++) {
+			for (int b = y1; b <= y2 && valid; b++) {
+				if(array[a][b] > 0) {
 					valid = false;
 				}
 			}
@@ -118,12 +104,9 @@ public class ArrayUtils {
 
 	public static int zerosInArray2D(int[][] array) {
 		int wasted = 0;
-		for (int i = 0; i < array.length; i++)
-		{
-			for (int z = 0; z < array[1].length; z++)
-			{
-				if (array[i][z] == 0)
-				{
+		for (int i = 0; i < array.length; i++) {
+			for (int z = 0; z < array[1].length; z++) {
+				if (array[i][z] == 0) {
 					wasted ++;
 				}
 			}

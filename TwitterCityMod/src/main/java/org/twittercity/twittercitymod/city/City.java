@@ -1,21 +1,35 @@
 package org.twittercity.twittercitymod.city;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+
 /* Data object represents a city */
 public class City {
 	
 	private int id;
 	private int x;
 	private int z;
-	private int chunkLength;
+	private int chunkLength; // city_size in theme.xml and its used to calculate x and z
+	//worldCities[CityID].x = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
+    //worldCities[CityID].z = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
 	
 	
 	private String outsideLightType;
 	private String streetLightType;
 	
-	private int cityLength;
+	private int cityLength; // Vgainei random apo 5 mexri city_size sto xml kai meta pollaplasiazete me 16
 	private int edgeLenght;
 	private int mapLength;
 	private int pathExtends;
+	
+	// Blocks. For now int ID and not Block object
+	private Block groundBlock;
+	private Block pathBlock;
+	
+	private boolean hasMainStreets;
+	private boolean hasPaths;
+	
+	private int blockStart = 0;
 	
 	public int getPathExtends() {
 		return pathExtends;
@@ -24,11 +38,6 @@ public class City {
 	public void setPathExtends(int pathExtends) {
 		this.pathExtends = pathExtends;
 	}
-
-	// Blocks. For now int ID and not Block object
-	private int groundBlockID;
-	
-	private boolean hasMainStreets;
 	
 	public City(){
 		this.id = 0;
@@ -40,12 +49,17 @@ public class City {
 		this.edgeLenght = 0;
 		this.mapLength = 0;
 		
-		this.groundBlockID = 0;
+		this.hasMainStreets = true;
+		this.hasPaths = true;
 		
+		this.groundBlock = Blocks.OBSIDIAN;
+		this.pathBlock = Blocks.DIAMOND_BLOCK;
+		
+		this.blockStart = this.getEdgeLenght() + 13;
 	}
 	
 	public City(int id, String outsideLightType, String streetLightType, int cityLength,
-			int edgeLenght, int mapLength, int groundBlockID){
+			int edgeLenght, int mapLength, Block groundBlock, Block pathBlock){
 		this.id = id;
 		
 		this.outsideLightType = outsideLightType;
@@ -55,8 +69,18 @@ public class City {
 		this.edgeLenght = edgeLenght;
 		this.mapLength = mapLength;
 		
-		this.groundBlockID = groundBlockID;
+		this.groundBlock = groundBlock;
+		this.pathBlock = pathBlock;
 
+	}
+	
+	//This function will be use to generate new city. Inside functions that calculate paths, buildings positions etc will be called.
+	public void calculateNewCity() {
+		// Chunk Editor
+		
+		// Path generation is currently executed at DebugItem.java
+		
+		// Make buildings
 	}
 
 	public int getId() {
@@ -130,13 +154,29 @@ public class City {
 	public void setMapLength(int mapLength) {
 		this.mapLength = mapLength;
 	}
-
-	public int getGroundBlockID() {
-		return groundBlockID;
+	
+	public int getBlockStart() {
+		return blockStart;
 	}
 
-	public void setGroundBlockID(int groundBlockID) {
-		this.groundBlockID = groundBlockID;
+	public void setBlockStart(int blockStart) {
+		this.blockStart = blockStart;
+	}
+	
+	public Block getGroundBlock() {
+		return groundBlock;
+	}
+	
+	public Block getPathBlock() {
+		return pathBlock;
+	}
+
+	public void setGroundBlock(Block groundBlock) {
+		this.groundBlock = groundBlock;
+	}
+	
+	public void setPathBlock(Block pathBlock) {
+		this.pathBlock = pathBlock;
 	}
 
 	public boolean hasMainStreets() {
@@ -147,6 +187,13 @@ public class City {
 		this.hasMainStreets = hasMainStreets;
 	}
 	
-	
-	
+	public void hasPaths(boolean hasPaths) {
+		
+		this.hasPaths = hasPaths;
+	}
+
+	public boolean hasPaths() {
+		
+		return hasPaths;
+	}	
 }

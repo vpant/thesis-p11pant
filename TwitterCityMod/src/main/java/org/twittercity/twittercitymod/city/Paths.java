@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class Paths {
-	private static int blockStart = 0;
 	private static int street = 0;
 	
 	public static class District{
@@ -32,32 +31,21 @@ public class Paths {
 	private static List<String> lstStreetsUsed = new ArrayList<String>();
 	private static List<Integer> lstAllBuildings = new ArrayList<Integer>();
 	
-	public static City firstCity = new City();
-	
-	public static int[][] MakePaths (World world){
+	public static int[][] makePaths(World world, City city) {
 		
-		DebugData.setupData();
-		
-		firstCity.setId(1);
-		firstCity.setEdgeLenght(8);
-		firstCity.setCityLength(6 * 16);
-		firstCity.setMapLength(firstCity.getCityLength() + (firstCity.getEdgeLenght() * 2));
-		firstCity.setHasMainStreets(true);
-		firstCity.setPathExtends(2);
-		
-		blockStart = firstCity.getEdgeLenght() + 13;
+		// First builded block testEdgeLength = 8 opote blockStart = 21
 		street = 0;
 		lstDistricts.clear();
 		lstStreetsUsed.clear();
 		lstAllBuildings.clear();
 		
-		int plotBlocks = (1 + firstCity.getMapLength()) - (blockStart * 2);
+		int plotBlocks = (1 + city.getMapLength()) - (city.getBlockStart() * 2);
 		int[][] area = new int[plotBlocks][plotBlocks];
 		
-		if (firstCity.hasMainStreets()){
+		if (city.hasMainStreets()) {
 			//make the main streets
-			for (int a =0; a <= (area.length - 1); a++){
-				for (int c = -firstCity.getPathExtends(); c<= firstCity.getPathExtends(); c++){
+			for (int a = 0; a <= (area.length - 1); a++){
+				for (int c = -city.getPathExtends(); c <= city.getPathExtends(); c++){
 					area[a][((area.length - 1) / 2) + c ] = 1;
 					area[((area.length - 1) / 2) + c][a] = 1;
 				}
@@ -65,39 +53,33 @@ public class Paths {
 			
 			//make the districts
 			//top right
-			splitArea(area, 0, 0, (area.length / 2 ) - (firstCity.getPathExtends() +1), (area.length / 2) - (firstCity.getPathExtends() + 1));
+			splitArea(area, 0, 0, (area.length / 2 ) - (city.getPathExtends() +1), (area.length / 2) - (city.getPathExtends() + 1));
 		
 			//bottom left
-			splitArea(area, (area.length / 2) + (firstCity.getPathExtends() + 1), (area.length / 2) + (firstCity.getPathExtends() + 1), (area.length - 1) , (area.length - 1));
+			splitArea(area, (area.length / 2) + (city.getPathExtends() + 1), (area.length / 2) + (city.getPathExtends() + 1), (area.length - 1) , (area.length - 1));
 			
 			//bottom right
-			splitArea(area, (area.length / 2) + (firstCity.getPathExtends() + 1), 0, (area.length - 1), (area.length / 2) - (firstCity.getPathExtends() + 1));
+			splitArea(area, (area.length / 2) + (city.getPathExtends() + 1), 0, (area.length - 1), (area.length / 2) - (city.getPathExtends() + 1));
 			
 			//top left
-			splitArea (area, 0, (area.length / 2) + (firstCity.getPathExtends() + 1), (area.length / 2) - (firstCity.getPathExtends() + 1), (area.length - 1));
+			splitArea (area, 0, (area.length / 2) + (city.getPathExtends() + 1), (area.length / 2) - (city.getPathExtends() + 1), (area.length - 1));
 		
 			shuffleDistricts(lstDistricts);
 		}
-		else
-		{
+		else {
 			splitArea (area, 0, 0, (area.length - 1),(area.length - 1));
 		}
 		
-		for (District disCurrent : lstDistricts )
-		{
-			//ArrayUtils.print2DArray(area);
-			//System.out.println("Fill area parameteres: disCurrent.x2 - disCurrent.x1 " + (disCurrent.x2 - disCurrent.x1) + ", disCurrent.z2 - disCurrent.z1 " + (disCurrent.z2 - disCurrent.z1) + " disCurrent.x1 " + disCurrent.x1 + ", disCurrent.z1 " + disCurrent.z1 + ", firstCity.getCityLength() > 5 * 16" + (firstCity.getCityLength() > 5 * 16));
-			int[][] district = fillArea(area, (disCurrent.x2 - disCurrent.x1),(disCurrent.z2 - disCurrent.z1), disCurrent.x1, disCurrent.z1, firstCity.getCityLength() > 5 * 16);
-			for (int x = 0; x < (district.length - 2); x++)
-			{
-				for (int y =0; y < (district[1].length - 2); y++)
-				{
+		for (District disCurrent : lstDistricts ) {
+			int[][] district = fillArea(area, (disCurrent.x2 - disCurrent.x1),(disCurrent.z2 - disCurrent.z1), disCurrent.x1, disCurrent.z1, city.getCityLength() > 5 * 16);
+			for (int x = 0; x < (district.length - 2); x++) {
+				for (int y =0; y < (district[1].length - 2); y++) {
 					area[disCurrent.x1 + x + 1][disCurrent.z1 + y + 1] = district[x + 1][y + 1];
 				}
 			}
 		}
-		
-		MakePaths(world,area);
+		//ArrayUtils.print2DArrayToFile(area);
+		makePaths(world, city, area);
 		return area;
 	}
 
@@ -131,37 +113,31 @@ public class Paths {
 			possibleToSplit = false;
 		}
 		
-		//firstCity.hasPaths
-		if (possibleToSplit)
-		{
-			if (splitByX)
-			{
+		//city.hasPaths
+		if (possibleToSplit) {
+			if (splitByX) {
 				int splitPoint = RandomHelper.nextInt(x1 + 20, x2 - 20);
 				splitArea (area, x1, z1, splitPoint, z2);
 				splitArea (area, splitPoint, z1, x2,z2);
 				street++;
-				//firstCity.hasPaths
-				if(true)
-				{
+				//city.hasPaths
+				if(true) {
 					//MakeStreetSign
 				}
 			}
-			else
-			{
+			else {
 				int splitPoint = RandomHelper.nextInt(z1 + 20, z2 - 20);
 				splitArea(area, x1, z1, x2, splitPoint);
 				splitArea(area, x1, splitPoint, x2, z2);
 				street++;
-				//firstCity.hasPaths
-				if(true)
-				{
+				//city.hasPaths
+				if(true) {
 					//MakeStreetSign
 				}
 				
 			}
 		}
-		else
-		{
+		else {
 			District disCurrent = new District();
 			disCurrent.x1 = x1;
 			disCurrent.x2 = x2;
@@ -174,7 +150,7 @@ public class Paths {
 	private static void shuffleDistricts(List<District> lstShuffle) {
 		int a = lstShuffle.size();
 		
-		while (a > 1 ){
+		while (a > 1 ) {
 			a--;
 			int b = RandomHelper.nextInt(a + 1);
 			District disCurrent = lstShuffle.get(a);
@@ -191,44 +167,32 @@ public class Paths {
 		ArrayList<Integer> buildings = new ArrayList<Integer>();
 		ArrayList<Integer> acceptedBuildings = new ArrayList<Integer>();
 		
-		do
-		{
+		do {
 			buildings.clear();
 			bonus = 0;
 			
-			do 
-			{
-				//mineshaft
+			do  {
 				Building currentBuilding;
 				
-				do
-				{
-					currentBuilding = DebugData.selectRandomBuilding();
-				}while (!isValidBuilding(currentBuilding, buildings, area, startX, startZ, sizeX, sizeZ));
+				do {
+					currentBuilding = Buildings.selectRandomBuilding(DebugData.buildings);
+				} while (!isValidBuilding(currentBuilding, buildings, area, startX, startZ, sizeX, sizeZ));
 				
 				boolean found = false;
-				if (RandomHelper.nextDouble() > 0.5)
-				{
-					//System.out.println("Mpika sto fillArea RandomHelper.nextDouble() > 0.5 kai to district array einai: " + Arrays.deepToString(district));
+				if (RandomHelper.nextDouble() > 0.5) {
 					district = ArrayUtils.rotateArray(district, RandomHelper.nextInt(4));
 				}
 				int x, z=0;
-				//System.out.println("Prin apo tin loop to district einai: " + Arrays.deepToString(district));
-				for (x = 0; x < district.length - currentBuilding.getSizeX() && !found; x++)
-				{
-					for(z = 0; z < (district[1].length - currentBuilding.getSizeZ()) && !found; z++)
-					{
-						found = ArrayUtils.isArraySectionAllZeros2D (district,x,z,x + currentBuilding.getSizeX(), z + currentBuilding.getSizeZ());
+				for (x = 0; x < district.length - currentBuilding.getSizeX() && !found; x++) {
+					for(z = 0; z < (district[1].length - currentBuilding.getSizeZ()) && !found; z++) {
+						found = ArrayUtils.isArraySectionAllZeros2D (district, x, z, x + currentBuilding.getSizeX(), z + currentBuilding.getSizeZ());
 					}
 				}
 				x--;
 				z--;
-				if (found)
-				{
-					for (int a = x + 1; a <= (x + currentBuilding.getSizeX() - 1); a++)
-					{
-						for (int b = z + 1; b <= (z + currentBuilding.getSizeZ() - 1); b++)
-						{
+				if (found) {
+					for (int a = x + 1; a <= (x + currentBuilding.getSizeX() - 1); a++) {
+						for (int b = z + 1; b <= (z + currentBuilding.getSizeZ() - 1); b++) {
 							district[a][b] = 2;
 						}
 					}
@@ -237,19 +201,16 @@ public class Paths {
 					district[x + currentBuilding.getSizeX() - 1][z + currentBuilding.getSizeZ() - 1] = 100 + currentBuilding.getID();
 					fail = 0;		
 				}
-				else
-				{
+				else {
 					fail++;
 				}
-			}while(fail < 10);
+			} while(fail < 10);
 			
 			int curWasted = ArrayUtils.zerosInArray2D(district) - bonus;
-			if(curWasted < wasted)
-			{
+			if(curWasted < wasted) {
 				intFinal = new int[district.length][district[1].length];
-				for (int i = 0; i < district.length; i++)
-				{
-					System.arraycopy(district[i], 0, intFinal[i], 0, district[0].length); //elegxos to district.length
+				for (int i = 0; i < district.length; i++) {
+					System.arraycopy(district[i], 0, intFinal[i], 0, district.length); // <- TEST - ITAN -> System.arraycopy(district[i], 0, intFinal[i], 0, district[0].length); //elegxos to district.length
 				}
 				wasted = curWasted;
 				attempts = 10;
@@ -257,66 +218,52 @@ public class Paths {
 				acceptedBuildings.addAll(buildings);
 			}
 			//Clear district
-			for(int[] row : district)
-			{
+			for(int[] row : district) {
 				Arrays.fill(row, 0);
 			}
 			
 			attempts--;
-		}while(attempts > 0);
+		} while(attempts > 0);
 		
-		if(sizeX == intFinal[1].length)
-		{
+		if(sizeX == intFinal[1].length) {
 			intFinal = ArrayUtils.rotateArray(intFinal, 1);
 		}
 		lstAllBuildings.addAll(lstAllBuildings);
 		return intFinal;
 	}
 	
-
-	private static void MakePaths(World world,int[][] area) {
-		for (int x = 0; x < area.length; x++)
-		{
-			for (int z = 0; z < area[1].length; z++)
-			{
-				if (area[x][z] == 1)
-				{
-					if (Math.abs(x - (area.length / 2)) == firstCity.getPathExtends() + 1 &&
-							Math.abs(z - (area[1].length /2)) == firstCity.getPathExtends() + 1)
-					{
+	//This is where the actual building is happening city should be passed as argument instead of using local city variable
+	private static void makePaths(World world, City city, int[][] area) {
+		for (int x = 0; x < area.length; x++) {
+			for (int z = 0; z < area[1].length; z++) {
+				if (area[x][z] == 1) {
+					if (Math.abs(x - (area.length / 2)) == city.getPathExtends() + 1 &&
+						Math.abs(z - (area[1].length /2)) == city.getPathExtends() + 1) {
 						//do nothing for now
 					}
-					else if(Math.abs(x - (area.length / 2)) == (firstCity.getPathExtends() + 1) ||
-                            Math.abs(z - (area[1].length / 2)) == (firstCity.getPathExtends() + 1))
-					{
-						if(firstCity.hasMainStreets() && multipleNeighbouringPaths(area, x, z))
-						{
-							System.out.println("Mpika proto setBlockstate kai extisa sto X = " + blockStart + x + ", Y = 63 kai sto Z = " + blockStart + z);
-							//spawn block at blockStart + x, 63, blockStart + z, firstCity.pathBlockID
-							world.setBlockState(new BlockPos(blockStart + x, 128, blockStart + z ), Blocks.STONE.getDefaultState());
+					else if(Math.abs(x - (area.length / 2)) == (city.getPathExtends() + 1) ||
+                            Math.abs(z - (area[1].length / 2)) == (city.getPathExtends() + 1)) {
+						if(city.hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
+							//System.out.println("Mpika proto setBlockstate kai extisa sto X = " + (blockStart + x) + ", Y = 128 kai sto Z = " + (blockStart + z));
+							//spawn block at blockStart + x, 63, blockStart + z, city.pathBlockID
+							world.setBlockState(new BlockPos(city.getBlockStart() + x, 63, city.getBlockStart() + z), city.getPathBlock().getDefaultState());
 						}
 					}
-					else
-					{
-						System.out.println("Mpika sto deutero setBlockstate kai extisa sto X = " + blockStart + x + ", Y = 63 kai sto Z = " + blockStart + z);
-						//spawn block at  blockStart + x, 63, blockStart +z, firstCity.pathBlockID
-						world.setBlockState(new BlockPos(blockStart + x, 128, blockStart + z ), Blocks.DIAMOND_BLOCK.getDefaultState());
-					}
-					
+					else {
+						//System.out.println("Mpika sto deutero setBlockstate kai extisa sto X = " + (blockStart + x ) + ", Y = 128 kai sto Z = " + (blockStart + z));
+						//spawn block at  blockStart + x, 63, blockStart +z, city.pathBlockID
+						world.setBlockState(new BlockPos(city.getBlockStart() + x, 63, city.getBlockStart() + z ), city.getPathBlock().getDefaultState());
+					}	
 				}
 			}
 		}
 		
-		if (firstCity.hasMainStreets())
-		{
-			for (int a = 0; a < area.length; a++)
-			{
-				if (a % 8 == 0)
-				{
+		if (city.hasMainStreets()) {
+			for (int a = 0; a < area.length; a++) {
+				if (a % 8 == 0) {
 					//npcs?
 				}
-				for (int c = -firstCity.getPathExtends(); c <= firstCity.getPathExtends(); c++)
-				{
+				for (int c = -city.getPathExtends(); c <= city.getPathExtends(); c++) {
 					area[a][((area.length - 1) / 2) + c] = 1;
 					area[((area.length - 1) / 2) + c][a] = 1;
 				}
@@ -327,20 +274,16 @@ public class Paths {
 	private static boolean multipleNeighbouringPaths(int[][] area, int x, int z) {
 		int paths = 0;
 		
-		if (x == 0 || area[x-1][z] == 1)
-		{
+		if (x == 0 || area[x-1][z] == 1) {
 			paths++;
 		}
-		if (z == 0 || area[x][z-1] == 1)
-		{
+		if (z == 0 || area[x][z-1] == 1) {
 			paths++;
 		}
-		if(x == (area.length - 1) || area[x+1][z] == 1)
-		{
+		if(x == (area.length - 1) || area[x+1][z] == 1) {
 			paths++;
 		}
-		if (z == (area[1].length - 1) || area[x][z+1] == 1)
-		{
+		if (z == (area[1].length - 1) || area[x][z+1] == 1) {
 			paths++;
 		}
 		
@@ -350,27 +293,22 @@ public class Paths {
 	private static boolean isValidBuilding(Building buildingCheck, ArrayList<Integer> buildings, int[][] area,
 			int startX, int startZ, int sizeX, int sizeZ) {
 		
-		switch (buildingCheck.getFrequency())
-		{
+		switch (buildingCheck.getFrequency()) {
 			case VERY_COMMON:
 			case COMMON:
 				return true;
 			case AVERAGE:
 			case RARE:
 			case VERY_RARE:
-				if(RandomHelper.nextDouble() > 0.975)
-				{
+				if(RandomHelper.nextDouble() > 0.975) {
 					return true;
 				}
-				if (buildings.contains(buildingCheck.getID()))
-				{
+				if (buildings.contains(buildingCheck.getID())) {
 					return false;
 				}
-				else
-				{
+				else {
 					int distance = 0;
-					switch (buildingCheck.getFrequency())
-					{
+					switch (buildingCheck.getFrequency()) {
 						case AVERAGE:
 							distance = 12;
 							break;
@@ -383,14 +321,10 @@ public class Paths {
 						default:
 							break;
 					}
-					for (int x = startX - distance; x < startX + sizeX + distance; x++)
-                    {
-                        for (int z = startZ - distance; z < startZ + sizeZ + distance; z++)
-                        {
-                            if (x >= 0 && z >= 0 && x <= (area.length - 1) && z <= (area[1].length - 1))
-                            {
-                                if (area[x][z] - 100 == buildingCheck.getID())
-                                {
+					for (int x = startX - distance; x < startX + sizeX + distance; x++) {
+                        for (int z = startZ - distance; z < startZ + sizeZ + distance; z++) {
+                            if (x >= 0 && z >= 0 && x <= (area.length - 1) && z <= (area[1].length - 1)) {
+                                if (area[x][z] - 100 == buildingCheck.getID()) {
                                     return false;
                                 }
                             }

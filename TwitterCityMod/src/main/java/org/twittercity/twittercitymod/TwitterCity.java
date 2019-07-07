@@ -2,16 +2,14 @@ package org.twittercity.twittercitymod;
 
 import org.apache.logging.log4j.Logger;
 import org.twittercity.twittercitymod.blocks.ModBlocks;
-import org.twittercity.twittercitymod.city.Paths;
 import org.twittercity.twittercitymod.items.ModItems;
 import org.twittercity.twittercitymod.proxy.CommonProxy;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.world.World;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -21,6 +19,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 /**
  * This class is the main class of our mod. When minecraft is executed the methods {@link TwitterCity#preInit}, {@link TwitterCity#init} and {@link TwitterCity#postInit}
@@ -48,12 +47,6 @@ public class TwitterCity {
 	/** Calls the init in our proxy package to execute the code needed when minecraft is loading, in the side (Client or Server) is should to execute. */
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
-		//World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0);
-		//if (!world.isRemote)
-		//{
-		//	Paths.MakePaths(world);
-		//}
-		
 		proxy.init(e);
 	}
 	
@@ -87,6 +80,14 @@ public class TwitterCity {
 		public static void registerBlocks(RegistryEvent.Register<Block> event) {
 			ModBlocks.register(event.getRegistry());
 		}
-
+		
+		@SubscribeEvent
+		public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+			//event.player.sendMessage(new TextComponentString(event.player.getDisplayName() +" is testing chat messages"));
+			event.player.setPositionAndUpdate(47, 136, 47);
+			if(!event.player.inventory.hasItemStack(new ItemStack(ModItems.debugItem))) {
+				event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.debugItem));
+			}	
+		}
 	}
 }
