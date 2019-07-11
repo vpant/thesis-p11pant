@@ -18,7 +18,7 @@ public class City {
 	private String streetLightType;
 	
 	private int cityLength; // Vgainei random apo 5 mexri city_size sto xml kai meta pollaplasiazete me 16
-	private int edgeLenght;
+	private int edgeLength;
 	private int mapLength;
 	private int pathExtends;
 	
@@ -45,8 +45,8 @@ public class City {
 		this.outsideLightType = "";
 		this.streetLightType = "";
 		
-		this.cityLength = 0;
-		this.edgeLenght = 0;
+		this.cityLength = 0 * 16;
+		this.edgeLength = 0;
 		this.mapLength = 0;
 		
 		this.hasMainStreets = true;
@@ -55,7 +55,7 @@ public class City {
 		this.groundBlock = Blocks.OBSIDIAN;
 		this.pathBlock = Blocks.DIAMOND_BLOCK;
 		
-		this.blockStart = this.getEdgeLenght() + 13;
+		this.blockStart = this.getEdgeLength() + 13;
 	}
 	
 	public City(int id, String outsideLightType, String streetLightType, int cityLength,
@@ -66,7 +66,7 @@ public class City {
 		this.streetLightType = streetLightType;
 		
 		this.cityLength = cityLength;
-		this.edgeLenght = edgeLenght;
+		this.edgeLength = edgeLenght;
 		this.mapLength = mapLength;
 		
 		this.groundBlock = groundBlock;
@@ -136,15 +136,15 @@ public class City {
 	}
 
 	public void setCityLength(int cityLength) {
-		this.cityLength = cityLength;
+		this.cityLength = cityLength * 16;
 	}
 
-	public int getEdgeLenght() {
-		return edgeLenght;
+	public int getEdgeLength() {
+		return edgeLength;
 	}
 
-	public void setEdgeLenght(int edgeLenght) {
-		this.edgeLenght = edgeLenght;
+	public void setEdgeLength(int edgeLength) {
+		this.edgeLength = edgeLength;
 	}
 
 	public int getMapLength() {

@@ -14,8 +14,9 @@ public class Building {
 	private int posX;
 	private int posZ;
 	
+	private String templateFileName;
 	
-	public Building(String name, int sourceX, int sourceStartY, int sourceZ, Frequency frequency, int ID, int sizeX, int sizeZ, int posX,int posZ)
+	public Building(String name, int sourceX, int sourceStartY, int sourceZ, Frequency frequency, int ID, int sizeX, int sizeZ, int posX,int posZ, String fileName)
 	{
 		this.name = name;
 		this.sourceX = sourceX;
@@ -27,6 +28,7 @@ public class Building {
 		this.sizeZ = sizeZ;
 		this.posX = posX;
 		this.posZ = posZ;
+		this.templateFileName = fileName;
 	}
 	
 	public String getName() {
@@ -88,5 +90,11 @@ public class Building {
 	}
 	public void setPosZ(int posZ) {
 		this.posZ = posZ;
+	}
+	public void setTemplateFileName(String templateFileName) {
+		this.templateFileName = templateFileName;
+	}
+	public String getTemplateFileName() {
+		return this.templateFileName;
 	}
 }

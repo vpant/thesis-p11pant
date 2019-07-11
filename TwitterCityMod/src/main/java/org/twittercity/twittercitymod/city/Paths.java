@@ -73,12 +73,11 @@ public class Paths {
 		for (District disCurrent : lstDistricts ) {
 			int[][] district = fillArea(area, (disCurrent.x2 - disCurrent.x1),(disCurrent.z2 - disCurrent.z1), disCurrent.x1, disCurrent.z1, city.getCityLength() > 5 * 16);
 			for (int x = 0; x < (district.length - 2); x++) {
-				for (int y =0; y < (district[1].length - 2); y++) {
+				for (int y = 0; y < (district[1].length - 2); y++) {
 					area[disCurrent.x1 + x + 1][disCurrent.z1 + y + 1] = district[x + 1][y + 1];
 				}
 			}
 		}
-		//ArrayUtils.print2DArrayToFile(area);
 		makePaths(world, city, area);
 		return area;
 	}
@@ -118,7 +117,7 @@ public class Paths {
 			if (splitByX) {
 				int splitPoint = RandomHelper.nextInt(x1 + 20, x2 - 20);
 				splitArea (area, x1, z1, splitPoint, z2);
-				splitArea (area, splitPoint, z1, x2,z2);
+				splitArea (area, splitPoint, z1, x2, z2);
 				street++;
 				//city.hasPaths
 				if(true) {
@@ -175,7 +174,7 @@ public class Paths {
 				Building currentBuilding;
 				
 				do {
-					currentBuilding = Buildings.selectRandomBuilding(DebugData.buildings);
+					currentBuilding = Buildings.selectRandomBuilding(Buildings.getAllBuildings());
 				} while (!isValidBuilding(currentBuilding, buildings, area, startX, startZ, sizeX, sizeZ));
 				
 				boolean found = false;
@@ -210,7 +209,7 @@ public class Paths {
 			if(curWasted < wasted) {
 				intFinal = new int[district.length][district[1].length];
 				for (int i = 0; i < district.length; i++) {
-					System.arraycopy(district[i], 0, intFinal[i], 0, district.length); // <- TEST - ITAN -> System.arraycopy(district[i], 0, intFinal[i], 0, district[0].length); //elegxos to district.length
+					System.arraycopy(district[i], 0, intFinal[i], 0, district[0].length); // <- TEST - ITAN -> System.arraycopy(district[i], 0, intFinal[i], 0, district[0].length); //elegxos to district.length
 				}
 				wasted = curWasted;
 				attempts = 10;
@@ -246,13 +245,13 @@ public class Paths {
 						if(city.hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
 							//System.out.println("Mpika proto setBlockstate kai extisa sto X = " + (blockStart + x) + ", Y = 128 kai sto Z = " + (blockStart + z));
 							//spawn block at blockStart + x, 63, blockStart + z, city.pathBlockID
-							world.setBlockState(new BlockPos(city.getBlockStart() + x, 63, city.getBlockStart() + z), city.getPathBlock().getDefaultState());
+							world.setBlockState(new BlockPos(city.getBlockStart() + city.getX() + x, 63, city.getBlockStart() + city.getZ() + z ), city.getPathBlock().getDefaultState());
 						}
 					}
 					else {
 						//System.out.println("Mpika sto deutero setBlockstate kai extisa sto X = " + (blockStart + x ) + ", Y = 128 kai sto Z = " + (blockStart + z));
 						//spawn block at  blockStart + x, 63, blockStart +z, city.pathBlockID
-						world.setBlockState(new BlockPos(city.getBlockStart() + x, 63, city.getBlockStart() + z ), city.getPathBlock().getDefaultState());
+						world.setBlockState(new BlockPos(city.getBlockStart() + city.getX() + x, 63, city.getBlockStart() + city.getZ() + z ), city.getPathBlock().getDefaultState());
 					}	
 				}
 			}

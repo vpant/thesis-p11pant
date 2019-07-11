@@ -84,7 +84,7 @@ public class TwitterCity {
 		@SubscribeEvent
 		public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
 			//event.player.sendMessage(new TextComponentString(event.player.getDisplayName() +" is testing chat messages"));
-			event.player.setPositionAndUpdate(47, 136, 47);
+			event.player.setPositionAndUpdate(1000, 136, 1000);
 			if(!event.player.inventory.hasItemStack(new ItemStack(ModItems.debugItem))) {
 				event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.debugItem));
 			}	
