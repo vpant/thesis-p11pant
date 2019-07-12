@@ -7,6 +7,7 @@ import org.twittercity.twittercitymod.proxy.CommonProxy;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,6 +19,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 /**
  * This class is the main class of our mod. When minecraft is executed the methods {@link TwitterCity#preInit}, {@link TwitterCity#init} and {@link TwitterCity#postInit}
@@ -78,6 +80,14 @@ public class TwitterCity {
 		public static void registerBlocks(RegistryEvent.Register<Block> event) {
 			ModBlocks.register(event.getRegistry());
 		}
-
+		
+		@SubscribeEvent
+		public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+			//event.player.sendMessage(new TextComponentString(event.player.getDisplayName() +" is testing chat messages"));
+			event.player.setPositionAndUpdate(1000, 136, 1000);
+			if(!event.player.inventory.hasItemStack(new ItemStack(ModItems.debugItem))) {
+				event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.debugItem));
+			}	
+		}
 	}
 }

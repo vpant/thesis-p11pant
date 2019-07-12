@@ -1,0 +1,264 @@
+[INFO][main.py:177]:MCEdit2 version 2.0.0-beta14 starting...
+[INFO][acceleratesupport.py:17]:No OpenGL_accelerate module loaded: No module named OpenGL_accelerate
+[INFO][settings.py:112]:Loading app settings from C:\thesis-p11pant\mcedit2-win64-2.0.0-beta14\MCEdit 2 Files\mcedit2.ini
+[INFO][loadablechunks.py:17]:Making checkerboard texture...
+[WARNING][editorapp.py:95]:UserFilesDirectory: C:\thesis-p11pant\mcedit2-win64-2.0.0-beta14\MCEdit 2 Files
+[INFO][editorapp.py:120]:Loaded translator. Selected language: en
+[INFO][editorapp.py:150]:Loaded stylesheet.
+[INFO][editorapp.py:162]:Loaded main window.
+[INFO][editorapp.py:218]:Loaded panels.
+[INFO][editorapp.py:261]:Loaded debug widgets.
+[INFO][editorapp.py:314]:Loaded menus.
+[INFO][worldlist.py:100]:Size hint: PySide.QtCore.QSize(120, 73)
+[INFO][worldlist.py:101]:Size : PySide.QtCore.QSize(120, 100)
+[INFO][minecraftinstall.py:429]:Checking install at C:\Users\Bill\AppData\Roaming\.minecraft
+[INFO][minecraftinstall.py:436]:Found versions:
+[u'1.12.2', u'1.13.2']
+[INFO][minecraftinstall.py:429]:Checking install at C:\Users\Bill\AppData\Roaming\.minecraft
+[INFO][minecraftinstall.py:436]:Found versions:
+[u'1.12.2', u'1.13.2']
+[INFO][worldlist.py:354]:Scanning C:\thesis-p11pant\mace\mace-v1_11_2\Resources\Mace for worlds...
+[INFO][editorapp.py:324]:Loaded world list.
+[INFO][editorapp.py:343]:Loaded status bar.
+[INFO][editorapp.py:677]:Updating recent files menu: (2) [u'C:\\thesis-p11pant\\mace\\mace-v1_11_2\\Resources\\Mace\\level.dat', u'D:\\Downloads\\mace-minecraft-master\\mace-minecraft-master\\bin\\Debug\\Resources\\Mace\\level.dat']
+[INFO][editorapp.py:692]:Adding Mace (C:\thesis-p11pant\mace\mace-v1_11_2\Resources\Mace\level.dat)
+[INFO][editorapp.py:692]:Adding Mace (D:\Downloads\mace-minecraft-master\mace-minecraft-master\bin\Debug\Resources\Mace\level.dat)
+[INFO][editorapp.py:350]:Loaded settings.
+[INFO][settings.py:149]:Setting u'worldview/camera/max_view_distance' changed to (64)(...) (was (u'64')(...))
+[WARNING][configure_blocks.py:121]:Failed to read definitions file defined_blocks.json
+[INFO][editorapp.py:372]:Loaded app dialogs.
+[INFO][editorapp.py:380]:Loading timer started
+[INFO][editorapp.py:390]:Finding plugins
+[INFO][__init__.py:230]:Loading plugins from C:\thesis-p11pant\mcedit2-win64-2.0.0-beta14\MCEdit 2 Files\plugins
+[INFO][__init__.py:115]:Trying to load plugin from koch.py
+[INFO][__init__.py:272]:Registered class <class 'koch.KochSnowflakePlugin'> of plugin C:\thesis-p11pant\mcedit2-win64-2.0.0-beta14\MCEdit 2 Files\plugins\koch.py
+[INFO][__init__.py:132]:Loaded koch.py (Koch Snowflake)
+[INFO][__init__.py:115]:Trying to load plugin from hilbert.py
+[INFO][__init__.py:272]:Registered class <class 'hilbert.HilbertCurvePlugin'> of plugin C:\thesis-p11pant\mcedit2-win64-2.0.0-beta14\MCEdit 2 Files\plugins\hilbert.py
+[INFO][__init__.py:132]:Loaded hilbert.py (Hilbert Curve)
+[INFO][__init__.py:115]:Trying to load plugin from simple_options.py
+[INFO][__init__.py:272]:Registered class <class 'simple_options.SimpleOptionsDemo'> of plugin C:\thesis-p11pant\mcedit2-win64-2.0.0-beta14\MCEdit 2 Files\plugins\simple_options.py
+[INFO][__init__.py:132]:Loaded simple_options.py (simple_options)
+[INFO][__init__.py:115]:Trying to load plugin from city.py
+[INFO][__init__.py:272]:Registered class <class 'city.CityGeneratePlugin'> of plugin C:\thesis-p11pant\mcedit2-win64-2.0.0-beta14\MCEdit 2 Files\plugins\city.py
+[INFO][__init__.py:132]:Loaded city.py (GFX: City)
+[INFO][__init__.py:115]:Trying to load plugin from world_editing_demo.py
+[INFO][__init__.py:272]:Registered class <class 'world_editing_demo.WorldEditingDemo'> of plugin C:\thesis-p11pant\mcedit2-win64-2.0.0-beta14\MCEdit 2 Files\plugins\world_editing_demo.py
+[INFO][__init__.py:132]:Loaded world_editing_demo.py (world_editing_demo)
+[INFO][__init__.py:115]:Trying to load plugin from storagedrawers.py
+[INFO][__init__.py:272]:Registered class <class 'storagedrawers.StorageDrawers4EditorWidget'> of plugin C:\thesis-p11pant\mcedit2-win64-2.0.0-beta14\MCEdit 2 Files\plugins\storagedrawers.py
+[INFO][__init__.py:132]:Loaded storagedrawers.py (storagedrawers)
+[INFO][__init__.py:115]:Trying to load plugin from count_blocks.py
+[INFO][__init__.py:272]:Registered class <class 'count_blocks.CountBlocksPlugin'> of plugin C:\thesis-p11pant\mcedit2-win64-2.0.0-beta14\MCEdit 2 Files\plugins\count_blocks.py
+[INFO][__init__.py:132]:Loaded count_blocks.py (count_blocks)
+[INFO][editorapp.py:407]:Opening worlds from command line.
+[INFO][qglcontext.py:53]:Obtained a GL context with this format:
+Valid: True
+Version: 4.6
+Hardware Accelerated: True
+Depth buffer: True, 24
+Double buffer: True
+Rendering profile: PySide.QtOpenGL.QGLFormat.OpenGLContextProfile.CompatibilityProfile
+
+Driver info:
+GL_VERSION: 4.6.0 NVIDIA 430.86 (4, 6)
+GL_VENDOR: 'NVIDIA Corporation'
+GL_RENDERER: 'GeForce GTX 970/PCIe/SSE2'
+
+[INFO][worldview.py:908]:LAYER Blocks VISIBLE True
+[INFO][worldview.py:908]:LAYER MonsterLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER Items VISIBLE True
+[INFO][worldview.py:908]:LAYER TileEntities VISIBLE True
+[INFO][worldview.py:908]:LAYER TileEntityLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER CommandBlockColors VISIBLE True
+[INFO][worldview.py:908]:LAYER CommandBlockLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER ItemFrames VISIBLE True
+[INFO][worldview.py:908]:LAYER TileTicks VISIBLE False
+[INFO][worldview.py:908]:LAYER ChunkSections VISIBLE False
+[INFO][worldview.py:908]:LAYER HeightMap VISIBLE False
+[INFO][worldview.py:908]:LAYER Places Where Creepers Can Spawn VISIBLE False
+[INFO][worldview.py:227]:Changing MinimapWorldView(u'None') to dimension WorldEditorDimension(dimName='', adapter=AnvilWorldAdapter(u'C:\\thesis-p11pant\\mace\\mace-v1_11_2\\Resources\\Mace'))
+[INFO][chunkloader.py:180]:Added: client MinimapWorldView(u'Mace: ')
+[INFO][worldlist.py:410]:Centering on spawn position.
+[INFO][worldlist.py:425]:Switched world view
+[INFO][worldeditor.py:444]:Scanning for regions in C:\thesis-p11pant\mace\mace-v1_11_2\Resources\Mace...
+[INFO][worldeditor.py:453]:Dim : Found 396 chunks in 0.02 seconds.
+[INFO][worldlist.py:438]:Removing view from WorldListWidget
+[INFO][worldview.py:200]:Deallocating GL resources for worldview MinimapWorldView(u'Mace: ')
+[INFO][minecraftinstall.py:486]:Created ResourceLoader with search path:
+C:\Users\Bill\AppData\Roaming\.minecraft\versions\1.12.2\1.12.2.jar (8c0443868b9e46c77d39db61c755679d)
+[INFO][command.py:440]:Adding menu item for cls <class 'simple_options.SimpleOptionsDemo'> text Simple Options Demo func <bound method SimpleOptionsDemo.showDialog of <simple_options.SimpleOptionsDemo object at 0x0000019DC15A3288>>
+[INFO][command.py:453]:Added action <PySide.QtGui.QAction object at 0x0000019DC15A3308>
+[INFO][command.py:440]:Adding menu item for cls <class 'world_editing_demo.WorldEditingDemo'> text World Editing Demo func <bound method WorldEditingDemo.showDialog of <world_editing_demo.WorldEditingDemo object at 0x0000019DC15A3508>>
+[INFO][command.py:453]:Added action <PySide.QtGui.QAction object at 0x0000019DC15A3588>
+[INFO][command.py:440]:Adding menu item for cls <class 'count_blocks.CountBlocksPlugin'> text Count Blocks func <bound method CountBlocksPlugin.countBlocks of <count_blocks.CountBlocksPlugin object at 0x0000019DC15A3648>>
+[INFO][command.py:453]:Added action <PySide.QtGui.QAction object at 0x0000019DC15A36C8>
+[INFO][editorsession.py:728]:Loading block models...
+[INFO][editorsession.py:728]:Loading block models 0/1650
+[INFO][editorsession.py:728]:Loading block models 100/1650
+[INFO][editorsession.py:728]:Loading block models 200/1650
+[INFO][editorsession.py:728]:Loading block models 300/1650
+[INFO][editorsession.py:728]:Loading block models 400/1650
+[INFO][editorsession.py:728]:Loading block models 500/1650
+[INFO][editorsession.py:728]:Loading block models 600/1650
+[INFO][editorsession.py:728]:Loading block models 700/1650
+[INFO][editorsession.py:728]:Loading block models 800/1650
+[INFO][editorsession.py:728]:Loading block models 900/1650
+[INFO][editorsession.py:728]:Loading block models 1000/1650
+[INFO][editorsession.py:728]:Loading block models 1100/1650
+[INFO][editorsession.py:728]:Loading block models 1200/1650
+[INFO][editorsession.py:728]:Loading block models 1300/1650
+[INFO][editorsession.py:728]:Loading block models 1400/1650
+[INFO][editorsession.py:728]:Loading block models 1500/1650
+[INFO][editorsession.py:728]:Loading block models 1600/1650
+[INFO][editorsession.py:728]:Loading 5228 hidden blockState models...
+[INFO][editorsession.py:728]:Found 1396 additional models for hidden states
+[INFO][textureatlas.py:112]:Preloaded 445 textures for world Mace (636 kB)
+[INFO][textureatlas.py:194]:Terrain atlas created for world Mace (636/720 kB)
+[INFO][textureatlas.py:196]:Cooking quads for 2626 models...
+[INFO][player.py:64]:No single-player.
+[INFO][player.py:216]:PlayerPanel: player None not found!
+[INFO][clone.py:306]:Begin clone: None
+[INFO][blockpicker.py:194]:Updating blocktype list widget (multiple=False) for <BlockTypeSet (Alpha)>
+[INFO][blockpicker.py:283]:Updating button with []
+[INFO][blockpicker.py:283]:Updating button with [<BlockType (1:0) (Stone (minecraft:stone[variant=stone])>]
+[INFO][blockpicker.py:194]:Updating blocktype list widget (multiple=True) for <BlockTypeSet (Alpha)>
+[INFO][blockpicker.py:283]:Updating button with []
+[INFO][blockpicker.py:194]:Updating blocktype list widget (multiple=False) for <BlockTypeSet (Alpha)>
+[INFO][blockpicker.py:283]:Updating button with []
+[INFO][brushmode.py:31]:Loading BrushModeWidget setting: found fill at 2
+[INFO][__init__.py:249]:Updating brush cursor
+[INFO][__init__.py:249]:Updating brush cursor
+[INFO][__init__.py:249]:Updating brush cursor
+[INFO][__init__.py:249]:Updating brush cursor
+[INFO][blockpicker.py:194]:Updating blocktype list widget (multiple=False) for <BlockTypeSet (Alpha)>
+[INFO][blockpicker.py:283]:Updating button with [<BlockType (1:0) (Stone (minecraft:stone[variant=stone])>]
+[INFO][blockpicker.py:194]:Updating blocktype list widget (multiple=False) for <BlockTypeSet (Alpha)>
+[INFO][blockpicker.py:283]:Updating button with []
+[INFO][blockpicker.py:283]:Updating button with [<BlockType (1:0) (Stone (minecraft:stone[variant=stone])>]
+[INFO][generate.py:292]:Chose generator <koch.KochSnowflakePlugin object at 0x0000019DB9E0EA08>
+[INFO][editorsession.py:1002]:Going to dimension 
+[INFO][qglcontext.py:53]:Obtained a GL context with this format:
+Valid: True
+Version: 4.6
+Hardware Accelerated: True
+Depth buffer: True, 24
+Double buffer: True
+Rendering profile: PySide.QtOpenGL.QGLFormat.OpenGLContextProfile.CompatibilityProfile
+
+Driver info:
+GL_VERSION: 4.6.0 NVIDIA 430.86 (4, 6)
+GL_VENDOR: 'NVIDIA Corporation'
+GL_RENDERER: 'GeForce GTX 970/PCIe/SSE2'
+
+[INFO][worldview.py:908]:LAYER Blocks VISIBLE True
+[INFO][worldview.py:908]:LAYER MonsterLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER Items VISIBLE True
+[INFO][worldview.py:908]:LAYER TileEntities VISIBLE True
+[INFO][worldview.py:908]:LAYER TileEntityLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER CommandBlockColors VISIBLE True
+[INFO][worldview.py:908]:LAYER CommandBlockLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER ItemFrames VISIBLE True
+[INFO][worldview.py:908]:LAYER TileTicks VISIBLE False
+[INFO][worldview.py:908]:LAYER ChunkSections VISIBLE False
+[INFO][worldview.py:908]:LAYER HeightMap VISIBLE False
+[INFO][worldview.py:908]:LAYER Places Where Creepers Can Spawn VISIBLE False
+[INFO][textureatlas.py:220]:GL resources loaded for TextureAtlas for Mace
+[INFO][worldview.py:227]:Changing MinimapWorldView(u'None') to dimension WorldEditorDimension(dimName=u'', adapter=AnvilWorldAdapter(u'C:\\thesis-p11pant\\mace\\mace-v1_11_2\\Resources\\Mace'))
+[INFO][chunkloader.py:180]:Added: client MinimapWorldView(u'Mace: ')
+[INFO][qglcontext.py:53]:Obtained a GL context with this format:
+Valid: True
+Version: 4.6
+Hardware Accelerated: True
+Depth buffer: True, 24
+Double buffer: True
+Rendering profile: PySide.QtOpenGL.QGLFormat.OpenGLContextProfile.CompatibilityProfile
+
+Driver info:
+GL_VERSION: 4.6.0 NVIDIA 430.86 (4, 6)
+GL_VENDOR: 'NVIDIA Corporation'
+GL_RENDERER: 'GeForce GTX 970/PCIe/SSE2'
+
+[INFO][worldview.py:908]:LAYER Blocks VISIBLE True
+[INFO][worldview.py:908]:LAYER MonsterLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER Items VISIBLE True
+[INFO][worldview.py:908]:LAYER TileEntities VISIBLE True
+[INFO][worldview.py:908]:LAYER TileEntityLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER CommandBlockColors VISIBLE True
+[INFO][worldview.py:908]:LAYER CommandBlockLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER ItemFrames VISIBLE True
+[INFO][worldview.py:908]:LAYER TileTicks VISIBLE False
+[INFO][worldview.py:908]:LAYER ChunkSections VISIBLE False
+[INFO][worldview.py:908]:LAYER HeightMap VISIBLE False
+[INFO][worldview.py:908]:LAYER Places Where Creepers Can Spawn VISIBLE False
+[INFO][worldview.py:227]:Changing OverheadWorldView(u'None') to dimension WorldEditorDimension(dimName=u'', adapter=AnvilWorldAdapter(u'C:\\thesis-p11pant\\mace\\mace-v1_11_2\\Resources\\Mace'))
+[INFO][qglcontext.py:53]:Obtained a GL context with this format:
+Valid: True
+Version: 4.6
+Hardware Accelerated: True
+Depth buffer: True, 24
+Double buffer: True
+Rendering profile: PySide.QtOpenGL.QGLFormat.OpenGLContextProfile.CompatibilityProfile
+
+Driver info:
+GL_VERSION: 4.6.0 NVIDIA 430.86 (4, 6)
+GL_VENDOR: 'NVIDIA Corporation'
+GL_RENDERER: 'GeForce GTX 970/PCIe/SSE2'
+
+[INFO][worldview.py:908]:LAYER Blocks VISIBLE True
+[INFO][worldview.py:908]:LAYER MonsterLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER Items VISIBLE True
+[INFO][worldview.py:908]:LAYER TileEntities VISIBLE True
+[INFO][worldview.py:908]:LAYER TileEntityLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER CommandBlockColors VISIBLE True
+[INFO][worldview.py:908]:LAYER CommandBlockLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER ItemFrames VISIBLE True
+[INFO][worldview.py:908]:LAYER TileTicks VISIBLE False
+[INFO][worldview.py:908]:LAYER ChunkSections VISIBLE False
+[INFO][worldview.py:908]:LAYER HeightMap VISIBLE False
+[INFO][worldview.py:908]:LAYER Places Where Creepers Can Spawn VISIBLE False
+[INFO][worldview.py:227]:Changing CutawayWorldView(u'None') to dimension WorldEditorDimension(dimName=u'', adapter=AnvilWorldAdapter(u'C:\\thesis-p11pant\\mace\\mace-v1_11_2\\Resources\\Mace'))
+[INFO][qglcontext.py:53]:Obtained a GL context with this format:
+Valid: True
+Version: 4.6
+Hardware Accelerated: True
+Depth buffer: True, 24
+Double buffer: True
+Rendering profile: PySide.QtOpenGL.QGLFormat.OpenGLContextProfile.CompatibilityProfile
+
+Driver info:
+GL_VERSION: 4.6.0 NVIDIA 430.86 (4, 6)
+GL_VENDOR: 'NVIDIA Corporation'
+GL_RENDERER: 'GeForce GTX 970/PCIe/SSE2'
+
+[INFO][worldview.py:908]:LAYER Blocks VISIBLE True
+[INFO][worldview.py:908]:LAYER MonsterLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER Items VISIBLE True
+[INFO][worldview.py:908]:LAYER TileEntities VISIBLE True
+[INFO][worldview.py:908]:LAYER TileEntityLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER CommandBlockColors VISIBLE True
+[INFO][worldview.py:908]:LAYER CommandBlockLocations VISIBLE False
+[INFO][worldview.py:908]:LAYER ItemFrames VISIBLE True
+[INFO][worldview.py:908]:LAYER TileTicks VISIBLE False
+[INFO][worldview.py:908]:LAYER ChunkSections VISIBLE False
+[INFO][worldview.py:908]:LAYER HeightMap VISIBLE False
+[INFO][worldview.py:908]:LAYER Places Where Creepers Can Spawn VISIBLE False
+[INFO][worldview.py:227]:Changing CameraWorldView(u'None') to dimension WorldEditorDimension(dimName=u'', adapter=AnvilWorldAdapter(u'C:\\thesis-p11pant\\mace\\mace-v1_11_2\\Resources\\Mace'))
+[INFO][worldeditor.py:444]:Scanning for regions in C:\thesis-p11pant\mace\mace-v1_11_2\Resources\Mace...
+[INFO][worldeditor.py:453]:Dim : Found 396 chunks in 0.02 seconds.
+[INFO][editorsession.py:1670]:Going from OverheadWorldView(u'Mace: ') to CameraWorldView(u'Mace: '): Center was Vector(0, 0, 0)
+[INFO][chunkloader.py:191]:Removed: client OverheadWorldView(u'Mace: ')
+[INFO][chunkloader.py:180]:Added: client CameraWorldView(u'Mace: ')
+[INFO][camera.py:358]:Camera: centering on Vector(0, 0, 0) (moving to Vector(-12.8171276411, 8.45236523481, -12.8171276411))
+[INFO][editorsession.py:1678]:Center is now Vector(-12.8171276411, 8.45236523481, -12.8171276411)
+[INFO][editorsession.py:1615]:Setting cursor SelectionCursor(None, visible=True, children=0, states=[]) for tool <mcedit2.editortools.select.SelectionTool object at 0x0000019DC22D2A88> on view <mcedit2.worldview.camera.CameraWorldView object at 0x0000019DC23DAF08>
+[INFO][editorapp.py:600]:Adding session menus: [<PySide.QtGui.QMenu object at 0x0000019DC0656AC8>, <PySide.QtGui.QMenu object at 0x0000019DC1580E88>, <PySide.QtGui.QMenu object at 0x0000019DC1580F48>, <PySide.QtGui.QMenu object at 0x0000019DC15A30C8>, <mcedit2.plugins.command.PluginsMenu object at 0x0000019DC15A3248>]
+[INFO][editorapp.py:677]:Updating recent files menu: (2) [u'C:\\thesis-p11pant\\mace\\mace-v1_11_2\\Resources\\Mace\\level.dat', u'D:\\Downloads\\mace-minecraft-master\\mace-minecraft-master\\bin\\Debug\\Resources\\Mace\\level.dat']
+[INFO][editorapp.py:692]:Adding Mace (C:\thesis-p11pant\mace\mace-v1_11_2\Resources\Mace\level.dat)
+[INFO][editorapp.py:692]:Adding Mace (D:\Downloads\mace-minecraft-master\mace-minecraft-master\bin\Debug\Resources\Mace\level.dat)
+[INFO][editorsession.py:1292]:Centering on spawn position.
+[INFO][camera.py:358]:Camera: centering on Vector(0, 64, 0) (moving to Vector(0.0, 64.0, 0.0))
+[INFO][editorsession.py:1231]:Pushing command Box Selection
+[INFO][editorsession.py:1231]:Pushing command Box Selection
+[INFO][settings.py:149]:Setting u'mainwindow/state' changed to (PySide.QtCore.QByteArray('   �    �    )(...) (was (PySide.QtCore.QByteArray('   �    �    )(...))
+[INFO][settings.py:149]:Setting u'mainwindow/geometry' changed to (PySide.QtCore.QByteArray('���        )(...) (was (PySide.QtCore.QByteArray('���   ������)(...))
