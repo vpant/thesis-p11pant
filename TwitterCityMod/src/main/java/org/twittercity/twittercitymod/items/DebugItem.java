@@ -5,7 +5,7 @@ import org.twittercity.twittercitymod.city.Buildings;
 import org.twittercity.twittercitymod.city.ChunksEditor;
 import org.twittercity.twittercitymod.city.Paths;
 import org.twittercity.twittercitymod.city.TemplateBuildings;
-import org.twittercity.twittercitymod.util.ArrayUtils;
+import org.twittercity.twittercitymod.util.BlockHelper;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -29,14 +29,13 @@ public class DebugItem extends ItemBase{
 		//playerIn.sendMessage(new TextComponentString("Kati ginete. " + template.getAuthor()));
 		if (!worldIn.isRemote) {
 			DebugData.setupData();	
-			ChunksEditor.makeChunksFlat(worldIn, Blocks.BEDROCK, 0, 0, 10);
+			//ChunksEditor.makeChunksFlat(worldIn, Blocks.BEDROCK, 0, 0, 10);
 			ChunksEditor.makeFlatChunksForCity(worldIn, DebugData.firstCity);
-			TemplateBuildings.getInstance().spawnTemplateBuildings(worldIn);
+			//TemplateBuildings.getInstance().spawnTemplateBuildings(worldIn);
 			area = Paths.makePaths(worldIn, DebugData.firstCity);
 			//ArrayUtils.print2DArrayToFile(area);
 			Buildings.makeInsideCity(worldIn, area, DebugData.firstCity);
 		}
-			
 		return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
 	}
 	

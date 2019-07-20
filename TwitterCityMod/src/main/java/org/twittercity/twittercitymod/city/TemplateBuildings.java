@@ -25,10 +25,11 @@ public class TemplateBuildings {
 		MinecraftServer minecraftserver = worldIn.getMinecraftServer();
 		TemplateManager templatemanager = worldserver.getStructureTemplateManager();	
 		for(Building building : Buildings.getAllBuildings()) {
-			ResourceLocation res = new ResourceLocation(Reference.MOD_ID, building.getTemplateFileName());
-			Template template = templatemanager.get(minecraftserver, res);
-			
-			template.addBlocksToWorld(worldIn, new BlockPos(building.getSourceX(), building.getSourceStartY(), building.getSourceZ()), new PlacementSettings());
+			if(building != null) {
+				ResourceLocation res = new ResourceLocation(Reference.MOD_ID, building.getTemplateFileName());
+				Template template = templatemanager.get(minecraftserver, res);
+				template.addBlocksToWorld(worldIn, new BlockPos(building.getSourceX(), building.getSourceStartY(), building.getSourceZ()), new PlacementSettings());
+			}
 		}
 	}
 	
