@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.twittercity.twittercitymod.DebugData;
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.util.ArrayUtils;
 import org.twittercity.twittercitymod.util.RandomHelper;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 

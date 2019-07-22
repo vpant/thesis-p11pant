@@ -1,10 +1,8 @@
 package org.twittercity.twittercitymod;
 
 import org.twittercity.twittercitymod.city.Building;
-import org.twittercity.twittercitymod.city.Buildings;
 import org.twittercity.twittercitymod.city.City;
 import org.twittercity.twittercitymod.city.Frequency;
-import org.twittercity.twittercitymod.util.RandomHelper;
 
 public class DebugData {
 	public static Building[] buildings = new Building[11];
@@ -28,7 +26,7 @@ public class DebugData {
 		
 		firstCity.setId(1);
 		firstCity.setEdgeLength(8);
-		firstCity.setCityLength(17); // * 16 internally
+		firstCity.setCityLength(5); // * 16 internally
 		firstCity.setMapLength(firstCity.getCityLength() + (firstCity.getEdgeLength() * 2));
 		firstCity.setPathExtends(2);
 		firstCity.setX(1000);
