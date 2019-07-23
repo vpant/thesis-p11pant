@@ -3,16 +3,13 @@ package org.twittercity.twittercitymod.items;
 import java.util.List;
 
 import org.twittercity.twittercitymod.DebugData;
-import org.twittercity.twittercitymod.city.Building;
 import org.twittercity.twittercitymod.city.Buildings;
 import org.twittercity.twittercitymod.city.ChunksEditor;
 import org.twittercity.twittercitymod.city.Paths;
-import org.twittercity.twittercitymod.city.templatestructures.TemplateBuildings;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.city.templatestructures.TwitterCityTemplate;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;

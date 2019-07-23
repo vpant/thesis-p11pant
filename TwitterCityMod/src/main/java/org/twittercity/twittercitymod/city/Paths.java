@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class Paths {
-	private static int street = 0;
+	//private static int street = 0;
 	
 	public static class District{
 		public int x1;
@@ -32,7 +32,6 @@ public class Paths {
 	public static int[][] makePaths(World world, City city) {
 		
 		// First builded block testEdgeLength = 8 opote blockStart = 21
-		street = 0;
 		lstDistricts.clear();
 		lstStreetsUsed.clear();
 		lstAllBuildings.clear();
@@ -116,7 +115,6 @@ public class Paths {
 				int splitPoint = RandomHelper.nextInt(x1 + 20, x2 - 20);
 				splitArea (area, x1, z1, splitPoint, z2);
 				splitArea (area, splitPoint, z1, x2, z2);
-				street++;
 				//city.hasPaths
 				if(true) {
 					//MakeStreetSign
@@ -126,7 +124,6 @@ public class Paths {
 				int splitPoint = RandomHelper.nextInt(z1 + 20, z2 - 20);
 				splitArea(area, x1, z1, x2, splitPoint);
 				splitArea(area, x1, splitPoint, x2, z2);
-				street++;
 				//city.hasPaths
 				if(true) {
 					//MakeStreetSign

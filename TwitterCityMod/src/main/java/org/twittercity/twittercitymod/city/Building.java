@@ -1,5 +1,10 @@
 package org.twittercity.twittercitymod.city;
 
+import org.twittercity.twittercitymod.city.templatestructures.TemplateBuildings;
+import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
+
+import net.minecraft.world.World;
+
 public class Building {
 	private String name;
 	private int sourceX;
@@ -15,6 +20,7 @@ public class Building {
 	private int posZ;
 	
 	private String templateFileName;
+	private TemplateStructure tmpStructure = null;
 	
 	public Building(String name, int sourceX, int sourceStartY, int sourceZ, Frequency frequency, int ID, int sizeX, int sizeZ, int posX,int posZ, String fileName)
 	{
@@ -96,5 +102,15 @@ public class Building {
 	}
 	public String getTemplateFileName() {
 		return this.templateFileName;
+	}
+	
+	public TemplateStructure getTemplateStructure(World world) {
+		//Load it if it is null and return it
+		if(this.tmpStructure == null) {
+			this.tmpStructure = TemplateBuildings.getInstance().getSingleBuildingTemplateStructure(world, this);
+		}
+		
+		return this.tmpStructure;
+		
 	}
 }

@@ -105,7 +105,6 @@ public class TwitterCityTemplate {
 								}
 								
 								structureBlocks.add(new TwitterCityTemplate.BlockInfo(blockpos, Blocks.BARRIER.getDefaultState(), null));
-								//worldIn.setBlockState(blockpos, Blocks.BARRIER.getDefaultState(), 4);
 							}
 						}
 						structureBlocks.add(new TwitterCityTemplate.BlockInfo(blockpos, iblockstate1, null));
