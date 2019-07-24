@@ -4,12 +4,18 @@ import org.apache.logging.log4j.Logger;
 import org.twittercity.twittercitymod.blocks.ModBlocks;
 import org.twittercity.twittercitymod.items.ModItems;
 import org.twittercity.twittercitymod.proxy.CommonProxy;
+import org.twittercity.twittercitymod.worldgen.TwitterCityBiomes;
+import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGen;
+import org.twittercity.twittercitymod.worldgen.WorldTypeTwitterCity;
+import org.twittercity.twittercitymod.worldgen.teleport.TeleportationTools;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -43,11 +49,17 @@ public class TwitterCity {
 	public void preInit(FMLPreInitializationEvent e) {
 		logger = e.getModLog();
 		proxy.preInit(e);
+		
+		TwitterCityWorldGen.registerDimensions();
 	}
 	/** Calls the init in our proxy package to execute the code needed when minecraft is loading, in the side (Client or Server) is should to execute. */
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
 		proxy.init(e);
+		
+		TwitterCityWorldGen.registerWorldGenerators();
+		TwitterCityBiomes.initBiomeManagerAndDictionary();
+		new WorldTypeTwitterCity();
 	}
 	
 	/** Calls the postInit in our proxy package to execute the code needed when minecraft is loading, in the side (Client or Server) is should to execute. */
@@ -58,9 +70,9 @@ public class TwitterCity {
 	
 	/** This method executes when a server is loaded. */
 	@EventHandler
-	public void serverLoad (FMLServerStartingEvent e)
+	public void serverStarting (FMLServerStartingEvent e)
 	{
-		proxy.serverLoad(e);
+		proxy.serverStarting(e);
 	}
 	
 	@Mod.EventBusSubscriber
@@ -84,10 +96,20 @@ public class TwitterCity {
 		@SubscribeEvent
 		public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
 			//event.player.sendMessage(new TextComponentString(event.player.getDisplayName() +" is testing chat messages"));
-			event.player.setPositionAndUpdate(1000, 136, 1000);
+			//event.player.setPositionAndUpdate(1000, 136, 1000);
+			//event.player.changeDimension(-1);
 			if(!event.player.inventory.hasItemStack(new ItemStack(ModItems.debugItem))) {
 				event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.debugItem));
 			}	
+			
+			//TeleportationTools.teleportToDimension(event.player, TwitterCityWorldGen.DIM_ID, 0, 100, 0);
+			//event.player.sendMessage(new TextComponentString(event.player.getDisplayName() +" is in the dimension " + event.player.dimension));
+		}
+		
+
+		@SubscribeEvent
+		public static void onEvent(EntityTravelToDimensionEvent event) {
+			
 		}
 	}
 }

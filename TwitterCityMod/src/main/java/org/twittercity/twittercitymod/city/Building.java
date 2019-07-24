@@ -105,12 +105,10 @@ public class Building {
 	}
 	
 	public TemplateStructure getTemplateStructure(World world) {
-		//Load it if it is null and return it
 		if(this.tmpStructure == null) {
 			this.tmpStructure = TemplateBuildings.getInstance().getSingleBuildingTemplateStructure(world, this);
 		}
 		
-		return this.tmpStructure;
-		
+		return this.tmpStructure;	
 	}
 }

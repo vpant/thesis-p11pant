@@ -11,7 +11,7 @@ public class TwitterCityWorldGen {
 	    public static final String NAME = "twitter_city";
 	    public static final int DIM_ID = findFreeDimensionID();
 	    public static final DimensionType DIM_TYPE = DimensionType.register(NAME, "_"+NAME, DIM_ID, WorldProviderTwitterCity.class, true);
-	    public static final WorldType TWITTER_CITY_WORLD_TYPE = new WorldTypeTwitterCity(NAME); // although instance isn't used, must create the instance to register the WorldType
+	    public static final WorldType TWITTER_CITY_WORLD_TYPE = new WorldTypeTwitterCity(); // although instance isn't used, must create the instance to register the WorldType
 	    //public static final IVillageCreationHandler CLOUD_VILLAGE_HANDLER = new VillageHouseCloudCreationHandler();
 	    
 	    /**

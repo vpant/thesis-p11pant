@@ -1,5 +1,7 @@
 package org.twittercity.twittercitymod.proxy;
 
+import org.twittercity.twittercitymod.commands.TwitterCityCmdTeleport;
+
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -31,9 +33,8 @@ public class CommonProxy {
     /**
      * Register the {@link TeleportCommand} class.
      */
-	public void serverLoad (FMLServerStartingEvent e)
-	{
-		
+	public void serverStarting (FMLServerStartingEvent e){
+		e.registerServerCommand(new TwitterCityCmdTeleport());
 	}
 	
 	public void registerItemRenderer(Item item, int meta, String id) {
