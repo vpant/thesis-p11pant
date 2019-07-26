@@ -24,7 +24,7 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 public class BiomeDecoratorTwitterCity extends BiomeDecorator {
 	// This predicate is used by WorldGen constructors to define
 	// whether a block can be replaced by ore generation.
-	Predicate<IBlockState> replaceablePredicate = new CloudPredicate();
+	Predicate<IBlockState> replaceablePredicate = new TwitterCityPredicate();
 
 	// If you want to make these configurable, you'll need a ChunkGeneratorSettings
 	// instance and use the fields from there instead.
@@ -71,12 +71,11 @@ public class BiomeDecoratorTwitterCity extends BiomeDecorator {
 	//protected WorldGenFlowersCloud flowerGen;
 
 	/**
-     * Instantiates a new biome decorator cloud.
+     * Instantiates a new biome decorator.
      */
     public BiomeDecoratorTwitterCity()
     {
         super();
-        
         // Must use predicate version if you wnat to replace custom blocks, otherwise will
         // only replace Blocks.STONE.
         dirtGen = new WorldGenMinable(Blocks.DIRT.getDefaultState(), dirtSize, replaceablePredicate);
@@ -174,7 +173,7 @@ public class BiomeDecoratorTwitterCity extends BiomeDecorator {
 				if (yRange > 0) {
 					int flowerY = random.nextInt(yRange);
 					BlockPos flowerBlockPos = chunkPos.add(flowerX, flowerY, flowerZ);
-					//flowerGen.generate(worldIn, random, flowerBlockPos);
+					flowerGen.generate(worldIn, random, flowerBlockPos);
 				}
 			}
 	}
@@ -269,8 +268,8 @@ public class BiomeDecoratorTwitterCity extends BiomeDecorator {
 		MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Post(worldIn, random, chunkPos));
 	}
 
-	static class CloudPredicate implements Predicate<IBlockState> {
-		private CloudPredicate() {
+	static class TwitterCityPredicate implements Predicate<IBlockState> {
+		private TwitterCityPredicate() {
 		}
 
 		/*
@@ -280,7 +279,7 @@ public class BiomeDecoratorTwitterCity extends BiomeDecorator {
 		 */
 		@Override
 		public boolean apply(IBlockState parBlockState) {
-			if (parBlockState != null && parBlockState.getBlock() == Blocks.CARROTS) {
+			if (parBlockState != null && parBlockState.getBlock() == Blocks.GOLDEN_RAIL) {
 				return true;
 			} else {
 				return false;

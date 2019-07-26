@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WorldTypeTwitterCity extends WorldType {
 
 	public WorldTypeTwitterCity() {
-		super(TwitterCityWorldGen.NAME);
+		super(TwitterCityWorldGenReference.NAME);
 	}
 
 	@Override
@@ -32,9 +32,10 @@ public class WorldTypeTwitterCity extends WorldType {
 	 */
 	@Override
 	public IChunkGenerator getChunkGenerator(World world, String generatorOptions) {
-		return new ChunkGeneratorTwitterCity(world);
+		return new ChunkGeneratorTwitterCity(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
 	}
 
+	
 	/*
 	 * (non-Javadoc)
 	 * 

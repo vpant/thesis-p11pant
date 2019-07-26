@@ -32,7 +32,7 @@ public class TwitterCityBiomes {
 
 			System.out.println("Registering biomes");
 
-			registry.register(new BiomeTwitterCity().setRegistryName(Reference.MOD_ID, TwitterCityWorldGen.NAME));
+			registry.register(new BiomeTwitterCity().setRegistryName(Reference.MOD_ID, TwitterCityWorldGenReference.NAME));
 		}
 	}
 
