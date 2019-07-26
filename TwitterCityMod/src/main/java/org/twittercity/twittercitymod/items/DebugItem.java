@@ -3,6 +3,7 @@ package org.twittercity.twittercitymod.items;
 import java.util.List;
 
 import org.twittercity.twittercitymod.DebugData;
+import org.twittercity.twittercitymod.city.Paths;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.city.templatestructures.TwitterCityTemplate;
 
@@ -25,13 +26,13 @@ public class DebugItem extends ItemBase{
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		int[][] area = null;
-		playerIn.sendMessage(new TextComponentString("Sto dimension. " + playerIn.dimension));
+		playerIn.sendMessage(new TextComponentString("Sea level is: " + worldIn.getSeaLevel()));
 		if (!worldIn.isRemote) {
 			DebugData.setupData();	
 			//ChunksEditor.makeChunksFlat(worldIn, Blocks.BEDROCK, 0, 0, 10);
 			//ChunksEditor.makeFlatChunksForCity(worldIn, DebugData.firstCity);
 			//TemplateBuildings.getInstance().spawnTemplateBuildings(worldIn);
-			//area = Paths.makePaths(worldIn, DebugData.firstCity);
+			area = Paths.makePaths(worldIn, DebugData.firstCity);
 			//ArrayUtils.print2DArrayToFile(area);
 			//Buildings.makeInsideCity(worldIn, area, DebugData.firstCity);
 			//for(Building building : DebugData.buildings) {

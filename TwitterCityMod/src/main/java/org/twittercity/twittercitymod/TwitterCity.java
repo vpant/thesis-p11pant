@@ -5,14 +5,12 @@ import org.twittercity.twittercitymod.blocks.ModBlocks;
 import org.twittercity.twittercitymod.items.ModItems;
 import org.twittercity.twittercitymod.proxy.CommonProxy;
 import org.twittercity.twittercitymod.worldgen.TwitterCityBiomes;
-import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGen;
+import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 import org.twittercity.twittercitymod.worldgen.WorldTypeTwitterCity;
-import org.twittercity.twittercitymod.worldgen.teleport.TeleportationTools;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
@@ -50,14 +48,14 @@ public class TwitterCity {
 		logger = e.getModLog();
 		proxy.preInit(e);
 		
-		TwitterCityWorldGen.registerDimensions();
+		TwitterCityWorldGenReference.registerDimensions();
 	}
 	/** Calls the init in our proxy package to execute the code needed when minecraft is loading, in the side (Client or Server) is should to execute. */
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
 		proxy.init(e);
 		
-		TwitterCityWorldGen.registerWorldGenerators();
+		TwitterCityWorldGenReference.registerWorldGenerators();
 		TwitterCityBiomes.initBiomeManagerAndDictionary();
 		new WorldTypeTwitterCity();
 	}

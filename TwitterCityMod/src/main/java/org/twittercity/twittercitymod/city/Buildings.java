@@ -324,7 +324,7 @@ public class Buildings {
 
 	private static void buildLast(HashMap<BlockPos,IBlockState> blockMap, World world) {
 		if(blockMap.isEmpty()) {
-			TwitterCity.logger.error("blockMap is empty");
+			//TwitterCity.logger.error("blockMap is empty");
 			return;
 		}
 		for ( BlockPos blockPos : blockMap.keySet() ) {

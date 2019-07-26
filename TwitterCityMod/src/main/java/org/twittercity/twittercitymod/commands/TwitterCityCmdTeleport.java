@@ -1,14 +1,11 @@
 package org.twittercity.twittercitymod.commands;
 
-import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGen;
+import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 import org.twittercity.twittercitymod.worldgen.teleport.TeleportationTools;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 
 public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 	@Override
@@ -33,7 +30,7 @@ public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 			return;
 		}*/
 
-		int dim = TwitterCityWorldGen.DIM_ID;//fetchInt(sender, args, 1, 0);
+		int dim = TwitterCityWorldGenReference.DIM_ID;//fetchInt(sender, args, 1, 0);
 		int x = fetchInt(sender, args, 2, 0);
 		int y = fetchInt(sender, args, 3, 100);
 		int z = fetchInt(sender, args, 4, 0);
@@ -45,7 +42,6 @@ public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 			if (currentId != dim) {
 				TeleportationTools.teleportToDimension(player, dim, x, y, z); // Maybe teleport to first town coordinates
 			} else {
-				super.sendMessage(sender, new TextComponentString("pame pros overworld"));
 				TeleportationTools.teleportToDimension(player, -1, x, y, z);
 				//player.setPositionAndUpdate(x, y, z);
 			}
