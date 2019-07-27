@@ -1,4 +1,4 @@
-package org.twittercity.twittercitymod.worldgen.teleport;
+package org.twittercity.twittercitymod.teleport;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
