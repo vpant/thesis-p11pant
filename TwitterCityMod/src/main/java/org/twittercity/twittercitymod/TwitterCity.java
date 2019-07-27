@@ -73,41 +73,4 @@ public class TwitterCity {
 		proxy.serverStarting(e);
 	}
 	
-	@Mod.EventBusSubscriber
-	public static class RegistrationHandler {
-
-		@SubscribeEvent
-		public static void registerItems(RegistryEvent.Register<Item> event) {
-			ModItems.register(event.getRegistry());
-		}
-		
-		@SubscribeEvent
-		public static void registerItems(ModelRegistryEvent event) {
-			ModItems.registerModels();
-		}
-		
-		@SubscribeEvent
-		public static void registerBlocks(RegistryEvent.Register<Block> event) {
-			ModBlocks.register(event.getRegistry());
-		}
-		
-		@SubscribeEvent
-		public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-			//event.player.sendMessage(new TextComponentString(event.player.getDisplayName() +" is testing chat messages"));
-			//event.player.setPositionAndUpdate(1000, 136, 1000);
-			//event.player.changeDimension(-1);
-			if(!event.player.inventory.hasItemStack(new ItemStack(ModItems.debugItem))) {
-				event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.debugItem));
-			}	
-			
-			//TeleportationTools.teleportToDimension(event.player, TwitterCityWorldGen.DIM_ID, 0, 100, 0);
-			//event.player.sendMessage(new TextComponentString(event.player.getDisplayName() +" is in the dimension " + event.player.dimension));
-		}
-		
-
-		@SubscribeEvent
-		public static void onEvent(EntityTravelToDimensionEvent event) {
-			
-		}
-	}
 }
