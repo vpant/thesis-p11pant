@@ -22,20 +22,16 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.chunk.ChunkPrimer;
 
 public class BiomeTwitterCity extends Biome {
-	 protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState(); // Alaksa auto kai alakse
-     
-	/**
-	 * Instantiates a new biome twitter city.
-	 */
+	 protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
+
 	public BiomeTwitterCity() {
-		super(new BiomeProperties(TwitterCityWorldGenReference.NAME).setBaseHeight(0.125F).setHeightVariation(0.1F)
+		super(new BiomeProperties("Twitter City").setBaseHeight(0.125F).setHeightVariation(0.1F)
 				.setRainDisabled().setTemperature(0.2F));
 
 		topBlock = Blocks.GRASS.getDefaultState();
@@ -75,33 +71,11 @@ public class BiomeTwitterCity extends Biome {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.minecraft.world.biome.Biome#getRandomTreeFeature(java.util.Random)
-	 */
-	/*
-	 * @Override public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
-	 * return new WorldGenTreesCloud(false); }
-	 */
-
-	/**
-	 * Gets a WorldGen appropriate for this biome.
-	 *
-	 * @param rand the rand
-	 * @return the random world gen for grass
-	 */
-	/*
-	 * @Override public WorldGenerator getRandomWorldGenForGrass(Random rand) {
-	 * return new WorldGenGrassCloud(); }
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see net.minecraft.world.biome.Biome#pickRandomFlower(java.util.Random,
 	 * net.minecraft.util.math.BlockPos)
 	 */
 	@Override
 	public BlockFlower.EnumFlowerType pickRandomFlower(Random rand, BlockPos pos) {
-		// Note that this should never be called but worthwhile overriding
-		// because parent class has it.
 		return BlockFlower.EnumFlowerType.WHITE_TULIP;
 	}
 
@@ -157,7 +131,6 @@ public class BiomeTwitterCity extends Biome {
 		int noise = (int) (noiseVal / 3.0D + 3.0D + rand.nextDouble() * 0.25D);
 		int chunkX = x & 15;
 		int chunkZ = z & 15;
-		MutableBlockPos pos = new MutableBlockPos();
 		
 		for (int primerY = 255; primerY >= 0; --primerY) {
 			// lay down bedrock layer
@@ -181,17 +154,6 @@ public class BiomeTwitterCity extends Biome {
 							mainBlock = fillerBlock;
 						}
 
-						/*
-						// area exposed to air will be ocean
-						if (primerY < seaLevel
-								&& (surfaceBlock == null || surfaceBlock.getMaterial() == Material.AIR)) {
-							if (getTemperature(pos.setPos(x, primerY, z)) < 0.15F) {
-								surfaceBlock = ICE;
-							} else {
-								surfaceBlock = WATER;
-							}
-						}
-						*/
 
 						j = noise;
 

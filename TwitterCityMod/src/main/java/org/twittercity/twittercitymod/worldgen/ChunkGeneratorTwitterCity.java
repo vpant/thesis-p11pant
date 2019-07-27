@@ -142,7 +142,6 @@ public class ChunkGeneratorTwitterCity implements IChunkGenerator {
 		if (generatorOptions != null)
         {
             this.settings = ChunkGeneratorSettings.Factory.jsonToFactory(generatorOptions).build();
-            this.oceanBlock = this.settings.useLavaOceans ? Blocks.LAVA.getDefaultState() : Blocks.WATER.getDefaultState();
             worldIn.setSeaLevel(this.settings.seaLevel);
         }
 
