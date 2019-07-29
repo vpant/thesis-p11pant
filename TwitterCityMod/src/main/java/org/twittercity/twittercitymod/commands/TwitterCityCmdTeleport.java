@@ -1,5 +1,7 @@
 package org.twittercity.twittercitymod.commands;
 
+import org.twittercity.twittercitymod.DebugData;
+import org.twittercity.twittercitymod.city.City;
 import org.twittercity.twittercitymod.teleport.TeleportationTools;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
@@ -21,14 +23,18 @@ public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 		return "Teleports you to Twitter City dimension if you are not there and two overworld if you are there.";
 	}
 	
+	// Maybe add twitter city id you want to teleport and defaulting to 1
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
 
+		// TO-DO Get city id or default as 1
+		City city = DebugData.firstCity;
+		
 		int twitterCityDim = TwitterCityWorldGenReference.DIM_ID;
 		// Maybe make the default value to First city spawn point
-		int x = fetchInt(sender, args, 2, 0); 
-		int y = fetchInt(sender, args, 3, 100);
-		int z = fetchInt(sender, args, 4, 0);
+		int x = fetchInt(sender, args, 2, city.getStartingPos().getX()); 
+		int y = fetchInt(sender, args, 3, 80);
+		int z = fetchInt(sender, args, 4, city.getStartingPos().getZ());
 
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) sender;
@@ -46,13 +52,8 @@ public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 					TeleportationTools.teleportToDimension(player, 0, 0, 63, 0);
 					BlockPos worldSpawn = player.getEntityWorld().getSpawnPoint();
 					player.setPositionAndUpdate(worldSpawn.getX(), 70, worldSpawn.getZ());
-				}
-				
+				}	
 			}
 		}
-
 	}
-
-
-
 }

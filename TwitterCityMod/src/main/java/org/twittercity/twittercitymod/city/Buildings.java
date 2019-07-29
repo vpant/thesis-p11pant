@@ -35,6 +35,8 @@ import net.minecraftforge.items.IItemHandler;
 
 public class Buildings {
 	
+	private static HashMap<BlockPos, IBlockState> buildLast = new HashMap<BlockPos, IBlockState>();
+	
 	private Buildings() {
 		// Do nothing, this is a class to create the buildings
 	}
@@ -75,18 +77,18 @@ public class Buildings {
 	}
 
 	private static void makeStreetLight(World world, City city, int x1, int z1, int x2, int z2) {
-		if(world.getBlockState(new BlockPos(city.getX() + x1, 63, city.getZ() + z1)) == city.getGroundBlock().getDefaultState() &&
-				world.getBlockState(new BlockPos(city.getX() + x1, 64, city.getZ() + z1)) == Blocks.AIR.getDefaultState() &&
-				world.getBlockState(new BlockPos(city.getX() + x1, 65, city.getZ() + z1)) == Blocks.AIR.getDefaultState()) 
+		if(world.getBlockState(new BlockPos(x1, 0, z1).add(city.getStartingPos())) == city.getGroundBlock().getDefaultState() &&
+				world.getBlockState(new BlockPos(x1, 1, z1).add(city.getStartingPos())) == Blocks.AIR.getDefaultState() &&
+				world.getBlockState(new BlockPos(x1, 2, z1).add(city.getStartingPos())) == Blocks.AIR.getDefaultState()) 
 		{
 			
-			world.setBlockState(new BlockPos(city.getX() + x1, 64, city.getZ() + z1 ), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(city.getX() + x1, 65, city.getZ() + z1 ), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(city.getX() + x1, 66, city.getZ() + z1 ), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(city.getX() + x1, 67, city.getZ() + z1 ), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(city.getX() + x1, 68, city.getZ() + z1 ), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(city.getX() + x1, 68, city.getZ() + z1 ), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(city.getX() + x1, 67, city.getZ() + z1 ), Blocks.GLOWSTONE.getDefaultState());
+			world.setBlockState(new BlockPos(x1, 1, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			world.setBlockState(new BlockPos(x1, 2, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			world.setBlockState(new BlockPos(x1, 3, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			world.setBlockState(new BlockPos(x1, 4, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			world.setBlockState(new BlockPos(x1, 5, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			world.setBlockState(new BlockPos(x1, 5, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			world.setBlockState(new BlockPos(x1, 4, z1 ).add(city.getStartingPos()), Blocks.GLOWSTONE.getDefaultState());
 		}
 		
 	}
@@ -95,22 +97,22 @@ public class Buildings {
 		int halfPlotBlocksLength = (((city.getPathExtends() / 2) + city.getMapLength()) - (2 * city.getBlockStart())) / 2;
 		for(int a = 0; a <= 2 * halfPlotBlocksLength; a++) {
 			for(int b = -(city.getPathExtends() + 1); b <= city.getPathExtends() + 1; b += (city.getPathExtends() + 1) * 2) {
-				if(world.getBlockState(new BlockPos(city.getX() + city.getBlockStart() + a, 63, city.getZ() + city.getBlockStart() + halfPlotBlocksLength + b + Integer.signum(b))) == city.getPathBlock().getDefaultState()
-					&& (world.getBlockState(new BlockPos(city.getX() + city.getBlockStart() + a, 63, city.getZ() + city.getBlockStart() + halfPlotBlocksLength + b)) == city.getGroundBlock().getDefaultState()
-					|| world.getBlockState(new BlockPos(city.getX() + city.getBlockStart() + a, 63, city.getZ() + city.getBlockStart() + halfPlotBlocksLength + b)) == city.getPathBlock().getDefaultState())
-					&& world.getBlockState(new BlockPos(city.getX() + city.getBlockStart() + a, 64, city.getZ() + city.getBlockStart() + halfPlotBlocksLength + b)) == Blocks.AIR.getDefaultState())
+				if(world.getBlockState(new BlockPos(city.getBlockStart() + a, 0, city.getBlockStart() + halfPlotBlocksLength + b + Integer.signum(b)).add(city.getStartingPos())) == city.getPathBlock().getDefaultState()
+					&& (world.getBlockState(new BlockPos(city.getBlockStart() + a, 0, city.getBlockStart() + halfPlotBlocksLength + b).add(city.getStartingPos())) == city.getGroundBlock().getDefaultState()
+					|| world.getBlockState(new BlockPos(city.getBlockStart() + a, 0, city.getBlockStart() + halfPlotBlocksLength + b).add(city.getStartingPos())) == city.getPathBlock().getDefaultState())
+					&& world.getBlockState(new BlockPos(city.getBlockStart() + a, 1, city.getBlockStart() + halfPlotBlocksLength + b).add(city.getStartingPos())) == Blocks.AIR.getDefaultState())
 				{
-					world.setBlockState(new BlockPos(city.getX() + city.getBlockStart() + a, 63, city.getZ() + city.getBlockStart() + halfPlotBlocksLength + b), city.getPathBlock().getDefaultState());
-					world.setBlockState(new BlockPos(city.getX() + city.getBlockStart() + a, 64, city.getZ() + city.getBlockStart() + halfPlotBlocksLength + b - Integer.signum(b)), Blocks.AIR.getDefaultState());					
+					world.setBlockState(new BlockPos(city.getBlockStart() + a, 0, city.getBlockStart() + halfPlotBlocksLength + b).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
+					world.setBlockState(new BlockPos(city.getBlockStart() + a, 1, city.getBlockStart() + halfPlotBlocksLength + b - Integer.signum(b)).add(city.getStartingPos()), Blocks.AIR.getDefaultState());					
 				}
-				if(world.getBlockState(new BlockPos(city.getX() + city.getBlockStart() + halfPlotBlocksLength + b + Integer.signum(b), 63, city.getZ() + city.getBlockStart() + a)) == city.getPathBlock().getDefaultState()
-						&& world.getBlockState(new BlockPos(city.getX() + city.getBlockStart() + halfPlotBlocksLength + (b - Integer.signum(b)), 63, city.getZ() + city.getBlockStart() + a)) == city.getPathBlock().getDefaultState()
-						&& (world.getBlockState(new BlockPos(city.getX() + city.getBlockStart() + halfPlotBlocksLength + b, 63, city.getZ() + city.getBlockStart() + a)) == city.getGroundBlock().getDefaultState()
-						|| world.getBlockState(new BlockPos(city.getX() + city.getBlockStart() + halfPlotBlocksLength + b, 63, city.getZ() + city.getBlockStart() + a)) == city.getPathBlock().getDefaultState())
-						&& world.getBlockState(new BlockPos(city.getX() + city.getBlockStart() + halfPlotBlocksLength + b, 64, city.getZ() + city.getBlockStart() + a)) == Blocks.AIR.getDefaultState()) 
+				if(world.getBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b + Integer.signum(b), 0, city.getBlockStart() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState()
+						&& world.getBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + (b - Integer.signum(b)), 0, city.getBlockStart() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState()
+						&& (world.getBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b, 0, city.getBlockStart() + a).add(city.getStartingPos())) == city.getGroundBlock().getDefaultState()
+						|| world.getBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b, 0, city.getBlockStart() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState())
+						&& world.getBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b, 1, city.getBlockStart() + a).add(city.getStartingPos())) == Blocks.AIR.getDefaultState()) 
 				{
-					world.setBlockState(new BlockPos(city.getX() + city.getBlockStart() + halfPlotBlocksLength + b, 63, city.getZ() + city.getBlockStart() + a), city.getPathBlock().getDefaultState());
-					world.setBlockState(new BlockPos(city.getX() + city.getBlockStart() + halfPlotBlocksLength + b - Integer.signum(b), 64, city.getZ() + city.getBlockStart() + a), Blocks.AIR.getDefaultState());
+					world.setBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b, 0,city.getBlockStart() + a).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
+					world.setBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b - Integer.signum(b), 1,city.getBlockStart() + a).add(city.getStartingPos()), Blocks.AIR.getDefaultState());
 				}
 			}
 		}
@@ -121,13 +123,15 @@ public class Buildings {
 		for(int x = 0; x < area.length; x++) {
 			for(int z = 0; z < area[1].length; z++) {
 				if(area[x][z] == 1) {
-					world.setBlockState(new BlockPos(city.getX() + city.getBlockStart() + x, 63, city.getZ() + city.getBlockStart() + z), city.getGroundBlock().getDefaultState());
+					world.setBlockState(new BlockPos(city.getBlockStart() + x, 0, city.getBlockStart() + z).add(city.getStartingPos()), city.getGroundBlock().getDefaultState());
 				}
 			}
 		}
-		
 	}
 
+	/*
+	 * Inserts all the buildings defined by id in the {@linkplain area}
+	 */
 	public static void makeBuildings(World world, int area[][], City city) {
 		int buildingsCount = 0;
 		Building[] buildings = Buildings.getAllBuildings();
@@ -136,20 +140,170 @@ public class Buildings {
 				if(area[x][z] >= 100 && area[x][z] <= 500 ) {
 					Building currentBuilding = buildings[area[x][z] - 100];
 
-					insertBuilding(world, city, area, x, z, currentBuilding, 0, -1);
+					insertBuilding(world, city, area, x, z, currentBuilding, -1);
 					area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
 					buildingsCount++;
 				}
 			}
 		}
-		
 		System.out.println("Number of buildings " + buildingsCount);
 	}
-
-	private static void insertBuilding(World world, City city, int[][] area, int x1dest, int z1dest,
-			Building building, int y1dest, int rotationFixed ) {
-		
+	
+	/**
+	 * Spawns a building in the world
+	 * @param world World object
+	 * @param city Current city
+	 * @param area 2D Representation of the city
+	 * @param x1dest X offset of the building for x = 0
+	 * @param z1dest Z offset of the building for z = 0
+	 * @param building Current building
+	 * @param y1dest Starting y of the building
+	 * @param rotationFixed
+	 */
+	private static void insertBuilding(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed ) {
+		buildLast.clear();
 		int sourceX = 0, sourceZ = 0;
+		int rotate = getBuildingRotation(building, area, x1dest, z1dest, rotationFixed);
+		TemplateStructure templateStructure = building.getTemplateStructure(world);
+		for(int x = 0; x < building.getSizeX(); x++) {
+			for(int z = 0; z < building.getSizeZ(); z++) {
+				switch(rotate) {
+					case 0:
+						sourceX = x;
+						sourceZ = z;
+						break;
+					case 1:
+						sourceX = (building.getSizeX() - 1) - z;
+						sourceZ = x;
+						break;
+					case 2:
+						sourceX = z;
+						sourceZ = (building.getSizeZ() - 1) - x;
+						break;
+					case 3:
+						sourceX = (building.getSizeX() - 1) - x;
+						sourceZ = (building.getSizeZ() - 1) - z;
+						break;
+					default:
+						TwitterCity.logger.debug("Invalid switch result!");
+						break;
+				}
+				
+				int sourceEndY;
+				for (sourceEndY = templateStructure.getSize().getY(); sourceEndY > 0; sourceEndY--) {
+					BlockPos pos = new BlockPos(sourceX + building.getSourceX(), sourceEndY + 64, sourceZ + building.getSourceZ());
+					IBlockState bState = templateStructure.getBlockStateFromBlockPos(pos);
+					if(bState != null && bState.getBlock() != Blocks.AIR) {
+						break;
+            		} 
+        		}
+				
+				for(int ySource = building.getSourceStartY() - 64; ySource <= sourceEndY; ySource++) {
+					BlockPos currentPos = new BlockPos(city.getBlockStart() + x + x1dest,ySource+1,+ city.getBlockStart() + z + z1dest).add(city.getStartingPos());
+					insertBuildingBlock(world, city, building, currentPos, sourceX, sourceZ, rotate);
+				}
+			}
+		}
+		buildLast(buildLast, world);	
+	} // insertBuilding End
+
+	private static void insertBuildingBlock(World world, City city, Building building, BlockPos currentPos, int sourceX, int sourceZ, int rotate) {
+		TemplateStructure templateStructure = building.getTemplateStructure(world);
+		if ((currentPos.getY() != 64 || world.getBlockState(currentPos).getBlock() == Blocks.AIR)
+				&& world.getBlockState(currentPos).getBlock() != Blocks.PLANKS) { 
+			IBlockState blockState = templateStructure.getBlockStateFromBlockPos(new BlockPos(sourceX + building.getSourceX(), currentPos.getY(), sourceZ + building.getSourceZ()));
+			if(blockState == null) {
+				return;
+			}
+			Block block = blockState.getBlock();
+
+			if(!BlockHelper.needsToBeBuildedLast(block)) {
+				if(BlockHelper.isDoor(block)) {
+					blockState = blockState.withProperty(BlockDoor.OPEN, false);
+				} else if(block == Blocks.TRAPDOOR) {
+					blockState = blockState.withProperty(BlockTrapDoor.OPEN, false);
+				}
+				if (rotate > 0) {
+					if(block == Blocks.STANDING_SIGN) {
+						world.setBlockState(currentPos, blockState.withProperty(BlockStandingSign.ROTATION, BlockHelper.rotateStandingSign(blockState.getValue(BlockStandingSign.ROTATION).intValue(), rotate))); 
+						addTextToSign(block);
+					} else if(BlockHelper.isPumpkin(block)) {
+						world.setBlockState(currentPos, blockState.withProperty(BlockPumpkin.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPumpkin.FACING), rotate)));
+					} else if(BlockHelper.isDoor(block)) {
+						world.setBlockState(currentPos, blockState.withProperty(BlockDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockDoor.FACING), rotate))); 
+					} else if(block == Blocks.TRAPDOOR) {
+						world.setBlockState(currentPos, blockState.withProperty(BlockTrapDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTrapDoor.FACING), rotate)));
+					} else if(block == Blocks.BED) { 
+						BlockHelper.spawnRotatedBed(world, block, currentPos, blockState, rotate);
+					} else if(BlockHelper.isFenceGate(block)) {
+						world.setBlockState(currentPos, blockState.withProperty(BlockFenceGate.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)));
+					} else if(BlockHelper.isPistonBasePart(block)) {
+						world.setBlockState(currentPos, blockState.withProperty(BlockPistonBase.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)));
+					} else if(BlockHelper.isPistonPart(block)) {
+						world.setBlockState(currentPos, blockState.withProperty(BlockPistonExtension.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonExtension.FACING), rotate)));
+					} else if(BlockHelper.isStairs(block)) {
+						world.setBlockState(currentPos, blockState.withProperty(BlockStairs.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockStairs.FACING), rotate)));
+					} else { // default
+						world.setBlockState(currentPos, blockState);
+					}
+                    
+                } // if rotate > 0
+				else if(block == Blocks.VINE || BlockHelper.isRepeater(block) || block == Blocks.RAIL || BlockHelper.isMushroom(block)) {
+					//do not spawn
+				}
+				else {
+					// Bed needs to notify other blocks no matter if it was rotated
+					if(block == Blocks.BED) {
+						BlockHelper.spawnRotatedBed(world, block, currentPos, blockState, rotate);
+					} else {
+						world.setBlockState(currentPos, blockState);
+					}
+				}
+				
+				if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && currentPos.getY() == 63) {
+					world.setBlockState(currentPos, city.getGroundBlock().getDefaultState());
+				} else if(block == Blocks.LAPIS_ORE){ 
+					world.setBlockState(currentPos, Blocks.WOOL.getDefaultState());
+				} else if(block == Blocks.GOLD_ORE && currentPos.getY() == 63) {
+					world.setBlockState(currentPos, city.getPathBlock().getDefaultState());
+				} else if(block == Blocks.CHEST) {
+					TileEntityChest chest = (TileEntityChest) world.getTileEntity(currentPos);
+					if(chest != null) {
+						addItemsToChest(chest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH));					
+					}
+				} else if(block == Blocks.BREWING_STAND || block == Blocks.NOTEBLOCK) {
+					world.setBlockState(currentPos, blockState);
+				} 
+			} // !isBlockToBuildLast
+			else {
+				/*
+				 * Blocks that must spawn last
+				 */
+				if(BlockHelper.isTorch(block)) {
+					blockState = (rotate > 0) ? blockState.withProperty(BlockTorch.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTorch.FACING), rotate)) : blockState;
+					buildLast.put(currentPos, blockState);
+				} else if(block == Blocks.LEVER) {
+					blockState = (rotate > 0) ? blockState.withProperty(BlockLever.FACING, BlockHelper.rotateLever(blockState.getValue(BlockLever.FACING), rotate)) : blockState;
+					buildLast.put(currentPos, blockState);
+				} else if(block == Blocks.WALL_SIGN || block == Blocks.LADDER || block == Blocks.DISPENSER
+						|| block == Blocks.CHEST || block == Blocks.FURNACE || block == Blocks.LIT_FURNACE) {
+					blockState = (rotate > 0) ? blockState.withProperty(BlockWallSign.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockWallSign.FACING), rotate)) : blockState;
+					buildLast.put(currentPos, blockState);
+					if(block == Blocks.WALL_SIGN) {
+						addTextToSign(block);
+					}
+				} else if(block == Blocks.STONE_BUTTON) {
+					blockState = (rotate > 0) ? blockState.withProperty(BlockButton.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockButton.FACING), rotate)) : blockState;
+					buildLast.put(currentPos, blockState);
+				}
+			}
+		}	
+	}
+
+	/*
+	 * Determines the rotation of the building from the area array
+	 */
+	private static int getBuildingRotation(Building building, int[][] area, int x1dest, int z1dest, int rotationFixed) {
 		int rotate = -1;
 		if(rotationFixed >= 0) {
 			rotate = rotationFixed;
@@ -175,156 +329,14 @@ public class Buildings {
 		if (rotate == -1) {
 			rotate = RandomHelper.nextInt(4);
 		}
-		
-		//get building's blocks list
-		//loop through the block list
-		//check blocks and spawn them
-		TemplateStructure templateStructure = building.getTemplateStructure(world);
-		HashMap<BlockPos, IBlockState> buildLast = new HashMap<BlockPos, IBlockState>();
-		for(int x = 0; x < building.getSizeX(); x++) {
-			for(int z = 0; z < building.getSizeZ(); z++) {
-				switch(rotate) {
-					case 0:
-						sourceX = x;
-						sourceZ = z;
-						break;
-					case 1:
-						sourceX = (building.getSizeX() - 1) - z;
-						sourceZ = x;
-						break;
-					case 2:
-						sourceX = z;
-						sourceZ = (building.getSizeZ() - 1) - x;
-						break;
-					case 3:
-						sourceX = (building.getSizeX() - 1) - x;
-						sourceZ = (building.getSizeZ() - 1) - z;
-						break;
-					default:
-						TwitterCity.logger.debug("Invalid switch result!");
-						break;
-				}
-				
-				// Max y is needed from BlockInfo
-				int sourceEndY;
-				//Checks if blocks from y = 128 to y = 64 are not blocks of air
-				// Does it search for the highest point of the building?
-				for (sourceEndY = templateStructure.getSize().getY() + 64; sourceEndY > 64; sourceEndY--) {
-					BlockPos pos = new BlockPos(sourceX + building.getSourceX(), sourceEndY, sourceZ + building.getSourceZ());
-					IBlockState bState = templateStructure.getBlockStateFromBlockPos(pos);
-					if(bState != null && bState.getBlock() != Blocks.AIR) {
-						break;
-            		} 
-        		}
-				
-				for(int ySource = building.getSourceStartY(); ySource <= sourceEndY; ySource++) {
-					int yDest = ySource;
-					BlockPos currentPos = new BlockPos(city.getX() + city.getBlockStart() + x + x1dest, yDest, city.getZ() + city.getBlockStart() + z + z1dest);
-					if ((yDest != 64 || world.getBlockState(currentPos).getBlock() == Blocks.AIR)
-							&& world.getBlockState(currentPos).getBlock() != Blocks.PLANKS) { 
-						IBlockState blockState = templateStructure.getBlockStateFromBlockPos(new BlockPos(sourceX + building.getSourceX(), ySource, sourceZ + building.getSourceZ()));
-						Block block = blockState.getBlock();
+		return rotate;
+	}
 
-						if(!BlockHelper.needsToBeBuildedLast(block)) {
-							if(BlockHelper.isDoor(block)) {
-								blockState = blockState.withProperty(BlockDoor.OPEN, false);
-							} else if(block == Blocks.TRAPDOOR) {
-								blockState = blockState.withProperty(BlockTrapDoor.OPEN, false);
-							}
-							if (rotate > 0) {
-								if(block == Blocks.STANDING_SIGN) {
-									//Ola good
-									world.setBlockState(currentPos, blockState.withProperty(BlockStandingSign.ROTATION, BlockHelper.rotateStandingSign(blockState.getValue(BlockStandingSign.ROTATION).intValue(), rotate))); 
-									addTextToSign(block);
-								} else if(BlockHelper.isPumpkin(block)) {
-									//Elegxos rotation
-									world.setBlockState(currentPos, blockState.withProperty(BlockPumpkin.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPumpkin.FACING), rotate)));
-								} else if(BlockHelper.isDoor(block)) {
-									// Portes rotation ok
-									world.setBlockState(currentPos, blockState.withProperty(BlockDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockDoor.FACING), rotate))); 
-								} else if(block == Blocks.TRAPDOOR) {
-									//Etoimo to rotation
-									world.setBlockState(currentPos, blockState.withProperty(BlockTrapDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTrapDoor.FACING), rotate)));
-								} else if(block == Blocks.BED) { 
-									BlockHelper.spawnRotatedBed(world, block, currentPos, blockState, rotate);
-								} else if(BlockHelper.isFenceGate(block)) {
-									// Probably ok
-									world.setBlockState(currentPos, blockState.withProperty(BlockFenceGate.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)));
-								} else if(BlockHelper.isPistonBasePart(block)) {
-									// Probably ok
-									world.setBlockState(currentPos, blockState.withProperty(BlockPistonBase.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)));
-								} else if(BlockHelper.isPistonPart(block)) {
-									// Probably ok
-									world.setBlockState(currentPos, blockState.withProperty(BlockPistonExtension.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonExtension.FACING), rotate)));
-								} else if(BlockHelper.isStairs(block)) {
-									world.setBlockState(currentPos, blockState.withProperty(BlockStairs.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockStairs.FACING), rotate)));
-								} else { // default
-									world.setBlockState(currentPos, blockState);
-								}
-			                    
-			                } // if rotate > 0
-							else if(block == Blocks.VINE || BlockHelper.isRepeater(block) || block == Blocks.RAIL || BlockHelper.isMushroom(block)) {
-								//do not spawn
-							}
-							else {
-								// Bed needs to notify other blocks no matter if it was rotated
-								if(block == Blocks.BED) {
-									BlockHelper.spawnRotatedBed(world, block, currentPos, blockState, rotate);
-								} else {
-									world.setBlockState(currentPos, blockState);
-								}
-							}
-							
-							if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && yDest == 63) {
-								world.setBlockState(currentPos, city.getGroundBlock().getDefaultState());
-							} else if(block == Blocks.LAPIS_ORE){ 
-								world.setBlockState(currentPos, Blocks.WOOL.getDefaultState());
-							} else if(block == Blocks.GOLD_ORE && yDest == 63) {
-								world.setBlockState(currentPos, city.getPathBlock().getDefaultState());
-							} else if(block == Blocks.CHEST) {
-								TileEntityChest chest = (TileEntityChest) world.getTileEntity(currentPos);
-								if(chest != null) {
-									addItemsToChest(chest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH));					
-								}
-							} else if(block == Blocks.BREWING_STAND || block == Blocks.NOTEBLOCK) {
-								world.setBlockState(currentPos, blockState);
-							} 
-						} // !isBlockToBuildLast
-						else {
-							/*
-							 * Blocks that must spawn last
-							 */
-							if(BlockHelper.isTorch(block)) {
-								blockState = (rotate > 0) ? blockState.withProperty(BlockTorch.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTorch.FACING), rotate)) : blockState;
-								buildLast.put(currentPos, blockState);
-							} else if(block == Blocks.LEVER) {
-								blockState = (rotate > 0) ? blockState.withProperty(BlockLever.FACING, BlockHelper.rotateLever(blockState.getValue(BlockLever.FACING), rotate)) : blockState;
-								buildLast.put(currentPos, blockState);
-							} else if(block == Blocks.WALL_SIGN || block == Blocks.LADDER || block == Blocks.DISPENSER
-									|| block == Blocks.CHEST || block == Blocks.FURNACE || block == Blocks.LIT_FURNACE) {
-								blockState = (rotate > 0) ? blockState.withProperty(BlockWallSign.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockWallSign.FACING), rotate)) : blockState;
-								buildLast.put(currentPos, blockState);
-								if(block == Blocks.WALL_SIGN) {
-									addTextToSign(block);
-								}
-							} else if(block == Blocks.STONE_BUTTON) {
-								//Elegxos
-								blockState = (rotate > 0) ? blockState.withProperty(BlockButton.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockButton.FACING), rotate)) : blockState;
-								buildLast.put(currentPos, blockState);
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		buildLast(buildLast, world);
-		
-	} // insertBuilding End
-
+	/*
+	 * Builds that blocks that are needed to built last
+	 */
 	private static void buildLast(HashMap<BlockPos,IBlockState> blockMap, World world) {
 		if(blockMap.isEmpty()) {
-			//TwitterCity.logger.error("blockMap is empty");
 			return;
 		}
 		for ( BlockPos blockPos : blockMap.keySet() ) {
@@ -335,7 +347,10 @@ public class Buildings {
 	private static void addTextToSign(Block block) {
 		
 	}
-
+	
+	/*
+	 * Add items to chests
+	 */
 	private static void addItemsToChest(IItemHandler itemHanlder) {
 		Item[] items = { Items.APPLE, Items.COOKIE, Items.BREAD, Items.BOOK, Items.BONE, Items.FISHING_ROD, Items.WOODEN_AXE, 
 				Items.EGG, Items.BOAT, Items.BUCKET, Items.GLASS_BOTTLE, Items.BOWL, Items.PAPER, Items.WOODEN_SWORD, Items.WOODEN_SHOVEL, Items.WHEAT}; 
@@ -344,6 +359,9 @@ public class Buildings {
 		}
 	}
 
+	/*
+	 * Checks the area for to determine proper building rotation
+	 */
 	private static int checkArea(int[][] area, int x, int z) {
 		if(x >= 0 && z >= 0 && x < area.length && z < area[1].length) {
 			return area[x][z];
@@ -353,6 +371,9 @@ public class Buildings {
 		}
 	}
 	
+	/*
+	 * Returns a random building
+	 */
 	public static Building selectRandomBuilding (Building[] buildings)
 	{
 		int fail = 0;

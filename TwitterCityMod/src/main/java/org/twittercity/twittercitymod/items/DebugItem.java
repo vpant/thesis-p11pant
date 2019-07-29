@@ -30,7 +30,6 @@ public class DebugItem extends ItemBase{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		int[][] area = null;
 		if (!worldIn.isRemote) {
-			DebugData.setupData();
 			World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
 			//ChunksEditor.makeChunksFlat(worldIn, Blocks.BEDROCK, 0, 0, 10);
 			ChunksEditor.makeFlatChunksForCity(twitterWorld, DebugData.firstCity);

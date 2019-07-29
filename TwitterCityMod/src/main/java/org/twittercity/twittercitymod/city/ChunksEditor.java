@@ -32,8 +32,8 @@ public class ChunksEditor {
 	 * @param city
 	 */
 	public static void makeFlatChunksForCity(World world, City city) {
-		TwitterCity.logger.info("X is: " + city.getX() + "and Z is: " + city.getZ());
-		makeChunksFlat(world, city.getGroundBlock(), city.getX(), city.getZ(), (city.getCityLength() / 16));
+		TwitterCity.logger.info("X is: " + city.getStartingPos().getX() + "and Z is: " + city.getStartingPos().getZ());
+		makeChunksFlat(world, city.getGroundBlock(), city.getStartingPos().getX(), city.getStartingPos().getZ(), (city.getCityLength() / 16));
 	}
 	
 	

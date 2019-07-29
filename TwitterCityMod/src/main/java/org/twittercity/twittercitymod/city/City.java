@@ -2,13 +2,15 @@ package org.twittercity.twittercitymod.city;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 
 /* Data object represents a city */
 public class City {
 	
 	private int id;
-	private int x;
-	private int z;
+	//private int x;
+	//private int z;
+	BlockPos startingPos;
 	private int chunkLength; // city_size in theme.xml and its used to calculate x and z
 	//worldCities[CityID].x = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
     //worldCities[CityID].z = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
@@ -58,8 +60,7 @@ public class City {
 		this.blockStart = this.getEdgeLength() + 13;
 	}
 	
-	public City(int id, String outsideLightType, String streetLightType, int cityLength,
-			int edgeLenght, int mapLength, Block groundBlock, Block pathBlock){
+	public City(int id, String outsideLightType, String streetLightType, int cityLength, int edgeLenght, int mapLength, Block groundBlock, Block pathBlock){
 		this.id = id;
 		
 		this.outsideLightType = outsideLightType;
@@ -73,15 +74,6 @@ public class City {
 		this.pathBlock = pathBlock;
 
 	}
-	
-	//This function will be use to generate new city. Inside functions that calculate paths, buildings positions etc will be called.
-	public void calculateNewCity() {
-		// Chunk Editor
-		
-		// Path generation is currently executed at DebugItem.java
-		
-		// Make buildings
-	}
 
 	public int getId() {
 		return id;
@@ -91,21 +83,14 @@ public class City {
 		this.id = id;
 	}
 
-	public int getX() {
-		return x;
+	public void setStartingPos(BlockPos startingPos) {
+		this.startingPos = startingPos;
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public BlockPos getStartingPos() {
+		return startingPos;
 	}
 
-	public int getZ() {
-		return z;
-	}
-
-	public void setZ(int z) {
-		this.z = z;
-	}
 
 	public int getChunkLength() {
 		return chunkLength;

@@ -240,13 +240,13 @@ public class Paths {
 						if(city.hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
 							//System.out.println("Mpika proto setBlockstate kai extisa sto X = " + (blockStart + x) + ", Y = 128 kai sto Z = " + (blockStart + z));
 							//spawn block at blockStart + x, 63, blockStart + z, city.pathBlockID
-							world.setBlockState(new BlockPos(city.getBlockStart() + city.getX() + x, 63, city.getBlockStart() + city.getZ() + z ), city.getPathBlock().getDefaultState());
+							world.setBlockState(new BlockPos(city.getBlockStart() + x, 0, city.getBlockStart() + z ).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
 						}
 					}
 					else {
 						//System.out.println("Mpika sto deutero setBlockstate kai extisa sto X = " + (blockStart + x ) + ", Y = 128 kai sto Z = " + (blockStart + z));
 						//spawn block at  blockStart + x, 63, blockStart +z, city.pathBlockID
-						world.setBlockState(new BlockPos(city.getBlockStart() + city.getX() + x, 63, city.getBlockStart() + city.getZ() + z ), city.getPathBlock().getDefaultState());
+						world.setBlockState(new BlockPos(city.getBlockStart() + x, 0, city.getBlockStart() + z ).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
 					}	
 				}
 			}

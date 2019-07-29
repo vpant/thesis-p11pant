@@ -35,6 +35,7 @@ public class TwitterCity {
 	/** Calls the preInit in our proxy package to execute the code needed when minecraft is loading, in the side (Client or Server) is should to execute. */
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
+		DebugData.setupData(); // Initialize debug data to use throughout the mod
 		logger = e.getModLog();
 		proxy.preInit(e);
 		

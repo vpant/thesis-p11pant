@@ -104,6 +104,9 @@ public class Building {
 		return this.templateFileName;
 	}
 	
+	/*
+	 * Loads or returns a cached template structure object for this building
+	 */
 	public TemplateStructure getTemplateStructure(World world) {
 		if(this.tmpStructure == null) {
 			this.tmpStructure = TemplateBuildings.getInstance().getSingleBuildingTemplateStructure(world, this);

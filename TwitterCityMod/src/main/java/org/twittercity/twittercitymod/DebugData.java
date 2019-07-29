@@ -4,6 +4,8 @@ import org.twittercity.twittercitymod.city.Building;
 import org.twittercity.twittercitymod.city.City;
 import org.twittercity.twittercitymod.city.Frequency;
 
+import net.minecraft.util.math.BlockPos;
+
 public class DebugData {
 	public static Building[] buildings = new Building[11];
 	public static City firstCity = new City();
@@ -29,8 +31,7 @@ public class DebugData {
 		firstCity.setCityLength(7); // * 16 internally
 		firstCity.setMapLength(firstCity.getCityLength() + (firstCity.getEdgeLength() * 2));
 		firstCity.setPathExtends(2);
-		firstCity.setX(1000);
-		firstCity.setZ(1000);
+		firstCity.setStartingPos(new BlockPos(1000,63,1000)); // It should stay 63 because it would cause problems with template structures
 	}
 	
 }
