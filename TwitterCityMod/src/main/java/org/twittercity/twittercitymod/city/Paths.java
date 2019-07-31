@@ -238,14 +238,10 @@ public class Paths {
 					else if(Math.abs(x - (area.length / 2)) == (city.getPathExtends() + 1) ||
                             Math.abs(z - (area[1].length / 2)) == (city.getPathExtends() + 1)) {
 						if(city.hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
-							//System.out.println("Mpika proto setBlockstate kai extisa sto X = " + (blockStart + x) + ", Y = 128 kai sto Z = " + (blockStart + z));
-							//spawn block at blockStart + x, 63, blockStart + z, city.pathBlockID
 							world.setBlockState(new BlockPos(city.getBlockStart() + x, 0, city.getBlockStart() + z ).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
 						}
 					}
 					else {
-						//System.out.println("Mpika sto deutero setBlockstate kai extisa sto X = " + (blockStart + x ) + ", Y = 128 kai sto Z = " + (blockStart + z));
-						//spawn block at  blockStart + x, 63, blockStart +z, city.pathBlockID
 						world.setBlockState(new BlockPos(city.getBlockStart() + x, 0, city.getBlockStart() + z ).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
 					}	
 				}

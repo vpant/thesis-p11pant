@@ -81,7 +81,6 @@ public class Buildings {
 				world.getBlockState(new BlockPos(x1, 1, z1).add(city.getStartingPos())) == Blocks.AIR.getDefaultState() &&
 				world.getBlockState(new BlockPos(x1, 2, z1).add(city.getStartingPos())) == Blocks.AIR.getDefaultState()) 
 		{
-			
 			world.setBlockState(new BlockPos(x1, 1, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
 			world.setBlockState(new BlockPos(x1, 2, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
 			world.setBlockState(new BlockPos(x1, 3, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
@@ -119,6 +118,7 @@ public class Buildings {
 		
 	}
 
+	//Remove paths if they are not activated in the current city
 	private static void removePaths(World world, int[][] area, City city) {
 		for(int x = 0; x < area.length; x++) {
 			for(int z = 0; z < area[1].length; z++) {
@@ -130,19 +130,26 @@ public class Buildings {
 	}
 
 	/*
-	 * Inserts all the buildings defined by id in the {@linkplain area}
+	 * Inserts all the buildings that are defined by id in the area array
 	 */
 	public static void makeBuildings(World world, int area[][], City city) {
 		int buildingsCount = 0;
 		Building[] buildings = Buildings.getAllBuildings();
+		if(buildings == null) {
+			return;
+		}
 		for (int x = 0; x < area.length; x++) {
 			for(int z = 0; z < area[1].length; z++) {
 				if(area[x][z] >= 100 && area[x][z] <= 500 ) {
-					Building currentBuilding = buildings[area[x][z] - 100];
-
-					insertBuilding(world, city, area, x, z, currentBuilding, -1);
-					area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
-					buildingsCount++;
+					int buildingID = area[x][z] - 100;
+					if(buildingID >= 0 && buildingID < buildings.length) {
+						Building currentBuilding = buildings[area[x][z] - 100];
+						insertBuilding(world, city, area, x, z, currentBuilding, -1);
+						
+						//insertBuilding(world, city, area, x, z, currentBuilding, 2);
+						area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
+						buildingsCount++;
+					}
 				}
 			}
 		}
@@ -157,10 +164,9 @@ public class Buildings {
 	 * @param x1dest X offset of the building for x = 0
 	 * @param z1dest Z offset of the building for z = 0
 	 * @param building Current building
-	 * @param y1dest Starting y of the building
-	 * @param rotationFixed
+	 * @param rotationFixed Predifined rotation. If negative, rotation will be calculated.
 	 */
-	private static void insertBuilding(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed ) {
+	private static void insertBuildingStartingFrom(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed) {
 		buildLast.clear();
 		int sourceX = 0, sourceZ = 0;
 		int rotate = getBuildingRotation(building, area, x1dest, z1dest, rotationFixed);
@@ -191,7 +197,7 @@ public class Buildings {
 				
 				int sourceEndY;
 				for (sourceEndY = templateStructure.getSize().getY(); sourceEndY > 0; sourceEndY--) {
-					BlockPos pos = new BlockPos(sourceX + building.getSourceX(), sourceEndY + 64, sourceZ + building.getSourceZ());
+					BlockPos pos = new BlockPos(sourceX + building.getSourceX(), sourceEndY + 63, sourceZ + building.getSourceZ());
 					IBlockState bState = templateStructure.getBlockStateFromBlockPos(pos);
 					if(bState != null && bState.getBlock() != Blocks.AIR) {
 						break;
@@ -199,19 +205,26 @@ public class Buildings {
         		}
 				
 				for(int ySource = building.getSourceStartY() - 64; ySource <= sourceEndY; ySource++) {
-					BlockPos currentPos = new BlockPos(city.getBlockStart() + x + x1dest,ySource+1,+ city.getBlockStart() + z + z1dest).add(city.getStartingPos());
+					BlockPos currentPos = new BlockPos(city.getBlockStart() + x + x1dest, ySource, city.getBlockStart() + z + z1dest);
 					insertBuildingBlock(world, city, building, currentPos, sourceX, sourceZ, rotate);
 				}
 			}
 		}
-		buildLast(buildLast, world);	
-	} // insertBuilding End
+		buildLast(buildLast, world);
+	}
+	
+	private static void insertBuilding(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed) {
+		insertBuildingStartingFrom(world, city, area, x1dest, z1dest, building, rotationFixed);
+	}
+	
 
 	private static void insertBuildingBlock(World world, City city, Building building, BlockPos currentPos, int sourceX, int sourceZ, int rotate) {
 		TemplateStructure templateStructure = building.getTemplateStructure(world);
-		if ((currentPos.getY() != 64 || world.getBlockState(currentPos).getBlock() == Blocks.AIR)
+		int structureY = currentPos.getY() + 64;
+		currentPos = currentPos.add(city.getStartingPos().getX(), city.getStartingPos().getY() + 1, city.getStartingPos().getZ());
+		if ((currentPos.getY() != city.getStartingPos().getY() + 1 || world.getBlockState(currentPos).getBlock() == Blocks.AIR)
 				&& world.getBlockState(currentPos).getBlock() != Blocks.PLANKS) { 
-			IBlockState blockState = templateStructure.getBlockStateFromBlockPos(new BlockPos(sourceX + building.getSourceX(), currentPos.getY(), sourceZ + building.getSourceZ()));
+			IBlockState blockState = templateStructure.getBlockStateFromBlockPos(new BlockPos(sourceX + building.getSourceX(), structureY, sourceZ + building.getSourceZ()));
 			if(blockState == null) {
 				return;
 			}
@@ -260,11 +273,11 @@ public class Buildings {
 					}
 				}
 				
-				if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && currentPos.getY() == 63) {
+				if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && currentPos.getY() == city.getStartingPos().getY()) {
 					world.setBlockState(currentPos, city.getGroundBlock().getDefaultState());
 				} else if(block == Blocks.LAPIS_ORE){ 
 					world.setBlockState(currentPos, Blocks.WOOL.getDefaultState());
-				} else if(block == Blocks.GOLD_ORE && currentPos.getY() == 63) {
+				} else if(block == Blocks.GOLD_ORE && currentPos.getY() == city.getStartingPos().getY()) {
 					world.setBlockState(currentPos, city.getPathBlock().getDefaultState());
 				} else if(block == Blocks.CHEST) {
 					TileEntityChest chest = (TileEntityChest) world.getTileEntity(currentPos);

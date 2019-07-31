@@ -21,8 +21,14 @@ public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 	@Override
 	public String getUsage(ICommandSender sender) {
 		return "Teleports you to Twitter City dimension if you are not there and two overworld if you are there.";
+	}	
+
+
+	@Override
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+		return true;
 	}
-	
+
 	// Maybe add twitter city id you want to teleport and defaulting to 1
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) {

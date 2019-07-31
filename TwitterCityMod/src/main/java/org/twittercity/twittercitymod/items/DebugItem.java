@@ -55,8 +55,7 @@ public class DebugItem extends ItemBase{
 		List<TwitterCityTemplate.BlockInfo> list = tmpst.getBlockInfoList();
 		if(!list.isEmpty()) {
 			for(TwitterCityTemplate.BlockInfo block : list) {
-				//world.setBlockState(block.pos, block.blockState);
-				world.setBlockState(block.pos, block.blockState,4 );
+				world.setBlockState(block.pos, block.blockState, 4);
 			}
 		}
 	}
