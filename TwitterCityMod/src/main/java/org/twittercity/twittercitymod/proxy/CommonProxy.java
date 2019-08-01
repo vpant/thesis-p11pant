@@ -1,6 +1,13 @@
 package org.twittercity.twittercitymod.proxy;
 
+import org.twittercity.twittercitymod.DebugData;
+import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.commands.TwitterCityCmdTeleport;
+import org.twittercity.twittercitymod.registrationhandlers.TCBlocksRegistrationHandler;
+import org.twittercity.twittercitymod.registrationhandlers.TCItemsRegistrationHandler;
+import org.twittercity.twittercitymod.worldgen.TwitterCityBiomes;
+import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
+import org.twittercity.twittercitymod.worldgen.WorldTypeTwitterCity;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -14,13 +21,20 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent e) {
-
+    	TCBlocksRegistrationHandler.init();
+    	TCItemsRegistrationHandler.init();
+		DebugData.setupData(); // Initialize debug data to use throughout the mod
+		TwitterCity.logger = e.getModLog();
+		TwitterCityWorldGenReference.registerDimensions();
     }
 
     /**
      * Calls the {@link RegisterHelper#initRegister()} to register the blocks items. It registers the {@link GuiHandler} class as well.
      */
     public void init(FMLInitializationEvent e) {
+		TwitterCityWorldGenReference.registerWorldGenerators();
+		TwitterCityBiomes.initBiomeManagerAndDictionary();
+		new WorldTypeTwitterCity();
     }
     
     /**

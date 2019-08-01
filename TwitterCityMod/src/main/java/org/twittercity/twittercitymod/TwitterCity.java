@@ -2,9 +2,6 @@
 
 import org.apache.logging.log4j.Logger;
 import org.twittercity.twittercitymod.proxy.CommonProxy;
-import org.twittercity.twittercitymod.worldgen.TwitterCityBiomes;
-import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
-import org.twittercity.twittercitymod.worldgen.WorldTypeTwitterCity;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -35,20 +32,12 @@ public class TwitterCity {
 	/** Calls the preInit in our proxy package to execute the code needed when minecraft is loading, in the side (Client or Server) is should to execute. */
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
-		DebugData.setupData(); // Initialize debug data to use throughout the mod
-		logger = e.getModLog();
-		proxy.preInit(e);
-		
-		TwitterCityWorldGenReference.registerDimensions();
+		proxy.preInit(e);	
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
 		proxy.init(e);
-		
-		TwitterCityWorldGenReference.registerWorldGenerators();
-		TwitterCityBiomes.initBiomeManagerAndDictionary();
-		new WorldTypeTwitterCity();
 	}
 	
 	@EventHandler
@@ -58,11 +47,7 @@ public class TwitterCity {
 	
 	/** This method executes when a server is loaded. */
 	@EventHandler
-	public void serverStarting (FMLServerStartingEvent e)
-	{
+	public void serverStarting (FMLServerStartingEvent e) {
 		proxy.serverStarting(e);
 	}
-	
-	
-	
 }
