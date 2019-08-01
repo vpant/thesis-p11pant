@@ -1,0 +1,11 @@
+{
+    "variants": {
+		"variant=tc_stone": { "model": "tc:tc_stone" },
+		"variant=tc_andesite": { "model": "tc:tc_andesite" },
+		"variant=tc_andesite_smooth": { "model": "tc:tc_andesite_smooth" }, 
+		"variant=tc_diorite": { "model": "tc:tc_diorite" },
+		"variant=tc_diorite_smooth": { "model": "tc:tc_diorite_smooth" },
+		"variant=tc_granite": { "model": "tc:tc_granite" },
+        "variant=tc_granite_smooth": { "model": "tc:tc_granite_smooth" }
+	}
+}

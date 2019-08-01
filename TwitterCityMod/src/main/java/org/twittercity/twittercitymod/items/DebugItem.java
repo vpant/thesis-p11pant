@@ -2,13 +2,8 @@ package org.twittercity.twittercitymod.items;
 
 import java.util.List;
 
-import org.twittercity.twittercitymod.DebugData;
-import org.twittercity.twittercitymod.city.Buildings;
-import org.twittercity.twittercitymod.city.ChunksEditor;
-import org.twittercity.twittercitymod.city.Paths;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.city.templatestructures.TwitterCityTemplate;
-import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,7 +11,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 
 public class DebugItem extends ItemBase{
 
@@ -30,20 +24,20 @@ public class DebugItem extends ItemBase{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		int[][] area = null;
 		if (!worldIn.isRemote) {
-			World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
+			//World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
 			//ChunksEditor.makeChunksFlat(worldIn, Blocks.BEDROCK, 0, 0, 10);
-			ChunksEditor.makeFlatChunksForCity(twitterWorld, DebugData.firstCity);
+			//ChunksEditor.makeFlatChunksForCity(twitterWorld, DebugData.firstCity);
 			//TemplateBuildings.getInstance().spawnTemplateBuildings(worldIn);
-			area = Paths.makePaths(twitterWorld, DebugData.firstCity);
+			//area = Paths.makePaths(twitterWorld, DebugData.firstCity);
 			//ArrayUtils.print2DArrayToFile(area);
-			Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity);
+			//Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity);
 			//for(Building building : DebugData.buildings) {
 			//	spawnBlocksFromBlockInfoList(worldIn, TemplateBuildings.getInstance().getSingleBuildingTemplateStructure(worldIn, building));
 			//}
 			
 			//TemplateStructure ts = TemplateBuildings.getInstance().getSingleBuildingTemplateStructure(worldIn, DebugData.buildings[3]);
 			//System.out.println(ts.getSize().toString());
-		
+			//playerIn.sendMessage(new TextComponentString("BlockStone is instanceof TCAbstractBlock: " + Boolean.toString((TwitterCityBlocks.STONE instanceof TCAbstractBlock))));
 		}
 
 		
