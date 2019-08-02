@@ -142,7 +142,7 @@ public class Buildings {
 			for(int z = 0; z < area[1].length; z++) {
 				if(area[x][z] >= 100 && area[x][z] <= 500 ) {
 					int buildingID = area[x][z] - 100;
-					if(buildingID >= 0 && buildingID < buildings.length) {
+					if(buildingID >= 0 && buildingID < buildings.length && buildingsCount == 0) {
 						Building currentBuilding = buildings[area[x][z] - 100];
 						insertBuilding(world, city, area, x, z, currentBuilding, -1);
 						

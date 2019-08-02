@@ -1,6 +1,7 @@
 package org.twittercity.twittercitymod.util;
 
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.blocks.TCBlockColored;
 import org.twittercity.twittercitymod.blocks.TCBlockNewLog;
 import org.twittercity.twittercitymod.blocks.TCBlockOldLog;
@@ -13,13 +14,13 @@ import org.twittercity.twittercitymod.blocks.TCBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockColored;
+import net.minecraft.block.BlockLever.EnumOrientation;
 import net.minecraft.block.BlockNewLog;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockSandStone;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.BlockStoneBrick;
-import net.minecraft.block.BlockLever.EnumOrientation;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
@@ -256,5 +257,19 @@ public class BlockHelper {
 			tcBlockState = TCBlocks.SANDSTONE.getDefaultState().withProperty(TCBlockSandStone.TYPE, TCBlockSandStone.EnumType.byMetadata(vanillaBlockState.getValue(BlockSandStone.TYPE).getMetadata()));
 		}
 		return tcBlockState;
+	}
+
+	public static boolean isTCBlockNeighbor(World world, BlockPos pos) {
+		for(int x = -1; x <= 1; x++) {
+			for(int z = -1; z <= 1; z++) {
+				for(int y = -1; y <= 1; y++) {
+					BlockPos nextPos = new BlockPos(x, y, z).add(pos);
+					if(!nextPos.equals(pos) && (world.getBlockState(nextPos).getBlock() instanceof TCBlock)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

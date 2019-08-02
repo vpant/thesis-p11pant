@@ -1,19 +1,23 @@
 package org.twittercity.twittercitymod.proxy;
 
 import org.twittercity.twittercitymod.DebugData;
+import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.commands.TwitterCityCmdTeleport;
 import org.twittercity.twittercitymod.registrationhandlers.TCBlocksRegistrationHandler;
 import org.twittercity.twittercitymod.registrationhandlers.TCItemsRegistrationHandler;
+import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 import org.twittercity.twittercitymod.worldgen.TwitterCityBiomes;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 import org.twittercity.twittercitymod.worldgen.WorldTypeTwitterCity;
 
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Code executes Both Client and Server side.
@@ -23,9 +27,11 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
     	TCBlocksRegistrationHandler.init();
     	TCItemsRegistrationHandler.init();
-		DebugData.setupData(); // Initialize debug data to use throughout the mod
 		TwitterCity.logger = e.getModLog();
 		TwitterCityWorldGenReference.registerDimensions();
+		GameRegistry.registerTileEntity(TileEntityTwitter.class, new ResourceLocation(Reference.MOD_ID, "twitter_tile_entity"));		
+		
+		DebugData.setupData(); // Initialize debug data to use throughout the mod
     }
 
     /**

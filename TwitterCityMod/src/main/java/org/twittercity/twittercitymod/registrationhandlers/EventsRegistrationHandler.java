@@ -1,5 +1,7 @@
 package org.twittercity.twittercitymod.registrationhandlers;
 
+import org.twittercity.twittercitymod.blocks.TCBlock;
+import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.client.resources.I18n;
@@ -8,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -31,5 +34,11 @@ public class EventsRegistrationHandler {
 			}
 		}
 	}
-	
+
+	@SubscribeEvent
+	public static void onBreakEvent(BlockEvent.BreakEvent event) {		
+		if((event.getState().getBlock() instanceof TCBlock) || BlockHelper.isTCBlockNeighbor(event.getWorld(), event.getPos())) {
+			event.setCanceled(true);
+		} 
+	}
 }
