@@ -27,8 +27,7 @@ public class TCBlockStone extends TCBlock {
 		super(Material.ROCK);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, TCBlockStone.EnumType.STONE));
 		this.setSoundType(SoundType.STONE);
-		this.setRegistryName(name);	
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		this.setRegistryName(name);
 	};
 
 	/**

@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "axis=y,variant=acacia":  { "model": "minecraft:acacia_log" },
+        "axis=z,variant=acacia":   { "model": "minecraft:acacia_log", "x": 90 },
+        "axis=x,variant=acacia":   { "model": "minecraft:acacia_log", "x": 90, "y": 90 },
+        "axis=none,variant=acacia": { "model": "minecraft:acacia_bark" },
+		"axis=y,variant=dark_oak":  { "model": "minecraft:dark_oak_log" },
+        "axis=z,variant=dark_oak":   { "model": "minecraft:dark_oak_log", "x": 90 },
+        "axis=x,variant=dark_oak":   { "model": "minecraft:dark_oak_log", "x": 90, "y": 90 },
+        "axis=none,variant=dark_oak": { "model": "minecraft:dark_oak_bark" }
+    }
+}
+

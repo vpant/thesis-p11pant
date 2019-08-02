@@ -1,12 +1,28 @@
 package org.twittercity.twittercitymod.util;
 
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.blocks.TCBlockColored;
+import org.twittercity.twittercitymod.blocks.TCBlockNewLog;
+import org.twittercity.twittercitymod.blocks.TCBlockOldLog;
+import org.twittercity.twittercitymod.blocks.TCBlockPlanks;
+import org.twittercity.twittercitymod.blocks.TCBlockSandStone;
+import org.twittercity.twittercitymod.blocks.TCBlockStone;
+import org.twittercity.twittercitymod.blocks.TCBlockStoneBrick;
+import org.twittercity.twittercitymod.blocks.TCBlocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
+import net.minecraft.block.BlockColored;
+import net.minecraft.block.BlockNewLog;
+import net.minecraft.block.BlockOldLog;
+import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.BlockSandStone;
+import net.minecraft.block.BlockStone;
+import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.BlockLever.EnumOrientation;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -212,5 +228,33 @@ public class BlockHelper {
         
 		world.notifyNeighborsRespectDebug(currentPos, block, false);
 		world.notifyNeighborsRespectDebug(blockPos, blockState.getBlock(), false);  		
+	}
+	
+	public static IBlockState replaceWithTCBlockState(IBlockState vanillaBlockState) {
+		Block vanillaBlock = vanillaBlockState.getBlock();
+		IBlockState tcBlockState = vanillaBlockState;
+		if(vanillaBlock == Blocks.STONE) {
+			tcBlockState = TCBlocks.STONE.getDefaultState().withProperty(TCBlockStone.VARIANT, TCBlockStone.EnumType.byMetadata(vanillaBlockState.getValue(BlockStone.VARIANT).getMetadata()));
+		} else if(vanillaBlock == Blocks.WOOL) {
+			tcBlockState = TCBlocks.WOOL.getDefaultState().withProperty(TCBlockColored.COLOR, EnumDyeColor.byMetadata(vanillaBlockState.getValue(BlockColored.COLOR).getMetadata()));
+		} else if(vanillaBlock == Blocks.PLANKS) {
+			tcBlockState = TCBlocks.PLANKS.getDefaultState().withProperty(TCBlockPlanks.VARIANT, TCBlockPlanks.EnumType.byMetadata(vanillaBlockState.getValue(BlockPlanks.VARIANT).getMetadata()));
+		} else if(vanillaBlock == Blocks.LOG) {
+			tcBlockState = TCBlocks.LOG.getDefaultState().withProperty(TCBlockOldLog.VARIANT, TCBlockPlanks.EnumType.byMetadata(vanillaBlockState.getValue(BlockOldLog.VARIANT).getMetadata()));
+		} else if(vanillaBlock == Blocks.LOG2) {
+			tcBlockState = TCBlocks.LOG2.getDefaultState().withProperty(TCBlockNewLog.VARIANT, TCBlockPlanks.EnumType.byMetadata(vanillaBlockState.getValue(BlockNewLog.VARIANT).getMetadata()));
+		} else if(vanillaBlock == Blocks.COBBLESTONE) {
+			tcBlockState = TCBlocks.COBBLESTONE.getDefaultState();
+		} else if(vanillaBlock == Blocks.MOSSY_COBBLESTONE) {
+			tcBlockState = TCBlocks.MOSSY_COBBLESTONE.getDefaultState();
+		} else if(vanillaBlock == Blocks.STONEBRICK) {
+			tcBlockState = TCBlocks.STONEBRICK.getDefaultState()
+					.withProperty(TCBlockStoneBrick.VARIANT, TCBlockStoneBrick.EnumType.byMetadata(vanillaBlockState.getValue(BlockStoneBrick.VARIANT).getMetadata()));
+		} else if(vanillaBlock == Blocks.BRICK_BLOCK) {
+			tcBlockState = TCBlocks.BRICK_BLOCK.getDefaultState();
+		} else if(vanillaBlock == Blocks.SANDSTONE) {
+			tcBlockState = TCBlocks.SANDSTONE.getDefaultState().withProperty(TCBlockSandStone.TYPE, TCBlockSandStone.EnumType.byMetadata(vanillaBlockState.getValue(BlockSandStone.TYPE).getMetadata()));
+		}
+		return tcBlockState;
 	}
 }

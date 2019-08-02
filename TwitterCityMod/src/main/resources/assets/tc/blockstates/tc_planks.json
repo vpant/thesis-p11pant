@@ -1,0 +1,10 @@
+{
+    "variants": {
+		"variant=jungle": { "model": "minecraft:jungle_planks" },
+		"variant=acacia": { "model": "minecraft:acacia_planks" },
+		"variant=birch": { "model": "minecraft:birch_planks" }, 
+		"variant=dark_oak": { "model": "minecraft:dark_oak_planks" },
+		"variant=oak": { "model": "minecraft:oak_planks" },
+		"variant=spruce": { "model": "minecraft:spruce_planks" }
+	}
+}

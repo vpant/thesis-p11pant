@@ -4,16 +4,12 @@ import java.util.HashMap;
 
 import org.twittercity.twittercitymod.DebugData;
 import org.twittercity.twittercitymod.TwitterCity;
-import org.twittercity.twittercitymod.blocks.TCBlockColored;
-import org.twittercity.twittercitymod.blocks.TCBlockStone;
-import org.twittercity.twittercitymod.blocks.TCBlocks;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.util.RandomHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockButton;
-import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.BlockLever;
@@ -22,14 +18,12 @@ import net.minecraft.block.BlockPistonExtension;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockStandingSign;
-import net.minecraft.block.BlockStone;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.BlockWallSign;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
@@ -263,7 +257,7 @@ public class Buildings {
 					} else if(BlockHelper.isStairs(block)) {
 						world.setBlockState(currentPos, blockState.withProperty(BlockStairs.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockStairs.FACING), rotate)));
 					} else { // default
-						world.setBlockState(currentPos, replaceWithTCBlockState(blockState));
+						world.setBlockState(currentPos, BlockHelper.replaceWithTCBlockState(blockState));
 					}
                     
                 } // if rotate > 0
@@ -275,14 +269,14 @@ public class Buildings {
 					if(block == Blocks.BED) {
 						BlockHelper.spawnRotatedBed(world, block, currentPos, blockState, rotate);
 					} else {
-						world.setBlockState(currentPos, replaceWithTCBlockState(blockState));
+						world.setBlockState(currentPos, BlockHelper.replaceWithTCBlockState(blockState));
 					}
 				}
 				
 				if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && currentPos.getY() == city.getStartingPos().getY()) {
 					world.setBlockState(currentPos, city.getGroundBlock().getDefaultState());
 				} else if(block == Blocks.LAPIS_ORE){ 
-					world.setBlockState(currentPos, replaceWithTCBlockState(Blocks.WOOL.getDefaultState()));
+					world.setBlockState(currentPos, BlockHelper.replaceWithTCBlockState(Blocks.WOOL.getDefaultState()));
 				} else if(block == Blocks.GOLD_ORE && currentPos.getY() == city.getStartingPos().getY()) {
 					world.setBlockState(currentPos, city.getPathBlock().getDefaultState());
 				} else if(block == Blocks.CHEST) {
@@ -414,18 +408,6 @@ public class Buildings {
 		} while(!valid);
 		
 		return buildings[buildingID];
-	}
-	
-	private static IBlockState replaceWithTCBlockState(IBlockState vanillaBlockState) {
-		Block vanillaBlock = vanillaBlockState.getBlock();
-		IBlockState tcBlockState = vanillaBlockState;
-		if(vanillaBlock == Blocks.STONE) {
-			tcBlockState = TCBlocks.STONE.getDefaultState().withProperty(TCBlockStone.VARIANT, TCBlockStone.EnumType.byMetadata(vanillaBlockState.getValue(BlockStone.VARIANT).getMetadata()));
-		} else if(vanillaBlock == Blocks.WOOL) {
-			tcBlockState = TCBlocks.WOOL.getDefaultState().withProperty(TCBlockColored.COLOR, EnumDyeColor.byMetadata(vanillaBlockState.getValue(BlockColored.COLOR).getMetadata()));
-		}
-		
-		return tcBlockState;
 	}
 	
 	public static Building[] getAllBuildings() {

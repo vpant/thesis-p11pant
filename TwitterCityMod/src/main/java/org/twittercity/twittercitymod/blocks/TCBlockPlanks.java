@@ -22,7 +22,6 @@ public class TCBlockPlanks extends TCBlock {
 	public TCBlockPlanks(String name) {
 		super(Material.WOOD);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, TCBlockPlanks.EnumType.OAK));
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		this.setRegistryName(name);	
 		this.setSoundType(SoundType.WOOD);
 	}

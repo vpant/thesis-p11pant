@@ -31,7 +31,7 @@ public class DebugData {
 		firstCity.setCityLength(7); // * 16 internally
 		firstCity.setMapLength(firstCity.getCityLength() + (firstCity.getEdgeLength() * 2));
 		firstCity.setPathExtends(2);
-		firstCity.setStartingPos(new BlockPos(1000,90,1000)); // It should stay 63 because it would cause problems with template structures
+		firstCity.setStartingPos(new BlockPos(1000,63,1000)); // It should stay 63 because it would cause problems with template structures
 	}
 	
 }

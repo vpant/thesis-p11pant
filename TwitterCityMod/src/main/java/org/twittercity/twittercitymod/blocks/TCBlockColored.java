@@ -21,7 +21,6 @@ public class TCBlockColored extends TCBlock {
 	public TCBlockColored(String name) {
 		super(Material.CLOTH);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(COLOR, EnumDyeColor.WHITE));
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 		this.setRegistryName(name);
 	}
 
