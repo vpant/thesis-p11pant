@@ -140,6 +140,7 @@ public class BiomeDecoratorTwitterCity extends BiomeDecorator {
 		MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(worldIn, random, chunkPos));
 	}
 
+	@SuppressWarnings("deprecation")
 	private void generateTrees(World worldIn, Biome biomeIn, Random random, BlockPos chunkPos) {
 		int treesToGen = treesPerChunk;
 
@@ -161,6 +162,7 @@ public class BiomeDecoratorTwitterCity extends BiomeDecorator {
 			}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void generateFlowers(World worldIn, Biome biomeIn, Random random, BlockPos chunkPos) {
 		if (TerrainGen.decorate(worldIn, random, chunkPos, DecorateBiomeEvent.Decorate.EventType.FLOWERS))
 			for (int numFlowersGenerated = 0; numFlowersGenerated < flowersPerChunk; ++numFlowersGenerated) {
@@ -178,6 +180,7 @@ public class BiomeDecoratorTwitterCity extends BiomeDecorator {
 			}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void generateGrass(World worldIn, Biome biomeIn, Random random, BlockPos chunkPos) {
 		if (TerrainGen.decorate(worldIn, random, chunkPos, DecorateBiomeEvent.Decorate.EventType.GRASS))
 			for (int numGrassPerChunk = 0; numGrassPerChunk < grassPerChunk; ++numGrassPerChunk) {
@@ -193,6 +196,7 @@ public class BiomeDecoratorTwitterCity extends BiomeDecorator {
 			}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void generateFalls(World worldIn, Random random, BlockPos chunkPos) {
 		if (TerrainGen.decorate(worldIn, random, chunkPos, DecorateBiomeEvent.Decorate.EventType.LAKE_WATER))
 			for (int k5 = 0; k5 < 50; ++k5) {
@@ -217,6 +221,7 @@ public class BiomeDecoratorTwitterCity extends BiomeDecorator {
 			}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void generate(World worldIn, Random random, BlockPos chunkPos, EventType eventType,
 			WorldGenerator generator, int countPerChunk) {
 		if (TerrainGen.decorate(worldIn, random, chunkPos, eventType)) {

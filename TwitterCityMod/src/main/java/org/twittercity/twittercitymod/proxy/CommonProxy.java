@@ -60,4 +60,9 @@ public class CommonProxy {
 	public void registerItemRenderer(Item item, int meta, String id) {
 		
 	}
+	
+	// Proxied method to open tweet GUI. Opening a GUI is client side code so we override this method to ClientProxy
+	public void openTweetGUI() {
+		
+	}
 }
