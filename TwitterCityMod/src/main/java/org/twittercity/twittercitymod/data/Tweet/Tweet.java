@@ -1,11 +1,13 @@
 package org.twittercity.twittercitymod.data.Tweet;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 
 import javax.imageio.ImageIO;
 
@@ -39,23 +41,29 @@ public class Tweet {
 			return this.image;
 		}
 		try {
+			//Download profile pic
 			URL imageURL = new URL(profilePicUrl);
-			BufferedImage jpgImage = ImageIO.read(imageURL);
+			URLConnection con = imageURL.openConnection();
+			con.setConnectTimeout(1200);
+			con.setReadTimeout(2000);
+			InputStream imageStream = con.getInputStream();
+			BufferedImage jpgImage = ImageIO.read(imageStream);
+			
+			// Convert from jpg to png
 			ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
 			byteArrayOut.flush();
 			ImageIO.write(jpgImage, "png", byteArrayOut);
 			byteArrayOut.close();
 			byte[] resultingBytes = byteArrayOut.toByteArray();
-			
 			InputStream in = new ByteArrayInputStream(resultingBytes);
 			BufferedImage oldImage = ImageIO.read(in);
-			
+			// Scale the 48 x 48 image 
+			Image scaledImage = oldImage.getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+			//Scale canvas to 256 x 256		
 			image = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
-		    Graphics g = image.getGraphics();
-		    g.drawImage(oldImage, 0, 0, null);
+		    Graphics2D g = image.createGraphics();
+		    g.drawImage(scaledImage, 0, 0, null);
 		    g.dispose();
-		    
-			return this.image;
 		} catch (Exception e) {
 			this.image = null;
 		}		

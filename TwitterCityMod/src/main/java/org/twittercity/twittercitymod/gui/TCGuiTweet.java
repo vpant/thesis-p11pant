@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -29,13 +30,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 //Tweet profile pic 48x48
 public class TCGuiTweet extends GuiScreen {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/gui/tweet.png");
-	public static final int WIDTH = 256, HEIGHT = 140;
+	private static BufferedImage bufImage = null;
+	DynamicTexture dynTextures = null;
 	
+	public static final int WIDTH = 256, HEIGHT = 140;
 	private Tweet tweet;
-	BufferedImage profileImage;
 	private List<ITextComponent> cachedComponents;
 	private List<ArrayList<ITextComponent>> textComponentPages;
 
+	TextureManager textManager;	
 	// Should be final but for debugging ignore
 	private int TWEET_TEXT_MAX_ROW_LENGTH = 191;
 	// private final int tweetTextAreaHeight = 97;
@@ -48,7 +51,8 @@ public class TCGuiTweet extends GuiScreen {
 
 	public TCGuiTweet(Tweet tweet) {
 		this.tweet = tweet;
-		profileImage = tweet.getProfilePicture();
+		
+		bufImage = tweet.getProfilePicture();
 	}
 
 	@Override
@@ -66,6 +70,8 @@ public class TCGuiTweet extends GuiScreen {
 		this.buttonPreviousPage = (TCGuiTweet.NextPageButton) this
 				.addButton(new TCGuiTweet.NextPageButton(2, x + 35, y + 115, false));
 		this.updateButtons();
+		
+		textManager = this.mc.getTextureManager();
 	}
 
 	private void updateButtons() {
@@ -77,11 +83,12 @@ public class TCGuiTweet extends GuiScreen {
 
 		ITextComponent itextcomponent = new TextComponentString(text);
 		this.cachedComponents = itextcomponent != null
-				? GuiUtilRenderComponents.splitText(itextcomponent, TWEET_TEXT_MAX_ROW_LENGTH, this.fontRenderer, true, true)
+				? GuiUtilRenderComponents.splitText(itextcomponent, TWEET_TEXT_MAX_ROW_LENGTH, this.fontRenderer, true,
+						true)
 				: null;
 
 		int tweetRowsPerPage = Math.min(65 / this.fontRenderer.FONT_HEIGHT, this.cachedComponents.size());
-		
+
 		int counter = 0, pageCounter = 0;
 		this.textComponentPages = new ArrayList<ArrayList<ITextComponent>>();
 		List<ITextComponent> tempList = Lists.<ITextComponent>newArrayList();
@@ -97,7 +104,7 @@ public class TCGuiTweet extends GuiScreen {
 				this.addNewPage();
 			}
 		}
-		if(!tempList.isEmpty()) {
+		if (!tempList.isEmpty()) {
 			this.textComponentPages.add(pageCounter, (ArrayList<ITextComponent>) tempList);
 			this.addNewPage();
 		}
@@ -107,7 +114,7 @@ public class TCGuiTweet extends GuiScreen {
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.getTextureManager().bindTexture(TEXTURE);
+		textManager.bindTexture(TEXTURE);
 		int x = (this.width - WIDTH) / 2;
 		int y = (this.height - 140) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, WIDTH, 140);
@@ -119,17 +126,16 @@ public class TCGuiTweet extends GuiScreen {
 		String s1 = I18n.format("book.editTitle");
 		int k = this.fontRenderer.getStringWidth(s1);
 		this.fontRenderer.drawString(s1, x + 36 + (180 - k) / 2, y + 15, 0);
-		
+
 		String bookAuthor = I18n.format("book.byAuthor", tweet.getAuthor());
 		int i1 = this.fontRenderer.getStringWidth(bookAuthor);
-		this.fontRenderer.drawString(TextFormatting.RED + bookAuthor, x + 36 + (180 -
-		i1) / 2, y + 115, 0);
-		
+		this.fontRenderer.drawString(TextFormatting.RED + bookAuthor, x + 36 + (180 - i1) / 2, y + 115, 0);
+
 		String pagesCountText = I18n.format("book.pageIndicator", this.currPage + 1, this.totalPages);
 		int j1 = this.fontRenderer.getStringWidth(pagesCountText);
 		this.fontRenderer.drawString(TextFormatting.RED + pagesCountText, x - j1 + 285 - 44, y + 15, 0);
 
-		if(this.currPage <= this.totalPages - 1) {
+		if (this.currPage <= this.totalPages - 1) {
 			for (int l1 = 0; l1 < this.textComponentPages.get(this.currPage).size(); ++l1) {
 				ITextComponent itextcomponent2 = this.textComponentPages.get(this.currPage).get(l1);
 				this.fontRenderer.drawString(TextFormatting.WHITE + itextcomponent2.getUnformattedText(), x + 36,
@@ -140,20 +146,20 @@ public class TCGuiTweet extends GuiScreen {
 		ITextComponent itextcomponent1 = this.getClickedComponentAt(mx, my);
 		if (itextcomponent1 != null) {
 			this.handleComponentHover(itextcomponent1, mx, my);
+		}	
+
+		if (bufImage != null) {
+			if(dynTextures == null) {
+				dynTextures = new DynamicTexture(bufImage);
+			}
+			textManager.bindTexture(textManager.getDynamicTextureLocation(Reference.MOD_ID, dynTextures));
 		}
-		
-		ResourceLocation placeholderRS = new ResourceLocation(Reference.MOD_ID, "textures/gui/placeholder.png");
-		this.mc.getTextureManager().bindTexture(placeholderRS);
-		this.drawTexturedModalRect((x + WIDTH - 70) / 2, y + 6, 0, 0, 24, 24);
+		else {
+			ResourceLocation placeholderRS = new ResourceLocation(Reference.MOD_ID, "textures/gui/no-image.png");
+			textManager.bindTexture(placeholderRS);
 			
-		if(profileImage != null) {
-			DynamicTexture dynTextures = new DynamicTexture(profileImage);
-			//dynTextures.updateDynamicTexture();
-			ResourceLocation imRS = this.mc.getTextureManager().getDynamicTextureLocation(Reference.MOD_ID, dynTextures);
-			this.mc.getTextureManager().deleteTexture(placeholderRS);
-			this.mc.getTextureManager().bindTexture(imRS);
-			this.drawTexturedModalRect((x + WIDTH - 70) / 2, y + 6, 0, 0, 48, 48);
 		}
+		this.drawTexturedModalRect((x + WIDTH - 70) / 2, y + 6, 0, 0, 24, 24);
 		super.drawScreen(mx, my, partialTicks);
 	}
 
