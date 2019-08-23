@@ -1,7 +1,7 @@
 package org.twittercity.twittercitymod.proxy;
 
 import org.twittercity.twittercitymod.Reference;
-import org.twittercity.twittercitymod.data.Tweet.Tweet;
+import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.gui.TCGuiTweet;
 
 import net.minecraft.client.Minecraft;

@@ -8,7 +8,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import org.twittercity.twittercitymod.Reference;
-import org.twittercity.twittercitymod.data.Tweet.Tweet;
+import org.twittercity.twittercitymod.data.db.Tweet;
 
 import com.google.common.collect.Lists;
 
