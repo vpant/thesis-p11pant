@@ -11,27 +11,15 @@ import java.net.URLConnection;
 import java.sql.Date;
 
 import javax.imageio.ImageIO;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
-@Entity(name = "")
 public class Tweet {
 
-	@Id @GeneratedValue @Column(name = "id")
 	private int id;
-	@Column(name = "text")
 	private String text;
-	@Column(name = "date")
 	private String author;
-	@Column(name = "author_account_id")
 	private String authorAccountId;
-	@Column(name = "id_str")
 	private String idStr;
-	@Column(name = "date")
 	private Date date;
-	@Column(name = "profile_pic_url")
 	private String profilePicUrl;
 	private BufferedImage image = null;
 
