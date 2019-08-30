@@ -1,24 +1,9 @@
-package org.twittercity.twittercitymod.chunkpregen;
+package org.twittercity.twittercitymod.city;
 
-import java.text.DecimalFormat;
-
-import org.apache.logging.log4j.LogManager;
-import org.twittercity.twittercitymod.chunkpregen.commands.ChunkGenCommand;
-import org.twittercity.twittercitymod.chunkpregen.handlers.ConfigurationHandler;
-import org.twittercity.twittercitymod.chunkpregen.handlers.TickHandler;
-import org.twittercity.twittercitymod.chunkpregen.reference.Reference;
-import org.twittercity.twittercitymod.chunkpregen.util.Utilities;
-
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-
-@Mod(modid = Reference.MOD_ID, version = Reference.VERSION, guiFactory=Reference.GUI_FACTORY, acceptableRemoteVersions = "*")
+//@Mod(modid = Reference.MOD_ID, version = Reference.VERSION, guiFactory=Reference.GUI_FACTORY, acceptableRemoteVersions = "*")
 public class ChunkGen
 {
-
+/*
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Reference.logger = LogManager.getLogger(Reference.MOD_ID);
@@ -39,4 +24,5 @@ public class ChunkGen
             Utilities.queueChunkGeneration(event.getServer(), Reference.x, Reference.z, Reference.width, Reference.depth, Reference.dimension, false);
         }
     }
+    */
 }

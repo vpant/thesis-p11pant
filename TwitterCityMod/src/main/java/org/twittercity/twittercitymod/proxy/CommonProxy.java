@@ -3,6 +3,7 @@ package org.twittercity.twittercitymod.proxy;
 import org.twittercity.twittercitymod.DebugData;
 import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.city.chunkpregen.PreGenTickHandler;
 import org.twittercity.twittercitymod.commands.TwitterCityCmdTeleport;
 import org.twittercity.twittercitymod.registrationhandlers.TCBlocksRegistrationHandler;
 import org.twittercity.twittercitymod.registrationhandlers.TCItemsRegistrationHandler;
@@ -13,6 +14,7 @@ import org.twittercity.twittercitymod.worldgen.WorldTypeTwitterCity;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -30,6 +32,8 @@ public class CommonProxy {
 		TwitterCity.logger = e.getModLog();
 		TwitterCityWorldGenReference.registerDimensions();
 		GameRegistry.registerTileEntity(TileEntityTwitter.class, new ResourceLocation(Reference.MOD_ID, "twitter_tile_entity"));		
+		
+		MinecraftForge.EVENT_BUS.register(new PreGenTickHandler());
 		
 		DebugData.setupData(); // Initialize debug data to use throughout the mod
     }

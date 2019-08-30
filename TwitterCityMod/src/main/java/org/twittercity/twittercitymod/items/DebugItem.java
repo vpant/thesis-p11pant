@@ -3,15 +3,20 @@ package org.twittercity.twittercitymod.items;
 import java.util.List;
 
 import org.twittercity.twittercitymod.DebugData;
+import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.city.Buildings;
 import org.twittercity.twittercitymod.city.ChunksEditor;
+import org.twittercity.twittercitymod.city.City;
 import org.twittercity.twittercitymod.city.Paths;
+import org.twittercity.twittercitymod.city.chunkpregen.chunk.ChunkGenerationUtils;
+import org.twittercity.twittercitymod.city.chunkpregen.chunk.ChunkPreGenReference;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.city.templatestructures.TwitterCityTemplate;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -31,15 +36,28 @@ public class DebugItem extends ItemBase{
 		int[][] area = null;
 		if (!worldIn.isRemote) {
 			World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
+			MinecraftServer server = playerIn.getServer();
 			//ChunksEditor.makeChunksFlat(worldIn, Blocks.BEDROCK, 0, 0, 10);
-			ChunksEditor.makeFlatChunksForCity(twitterWorld, DebugData.firstCity);
+			if(ChunkPreGenReference.isPreGenFinished) {
+				TwitterCity.logger.info("Mpika");
+				ChunksEditor.makeFlatChunksForCity(twitterWorld, DebugData.firstCity);
+				area = Paths.makePaths(twitterWorld, DebugData.firstCity);
+				Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity);
+			}
+			
 			//TemplateBuildings.getInstance().spawnTemplateBuildings(worldIn);
-			area = Paths.makePaths(twitterWorld, DebugData.firstCity);
+			
 			//ArrayUtils.print2DArrayToFile(area);
-			Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity);
+			
 			//for(Building building : DebugData.buildings) {
 			//	spawnBlocksFromBlockInfoList(worldIn, TemplateBuildings.getInstance().getSingleBuildingTemplateStructure(worldIn, building));
 			//}
+			
+			City city = DebugData.firstCity;
+			int cityStartX = city.getStartingPos().getX();
+			int cityStartZ = city.getStartingPos().getZ();
+			TwitterCity.logger.info("City length is: " + city.getCityLength());
+			ChunkGenerationUtils.queueChunkGeneration(server, cityStartX, cityStartZ, (city.getCityLength() / 16), (city.getCityLength() / 16), TwitterCityWorldGenReference.DIM_ID, true);
 			
 			//TemplateStructure ts = TemplateBuildings.getInstance().getSingleBuildingTemplateStructure(worldIn, DebugData.buildings[3]);
 			//System.out.println(ts.getSize().toString());
