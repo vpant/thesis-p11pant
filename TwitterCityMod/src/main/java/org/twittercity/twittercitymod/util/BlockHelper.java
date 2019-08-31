@@ -10,6 +10,7 @@ import org.twittercity.twittercitymod.blocks.TCBlockSandStone;
 import org.twittercity.twittercitymod.blocks.TCBlockStone;
 import org.twittercity.twittercitymod.blocks.TCBlockStoneBrick;
 import org.twittercity.twittercitymod.blocks.TCBlocks;
+import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnQueue;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -215,6 +216,19 @@ public class BlockHelper {
         }
 	}
 
+	public static void enqueueRotatedBedForSpawn(World world, Block block, BlockPos currentPos, IBlockState blockState, int rotation) {	
+		if(blockState.getValue(BlockBed.PART).equals(BlockBed.EnumPartType.HEAD)) {
+			return;
+		}
+		
+		EnumFacing enumFacing = BlockHelper.cardinalRotation(blockState.getValue(BlockBed.FACING), rotation);
+		IBlockState iBlockState2 = Blocks.BED.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.valueOf(false)).withProperty(BlockBed.FACING, enumFacing).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
+		BlockPos blockPos = currentPos.offset(enumFacing);
+		
+		LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockData(currentPos, iBlockState2, 10, true));
+		LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockData(blockPos, iBlockState2.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD), 10, true));
+	}
+	
 
 	public static void spawnRotatedBed(World world, Block block, BlockPos currentPos, IBlockState blockState, int rotation) {	
 		if(blockState.getValue(BlockBed.PART).equals(BlockBed.EnumPartType.HEAD)) {
@@ -228,7 +242,7 @@ public class BlockHelper {
 		world.setBlockState(blockPos, iBlockState2.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD), 10);
         
 		world.notifyNeighborsRespectDebug(currentPos, block, false);
-		world.notifyNeighborsRespectDebug(blockPos, blockState.getBlock(), false);  		
+		world.notifyNeighborsRespectDebug(blockPos, blockState.getBlock(), false); 
 	}
 	
 	public static IBlockState replaceWithTCBlockState(IBlockState vanillaBlockState) {

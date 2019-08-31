@@ -4,6 +4,7 @@ import org.twittercity.twittercitymod.DebugData;
 import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.city.chunkpregen.PreGenTickHandler;
+import org.twittercity.twittercitymod.city.lazyblockspawn.handlers.LazyBlockSpawnTickHandler;
 import org.twittercity.twittercitymod.commands.TwitterCityCmdTeleport;
 import org.twittercity.twittercitymod.registrationhandlers.TCBlocksRegistrationHandler;
 import org.twittercity.twittercitymod.registrationhandlers.TCItemsRegistrationHandler;
@@ -33,7 +34,9 @@ public class CommonProxy {
 		TwitterCityWorldGenReference.registerDimensions();
 		GameRegistry.registerTileEntity(TileEntityTwitter.class, new ResourceLocation(Reference.MOD_ID, "twitter_tile_entity"));		
 		
+		// Tick Handlers
 		MinecraftForge.EVENT_BUS.register(new PreGenTickHandler());
+		MinecraftForge.EVENT_BUS.register(new LazyBlockSpawnTickHandler());
 		
 		DebugData.setupData(); // Initialize debug data to use throughout the mod
     }

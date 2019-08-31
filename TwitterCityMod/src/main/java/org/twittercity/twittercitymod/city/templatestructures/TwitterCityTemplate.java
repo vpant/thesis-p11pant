@@ -386,8 +386,7 @@ public class TwitterCityTemplate {
 			this.blockState = stateIn;
 			this.tileentityData = compoundIn;
 			
-		}
-		
+		}	
 	}
 
 	public static class EntityInfo {

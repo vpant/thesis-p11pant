@@ -1,10 +1,12 @@
 package org.twittercity.twittercitymod.city;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import org.twittercity.twittercitymod.DebugData;
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnQueue;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
+import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.util.RandomHelper;
 
@@ -35,7 +37,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class Buildings {
 	
-	private static HashMap<BlockPos, IBlockState> buildLast = new HashMap<BlockPos, IBlockState>();
+	private static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
 	
 	private Buildings() {
 		// Do nothing, this is a class to create the buildings
@@ -81,13 +83,13 @@ public class Buildings {
 				world.getBlockState(new BlockPos(x1, 1, z1).add(city.getStartingPos())) == Blocks.AIR.getDefaultState() &&
 				world.getBlockState(new BlockPos(x1, 2, z1).add(city.getStartingPos())) == Blocks.AIR.getDefaultState()) 
 		{
-			world.setBlockState(new BlockPos(x1, 1, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(x1, 2, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(x1, 3, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(x1, 4, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(x1, 5, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(x1, 5, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
-			world.setBlockState(new BlockPos(x1, 4, z1 ).add(city.getStartingPos()), Blocks.GLOWSTONE.getDefaultState());
+			LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(x1, 1, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(x1, 2, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(x1, 3, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(x1, 4, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(x1, 5, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(x1, 5, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState());
+			LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(x1, 4, z1 ).add(city.getStartingPos()), Blocks.GLOWSTONE.getDefaultState());
 		}
 		
 	}
@@ -101,8 +103,8 @@ public class Buildings {
 					|| world.getBlockState(new BlockPos(city.getBlockStart() + a, 0, city.getBlockStart() + halfPlotBlocksLength + b).add(city.getStartingPos())) == city.getPathBlock().getDefaultState())
 					&& world.getBlockState(new BlockPos(city.getBlockStart() + a, 1, city.getBlockStart() + halfPlotBlocksLength + b).add(city.getStartingPos())) == Blocks.AIR.getDefaultState())
 				{
-					world.setBlockState(new BlockPos(city.getBlockStart() + a, 0, city.getBlockStart() + halfPlotBlocksLength + b).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
-					world.setBlockState(new BlockPos(city.getBlockStart() + a, 1, city.getBlockStart() + halfPlotBlocksLength + b - Integer.signum(b)).add(city.getStartingPos()), Blocks.AIR.getDefaultState());					
+					LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(city.getBlockStart() + a, 0, city.getBlockStart() + halfPlotBlocksLength + b).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
+					LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(city.getBlockStart() + a, 1, city.getBlockStart() + halfPlotBlocksLength + b - Integer.signum(b)).add(city.getStartingPos()), Blocks.AIR.getDefaultState());					
 				}
 				if(world.getBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b + Integer.signum(b), 0, city.getBlockStart() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState()
 						&& world.getBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + (b - Integer.signum(b)), 0, city.getBlockStart() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState()
@@ -110,8 +112,8 @@ public class Buildings {
 						|| world.getBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b, 0, city.getBlockStart() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState())
 						&& world.getBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b, 1, city.getBlockStart() + a).add(city.getStartingPos())) == Blocks.AIR.getDefaultState()) 
 				{
-					world.setBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b, 0,city.getBlockStart() + a).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
-					world.setBlockState(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b - Integer.signum(b), 1,city.getBlockStart() + a).add(city.getStartingPos()), Blocks.AIR.getDefaultState());
+					LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b, 0,city.getBlockStart() + a).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
+					LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(city.getBlockStart() + halfPlotBlocksLength + b - Integer.signum(b), 1,city.getBlockStart() + a).add(city.getStartingPos()), Blocks.AIR.getDefaultState());
 				}
 			}
 		}
@@ -123,7 +125,7 @@ public class Buildings {
 		for(int x = 0; x < area.length; x++) {
 			for(int z = 0; z < area[1].length; z++) {
 				if(area[x][z] == 1) {
-					world.setBlockState(new BlockPos(city.getBlockStart() + x, 0, city.getBlockStart() + z).add(city.getStartingPos()), city.getGroundBlock().getDefaultState());
+					LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockPos(city.getBlockStart() + x, 0, city.getBlockStart() + z).add(city.getStartingPos()), city.getGroundBlock().getDefaultState());
 				}
 			}
 		}
@@ -210,7 +212,7 @@ public class Buildings {
 				}
 			}
 		}
-		buildLast(buildLast, world);
+		LazyBlockSpawnQueue.enqeueBlockListForSpawn(buildLast);
 	}
 	
 	private static void insertBuilding(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed) {
@@ -238,26 +240,26 @@ public class Buildings {
 				}
 				if (rotate > 0) {
 					if(block == Blocks.STANDING_SIGN) {
-						world.setBlockState(currentPos, blockState.withProperty(BlockStandingSign.ROTATION, BlockHelper.rotateStandingSign(blockState.getValue(BlockStandingSign.ROTATION).intValue(), rotate))); 
+						LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, blockState.withProperty(BlockStandingSign.ROTATION, BlockHelper.rotateStandingSign(blockState.getValue(BlockStandingSign.ROTATION).intValue(), rotate))); 
 						addTextToSign(block);
 					} else if(BlockHelper.isPumpkin(block)) {
-						world.setBlockState(currentPos, blockState.withProperty(BlockPumpkin.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPumpkin.FACING), rotate)));
+						LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, blockState.withProperty(BlockPumpkin.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPumpkin.FACING), rotate)));
 					} else if(BlockHelper.isDoor(block)) {
-						world.setBlockState(currentPos, blockState.withProperty(BlockDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockDoor.FACING), rotate))); 
+						LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, blockState.withProperty(BlockDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockDoor.FACING), rotate))); 
 					} else if(block == Blocks.TRAPDOOR) {
-						world.setBlockState(currentPos, blockState.withProperty(BlockTrapDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTrapDoor.FACING), rotate)));
+						LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, blockState.withProperty(BlockTrapDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTrapDoor.FACING), rotate)));
 					} else if(block == Blocks.BED) { 
-						BlockHelper.spawnRotatedBed(world, block, currentPos, blockState, rotate);
+						BlockHelper.enqueueRotatedBedForSpawn(world, block, currentPos, blockState, rotate);
 					} else if(BlockHelper.isFenceGate(block)) {
-						world.setBlockState(currentPos, blockState.withProperty(BlockFenceGate.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)));
+						LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, blockState.withProperty(BlockFenceGate.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)));
 					} else if(BlockHelper.isPistonBasePart(block)) {
-						world.setBlockState(currentPos, blockState.withProperty(BlockPistonBase.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)));
+						LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, blockState.withProperty(BlockPistonBase.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)));
 					} else if(BlockHelper.isPistonPart(block)) {
-						world.setBlockState(currentPos, blockState.withProperty(BlockPistonExtension.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonExtension.FACING), rotate)));
+						LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, blockState.withProperty(BlockPistonExtension.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonExtension.FACING), rotate)));
 					} else if(BlockHelper.isStairs(block)) {
-						world.setBlockState(currentPos, blockState.withProperty(BlockStairs.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockStairs.FACING), rotate)));
+						LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, blockState.withProperty(BlockStairs.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockStairs.FACING), rotate)));
 					} else { // default
-						world.setBlockState(currentPos, BlockHelper.replaceWithTCBlockState(blockState));
+						LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, BlockHelper.replaceWithTCBlockState(blockState));
 					}
                     
                 } // if rotate > 0
@@ -267,25 +269,25 @@ public class Buildings {
 				else {
 					// Bed needs to notify other blocks no matter if it was rotated
 					if(block == Blocks.BED) {
-						BlockHelper.spawnRotatedBed(world, block, currentPos, blockState, rotate);
+						BlockHelper.enqueueRotatedBedForSpawn(world, block, currentPos, blockState, rotate);
 					} else {
-						world.setBlockState(currentPos, BlockHelper.replaceWithTCBlockState(blockState));
+						LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, BlockHelper.replaceWithTCBlockState(blockState));
 					}
 				}
 				
 				if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && currentPos.getY() == city.getStartingPos().getY()) {
-					world.setBlockState(currentPos, city.getGroundBlock().getDefaultState());
+					LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, city.getGroundBlock().getDefaultState());
 				} else if(block == Blocks.LAPIS_ORE){ 
-					world.setBlockState(currentPos, BlockHelper.replaceWithTCBlockState(Blocks.WOOL.getDefaultState()));
+					LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, BlockHelper.replaceWithTCBlockState(Blocks.WOOL.getDefaultState()));
 				} else if(block == Blocks.GOLD_ORE && currentPos.getY() == city.getStartingPos().getY()) {
-					world.setBlockState(currentPos, city.getPathBlock().getDefaultState());
+					LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, city.getPathBlock().getDefaultState());
 				} else if(block == Blocks.CHEST) {
 					TileEntityChest chest = (TileEntityChest) world.getTileEntity(currentPos);
 					if(chest != null) {
 						addItemsToChest(chest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH));					
 					}
 				} else if(block == Blocks.BREWING_STAND || block == Blocks.NOTEBLOCK) {
-					world.setBlockState(currentPos, blockState);
+					LazyBlockSpawnQueue.enqueueBlockForSpawn(currentPos, blockState);
 				} 
 			} // !isBlockToBuildLast
 			else {
@@ -294,20 +296,20 @@ public class Buildings {
 				 */
 				if(BlockHelper.isTorch(block)) {
 					blockState = (rotate > 0) ? blockState.withProperty(BlockTorch.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTorch.FACING), rotate)) : blockState;
-					buildLast.put(currentPos, blockState);
+					buildLast.add(new BlockData(currentPos, blockState));
 				} else if(block == Blocks.LEVER) {
 					blockState = (rotate > 0) ? blockState.withProperty(BlockLever.FACING, BlockHelper.rotateLever(blockState.getValue(BlockLever.FACING), rotate)) : blockState;
-					buildLast.put(currentPos, blockState);
+					buildLast.add(new BlockData(currentPos, blockState));
 				} else if(block == Blocks.WALL_SIGN || block == Blocks.LADDER || block == Blocks.DISPENSER
 						|| block == Blocks.CHEST || block == Blocks.FURNACE || block == Blocks.LIT_FURNACE) {
 					blockState = (rotate > 0) ? blockState.withProperty(BlockWallSign.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockWallSign.FACING), rotate)) : blockState;
-					buildLast.put(currentPos, blockState);
+					buildLast.add(new BlockData(currentPos, blockState));
 					if(block == Blocks.WALL_SIGN) {
-						addTextToSign(block);
+						addTextToSign(block); // Lazy loading will have issues with this
 					}
 				} else if(block == Blocks.STONE_BUTTON) {
 					blockState = (rotate > 0) ? blockState.withProperty(BlockButton.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockButton.FACING), rotate)) : blockState;
-					buildLast.put(currentPos, blockState);
+					buildLast.add(new BlockData(currentPos, blockState));
 				}
 			}
 		}	
@@ -343,18 +345,6 @@ public class Buildings {
 			rotate = RandomHelper.nextInt(4);
 		}
 		return rotate;
-	}
-
-	/*
-	 * Builds that blocks that are needed to built last
-	 */
-	private static void buildLast(HashMap<BlockPos,IBlockState> blockMap, World world) {
-		if(blockMap.isEmpty()) {
-			return;
-		}
-		for ( BlockPos blockPos : blockMap.keySet() ) {
-		    world.setBlockState(blockPos, blockMap.get(blockPos));
-		}
 	}
 	
 	private static void addTextToSign(Block block) {
