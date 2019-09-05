@@ -12,7 +12,7 @@ public class BlockData {
 	public final BlockPos pos;
 	/** The type of block. */
 	public final IBlockState blockState;
-	/** world.setblockstate flags */
+	/** Argument passed to World#setblockstate flags */
 	public int flags;
 	/** Some blocks(Beds etc.) need to notify neighbors upon spawning */
 	public boolean shouldNotifyNeighbors;

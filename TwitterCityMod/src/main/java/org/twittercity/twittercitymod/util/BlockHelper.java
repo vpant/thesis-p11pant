@@ -220,6 +220,14 @@ public class BlockHelper {
                 return value;
         }
 	}
+	
+	public static boolean isBlockToIgnoreSpawning(Block block) {
+		boolean ignore = false;
+		if(block == Blocks.VINE || BlockHelper.isRepeater(block) || block == Blocks.RAIL || BlockHelper.isMushroom(block)) {
+			ignore = true;
+		}
+		return ignore;
+	}
 
 	public static void enqueueRotatedBedForSpawn(World world, BlockPos currentPos, IBlockState blockState, int rotation) {	
 		if(blockState.getValue(BlockBed.PART).equals(BlockBed.EnumPartType.HEAD)) {
@@ -302,10 +310,12 @@ public class BlockHelper {
 	 * Spawns or enqueue a block for spawning
 	 */
 	public static void spawnOrEnqueue(BlockData blockData, @Nullable World world) {
-		if(TwitterCityConfiguration.spawnImmediately && world != null) {
-			world.setBlockState(blockData.pos, blockData.blockState, blockData.flags);
-		} else {
-			LazyBlockSpawnQueue.enqueueBlockForSpawn(blockData);
+		if(blockData.blockState.getBlock() != Blocks.BED) {
+			if(TwitterCityConfiguration.spawnImmediately && world != null) {
+				world.setBlockState(blockData.pos, blockData.blockState, blockData.flags);
+			} else {
+				LazyBlockSpawnQueue.enqueueBlockForSpawn(blockData);
+			}
 		}
 	}
 	

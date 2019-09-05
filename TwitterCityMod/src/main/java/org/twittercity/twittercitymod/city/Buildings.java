@@ -43,6 +43,8 @@ public class Buildings {
 	}
 	
 	public static void makeInsideCity(World world, int area[][], City city) {
+		// Get city or create one
+		
 		//city is finished
 		if(makeBuildings(world, area, city)) {
 			cityFinishUp(world, area, city);
@@ -229,100 +231,84 @@ public class Buildings {
 		insertBuildingStartingFrom(world, city, area, x1dest, z1dest, building, rotationFixed);
 	}
 	
-
-	private static void insertBuildingBlock(World world, City city, Building building, BlockPos currentPos, int sourceX, int sourceZ, int rotate) {
+	/**
+	 * Spawns or enqueues for spawning a block from a template structure and returns
+	 * if the block spawned was a Twitter City block (TCBlock) spawned.
+	 */
+	private static boolean insertBuildingBlock(World world, City city, Building building, BlockPos currentPos, int sourceX, int sourceZ, int rotate) {
 		TemplateStructure templateStructure = building.getTemplateStructure(world);
 		int structureY = currentPos.getY() + 64;
 		currentPos = currentPos.add(city.getStartingPos().getX(), city.getStartingPos().getY() + 1, city.getStartingPos().getZ());
+		boolean tcBlockSpawned = false;
 		if ((currentPos.getY() != city.getStartingPos().getY() + 1 || world.getBlockState(currentPos).getBlock() == Blocks.AIR)
 				&& world.getBlockState(currentPos).getBlock() != Blocks.PLANKS) { 
 			IBlockState blockState = templateStructure.getBlockStateFromBlockPos(new BlockPos(sourceX + building.getSourceX(), structureY, sourceZ + building.getSourceZ()));
-			if(blockState == null) {
-				return;
+			
+			if(blockState == null || BlockHelper.isBlockToIgnoreSpawning(blockState.getBlock())) {
+				return false;
 			}
 			Block block = blockState.getBlock();
-
-			if(!BlockHelper.needsToBeBuildedLast(block)) {
-				if(BlockHelper.isDoor(block)) {
-					blockState = blockState.withProperty(BlockDoor.OPEN, false);
-				} else if(block == Blocks.TRAPDOOR) {
-					blockState = blockState.withProperty(BlockTrapDoor.OPEN, false);
+			
+			// Beds consists of 2 parts so they are treated differently from other blocks. Return here to avoid respawning
+			if(block == Blocks.BED) {
+				BlockHelper.spawnOrEnqueueRotatedBed(world, currentPos, blockState, rotate);
+				return false;
+			} else if(block == Blocks.STANDING_SIGN) {
+				blockState = rotate > 0 ? blockState.withProperty(BlockStandingSign.ROTATION, BlockHelper.rotateStandingSign(blockState.getValue(BlockStandingSign.ROTATION).intValue(), rotate)) : blockState;
+				addTextToSign(block);
+			} else if(BlockHelper.isPumpkin(block)) {
+				blockState = rotate > 0 ? blockState.withProperty(BlockPumpkin.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPumpkin.FACING), rotate)) : blockState;
+			} else if(BlockHelper.isDoor(block)) {
+				blockState = blockState.withProperty(BlockDoor.OPEN, false);
+				blockState = rotate > 0 ? blockState.withProperty(BlockDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockDoor.FACING), rotate)) : blockState;
+			} else if(block == Blocks.TRAPDOOR) {
+				blockState = blockState.withProperty(BlockTrapDoor.OPEN, false);
+				blockState = rotate > 0 ? blockState.withProperty(BlockTrapDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTrapDoor.FACING), rotate)) : blockState;
+			} else if(BlockHelper.isFenceGate(block)) {
+				blockState = rotate > 0 ? blockState.withProperty(BlockFenceGate.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)) : blockState;
+			} else if(BlockHelper.isPistonBasePart(block)) {
+				blockState = rotate > 0 ? blockState.withProperty(BlockPistonBase.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)) : blockState;
+			} else if(BlockHelper.isPistonPart(block)) {
+				blockState = rotate > 0 ? blockState.withProperty(BlockPistonExtension.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonExtension.FACING), rotate)) : blockState;
+			} else if(BlockHelper.isStairs(block)) {
+				blockState = rotate > 0 ? blockState.withProperty(BlockStairs.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockStairs.FACING), rotate)) : blockState;
+				//BlockHelper.spawnOrEnqueue(currentPos, blockState, world);
+			} else if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && currentPos.getY() == city.getStartingPos().getY()) {
+				blockState = city.getGroundBlock().getDefaultState();
+			} else if(block == Blocks.LAPIS_ORE){
+				blockState = BlockHelper.replaceWithTCBlockState(Blocks.WOOL.getDefaultState());
+				tcBlockSpawned = true;
+			} else if(block == Blocks.GOLD_ORE && currentPos.getY() == city.getStartingPos().getY()) {
+				blockState = city.getPathBlock().getDefaultState();
+			} else if(block == Blocks.CHEST) {
+				TileEntityChest chest = (TileEntityChest) world.getTileEntity(currentPos); // This wont work if chest is enqueued for spawning
+				if(chest != null) {
+					addItemsToChest(chest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH));					
 				}
-				if (rotate > 0) {
-					if(block == Blocks.STANDING_SIGN) {
-						BlockHelper.spawnOrEnqueue(currentPos, blockState.withProperty(BlockStandingSign.ROTATION, BlockHelper.rotateStandingSign(blockState.getValue(BlockStandingSign.ROTATION).intValue(), rotate)), world); 
-						addTextToSign(block);
-					} else if(BlockHelper.isPumpkin(block)) {
-						BlockHelper.spawnOrEnqueue(currentPos, blockState.withProperty(BlockPumpkin.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPumpkin.FACING), rotate)), world);
-					} else if(BlockHelper.isDoor(block)) {
-						BlockHelper.spawnOrEnqueue(currentPos, blockState.withProperty(BlockDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockDoor.FACING), rotate)), world); 
-					} else if(block == Blocks.TRAPDOOR) {
-						BlockHelper.spawnOrEnqueue(currentPos, blockState.withProperty(BlockTrapDoor.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTrapDoor.FACING), rotate)), world);
-					} else if(block == Blocks.BED) { 
-						BlockHelper.spawnOrEnqueueRotatedBed(world, currentPos, blockState, rotate);
-					} else if(BlockHelper.isFenceGate(block)) {
-						BlockHelper.spawnOrEnqueue(currentPos, blockState.withProperty(BlockFenceGate.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)), world);
-					} else if(BlockHelper.isPistonBasePart(block)) {
-						BlockHelper.spawnOrEnqueue(currentPos, blockState.withProperty(BlockPistonBase.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonBase.FACING), rotate)), world);
-					} else if(BlockHelper.isPistonPart(block)) {
-						BlockHelper.spawnOrEnqueue(currentPos, blockState.withProperty(BlockPistonExtension.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonExtension.FACING), rotate)), world);
-					} else if(BlockHelper.isStairs(block)) {
-						BlockHelper.spawnOrEnqueue(currentPos, blockState.withProperty(BlockStairs.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockStairs.FACING), rotate)), world);
-					} else { // default
-						BlockHelper.spawnOrEnqueue(currentPos, BlockHelper.replaceWithTCBlockState(blockState), world);
-					}
-                    
-                } // if rotate > 0
-				else if(block == Blocks.VINE || BlockHelper.isRepeater(block) || block == Blocks.RAIL || BlockHelper.isMushroom(block)) {
-					//do not spawn
+			} else if(BlockHelper.isTorch(block)) {
+				blockState = (rotate > 0) ? blockState.withProperty(BlockTorch.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTorch.FACING), rotate)) : blockState;
+			} else if(block == Blocks.LEVER) {
+				blockState = (rotate > 0) ? blockState.withProperty(BlockLever.FACING, BlockHelper.rotateLever(blockState.getValue(BlockLever.FACING), rotate)) : blockState;
+			} else if(block == Blocks.WALL_SIGN || block == Blocks.LADDER || block == Blocks.DISPENSER
+					|| block == Blocks.CHEST || block == Blocks.FURNACE || block == Blocks.LIT_FURNACE) {
+				blockState = (rotate > 0) ? blockState.withProperty(BlockWallSign.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockWallSign.FACING), rotate)) : blockState;
+				if(block == Blocks.WALL_SIGN) {
+					addTextToSign(block); // Lazy loading will have issues with this
 				}
-				else {
-					// Bed needs to notify other blocks no matter if it was rotated
-					if(block == Blocks.BED) {
-						BlockHelper.spawnOrEnqueueRotatedBed(world, currentPos, blockState, rotate);
-					} else {
-						BlockHelper.spawnOrEnqueue(currentPos, BlockHelper.replaceWithTCBlockState(blockState), world);
-					}
-				}
-				
-				if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && currentPos.getY() == city.getStartingPos().getY()) {
-					BlockHelper.spawnOrEnqueue(currentPos, city.getGroundBlock().getDefaultState(), world);
-				} else if(block == Blocks.LAPIS_ORE){ 
-					BlockHelper.spawnOrEnqueue(currentPos, BlockHelper.replaceWithTCBlockState(Blocks.WOOL.getDefaultState()), world);
-				} else if(block == Blocks.GOLD_ORE && currentPos.getY() == city.getStartingPos().getY()) {
-					BlockHelper.spawnOrEnqueue(currentPos, city.getPathBlock().getDefaultState(), world);
-				} else if(block == Blocks.CHEST) {
-					TileEntityChest chest = (TileEntityChest) world.getTileEntity(currentPos); // This wont work if chest is enqueued for spawning
-					if(chest != null) {
-						addItemsToChest(chest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH));					
-					}
-				} else if(block == Blocks.BREWING_STAND || block == Blocks.NOTEBLOCK) {
-					BlockHelper.spawnOrEnqueue(currentPos, blockState, world);
-				} 
-			} // !isBlockToBuildLast
-			else {
-				/*
-				 * Blocks that must spawn last
-				 */
-				if(BlockHelper.isTorch(block)) {
-					blockState = (rotate > 0) ? blockState.withProperty(BlockTorch.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockTorch.FACING), rotate)) : blockState;
-					buildLast.add(new BlockData(currentPos, blockState));
-				} else if(block == Blocks.LEVER) {
-					blockState = (rotate > 0) ? blockState.withProperty(BlockLever.FACING, BlockHelper.rotateLever(blockState.getValue(BlockLever.FACING), rotate)) : blockState;
-					buildLast.add(new BlockData(currentPos, blockState));
-				} else if(block == Blocks.WALL_SIGN || block == Blocks.LADDER || block == Blocks.DISPENSER
-						|| block == Blocks.CHEST || block == Blocks.FURNACE || block == Blocks.LIT_FURNACE) {
-					blockState = (rotate > 0) ? blockState.withProperty(BlockWallSign.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockWallSign.FACING), rotate)) : blockState;
-					buildLast.add(new BlockData(currentPos, blockState));
-					if(block == Blocks.WALL_SIGN) {
-						addTextToSign(block); // Lazy loading will have issues with this
-					}
-				} else if(block == Blocks.STONE_BUTTON) {
-					blockState = (rotate > 0) ? blockState.withProperty(BlockButton.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockButton.FACING), rotate)) : blockState;
-					buildLast.add(new BlockData(currentPos, blockState));
-				}
+			} else if(block == Blocks.STONE_BUTTON) {
+				blockState = (rotate > 0) ? blockState.withProperty(BlockButton.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockButton.FACING), rotate)) : blockState;	
+			} else { // default
+				blockState = BlockHelper.replaceWithTCBlockState(blockState);
+				tcBlockSpawned = true;
 			}
-		}	
+		
+			if(!BlockHelper.needsToBeBuildedLast(block)) {
+				BlockHelper.spawnOrEnqueue(currentPos, blockState, world);
+			} else {
+				buildLast.add(new BlockData(currentPos, blockState));
+			}		
+		}
+		return tcBlockSpawned;
 	}
 
 	/*
@@ -412,5 +398,14 @@ public class Buildings {
 	
 	public static Building[] getAllBuildings() {
 		return DebugData.buildings;
+	}
+	
+	public class ConstructionInfo {
+		public int currentBuildingId;
+		public int currentBuildingRotation;
+		
+		public ConstructionInfo() {
+			
+		}
 	}
 }
