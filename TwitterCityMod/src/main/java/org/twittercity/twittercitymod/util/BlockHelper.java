@@ -1,5 +1,7 @@
 package org.twittercity.twittercitymod.util;
 
+import java.util.List;
+
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.blocks.TCBlockColored;
@@ -11,6 +13,9 @@ import org.twittercity.twittercitymod.blocks.TCBlockStone;
 import org.twittercity.twittercitymod.blocks.TCBlockStoneBrick;
 import org.twittercity.twittercitymod.blocks.TCBlocks;
 import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnQueue;
+import org.twittercity.twittercitymod.config.TwitterCityConfiguration;
+
+import com.sun.istack.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -216,7 +221,7 @@ public class BlockHelper {
         }
 	}
 
-	public static void enqueueRotatedBedForSpawn(World world, Block block, BlockPos currentPos, IBlockState blockState, int rotation) {	
+	public static void enqueueRotatedBedForSpawn(World world, BlockPos currentPos, IBlockState blockState, int rotation) {	
 		if(blockState.getValue(BlockBed.PART).equals(BlockBed.EnumPartType.HEAD)) {
 			return;
 		}
@@ -230,7 +235,7 @@ public class BlockHelper {
 	}
 	
 
-	public static void spawnRotatedBed(World world, Block block, BlockPos currentPos, IBlockState blockState, int rotation) {	
+	public static void spawnRotatedBed(World world, BlockPos currentPos, IBlockState blockState, int rotation) {	
 		if(blockState.getValue(BlockBed.PART).equals(BlockBed.EnumPartType.HEAD)) {
 			return;
 		}
@@ -241,7 +246,7 @@ public class BlockHelper {
 		world.setBlockState(currentPos, iBlockState2, 10);
 		world.setBlockState(blockPos, iBlockState2.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD), 10);
         
-		world.notifyNeighborsRespectDebug(currentPos, block, false);
+		world.notifyNeighborsRespectDebug(currentPos, Blocks.BED, false);
 		world.notifyNeighborsRespectDebug(blockPos, blockState.getBlock(), false); 
 	}
 	
@@ -273,6 +278,12 @@ public class BlockHelper {
 		return tcBlockState;
 	}
 
+	/**
+	 * Checks if block's neighbors are instance of TCBlock (or it's children)
+	 * @param world
+	 * @param pos
+	 * @return
+	 */
 	public static boolean isTCBlockNeighbor(World world, BlockPos pos) {
 		for(int x = -1; x <= 1; x++) {
 			for(int z = -1; z <= 1; z++) {
@@ -285,5 +296,60 @@ public class BlockHelper {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Spawns or enqueue a block for spawning
+	 */
+	public static void spawnOrEnqueue(BlockData blockData, @Nullable World world) {
+		if(TwitterCityConfiguration.spawnImmediately && world != null) {
+			world.setBlockState(blockData.pos, blockData.blockState, blockData.flags);
+		} else {
+			LazyBlockSpawnQueue.enqueueBlockForSpawn(blockData);
+		}
+	}
+	
+	public static void spawnOrEnqueue(BlockData blockData) {
+		spawnOrEnqueue(blockData, null);
+	}
+	
+	public static void spawnOrEnqueue(BlockPos pos, IBlockState state, int flags) {
+		spawnOrEnqueue(new BlockData(pos, state, flags));
+	}
+	
+	public static void spawnOrEnqueue(BlockPos pos, IBlockState state, int flags, World world) {
+		spawnOrEnqueue(new BlockData(pos, state, flags), world);
+	}
+	
+	public static void spawnOrEnqueue(BlockPos pos, IBlockState state) {
+		spawnOrEnqueue(new BlockData(pos, state, 3));
+	}
+	
+	public static void spawnOrEnqueue(BlockPos pos, IBlockState state, World world) {
+		spawnOrEnqueue(new BlockData(pos, state, 3), world);
+	}
+	
+	/**
+	 * Spawns or enqueues a list of BlockData for spawning
+	 */
+	public static void spawnOrEnqueue(List<BlockData> blockList, @Nullable World world) {
+		if(blockList.isEmpty()) {
+			return;
+		}
+		if(TwitterCityConfiguration.spawnImmediately && world != null) { 
+			for(BlockData blockData : blockList) {
+				spawnOrEnqueue(blockData, world);
+			}
+		} else {
+			LazyBlockSpawnQueue.enqeueBlockListForSpawn(blockList);
+		}
+	}
+	
+	public static void spawnOrEnqueueRotatedBed(World world, BlockPos currentPos, IBlockState blockState, int rotation) {
+		if(TwitterCityConfiguration.spawnImmediately && world != null) {
+			spawnRotatedBed(world, currentPos, blockState, rotation);
+		} else {
+			enqueueRotatedBedForSpawn(world, currentPos, blockState, rotation);
+		}
 	}
 }

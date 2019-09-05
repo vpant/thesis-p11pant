@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 
 /**
  * This class is the main class of our mod. When minecraft is executed the methods {@link TwitterCity#preInit}, {@link TwitterCity#init} and {@link TwitterCity#postInit}
@@ -47,7 +48,12 @@ public class TwitterCity {
 	
 	/** This method executes when a server is loaded. */
 	@EventHandler
-	public void serverStarting (FMLServerStartingEvent e) {
+	public void serverStarting(FMLServerStartingEvent e) {
 		proxy.serverStarting(e);
+	}
+	
+	@EventHandler
+	public void serverStopping(FMLServerStoppedEvent e) {
+		proxy.serverStopping(e);
 	}
 }

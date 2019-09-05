@@ -3,20 +3,15 @@ package org.twittercity.twittercitymod.items;
 import java.util.List;
 
 import org.twittercity.twittercitymod.DebugData;
-import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.city.Buildings;
 import org.twittercity.twittercitymod.city.ChunksEditor;
-import org.twittercity.twittercitymod.city.City;
 import org.twittercity.twittercitymod.city.Paths;
-import org.twittercity.twittercitymod.city.chunkpregen.chunk.ChunkGenerationUtils;
-import org.twittercity.twittercitymod.city.chunkpregen.chunk.ChunkPreGenReference;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.city.templatestructures.TwitterCityTemplate;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -36,12 +31,22 @@ public class DebugItem extends ItemBase{
 		int[][] area = null;
 		if (!worldIn.isRemote) {
 			World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
-			MinecraftServer server = playerIn.getServer();
+			//MinecraftServer server = playerIn.getServer();
 			//ChunksEditor.makeChunksFlat(worldIn, Blocks.BEDROCK, 0, 0, 10);
 			//if(ChunkPreGenReference.isPreGenFinished) {
-				TwitterCity.logger.info("Mpika");
+				//TwitterCity.logger.info("Mpika");
 				ChunksEditor.makeFlatChunksForCity(twitterWorld, DebugData.firstCity);
-				area = Paths.makePaths(twitterWorld, DebugData.firstCity);
+			//CityWorldData ws = CityWorldData.get(twitterWorld);
+			area = Paths.makePaths(twitterWorld, DebugData.firstCity);
+			//DebugData.firstCity.setCityArea(area);
+			//DebugData.secondCity.setCityArea(area);
+			//ws.setCity(DebugData.firstCity);
+			//ws.setCity(DebugData.secondCity);
+			
+			//TwitterCity.logger.info("TwitterCity id: {}", ws.getCity(1).toString());
+			//TwitterCity.logger.info("TwitterCity id: {}", ws.getCity(2).toString());
+			
+				//ws.setArea(area);
 				Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity);
 			//}
 			

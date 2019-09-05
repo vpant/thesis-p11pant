@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 public class DebugData {
 	public static Building[] buildings = new Building[11];
 	public static City firstCity = new City();
-	
+	public static City secondCity = new City();
 	// This is the equivalent SourceWorld.GetBuildings (returns the array of buildings) that in mace are read from xml file. The selectRandomBuilding
 	// should encapsulated to Buildings class.
 	public static void setupData() {
@@ -28,10 +28,17 @@ public class DebugData {
 		
 		firstCity.setId(1);
 		firstCity.setEdgeLength(8);
-		firstCity.setCityLength(7); // * 16 internally
+		firstCity.setCityLength(5); // * 16 internally
 		firstCity.setMapLength(firstCity.getCityLength() + (firstCity.getEdgeLength() * 2));
 		firstCity.setPathExtends(2);
-		firstCity.setStartingPos(new BlockPos(1000,63,1000)); // It should stay 63 because it would cause problems with template structures
+		firstCity.setStartingPos(new BlockPos(1000,63,1000));
+	
+		secondCity.setId(2);
+		secondCity.setEdgeLength(15);
+		secondCity.setCityLength(4); // * 16 internally
+		secondCity.setMapLength(secondCity.getCityLength() + (secondCity.getEdgeLength() * 2));
+		secondCity.setPathExtends(2);
+		secondCity.setStartingPos(new BlockPos(10000,63,10000)); 
 	}
 	
 }

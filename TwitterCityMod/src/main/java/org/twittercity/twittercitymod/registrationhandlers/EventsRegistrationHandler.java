@@ -1,7 +1,6 @@
 package org.twittercity.twittercitymod.registrationhandlers;
 
 import org.twittercity.twittercitymod.blocks.TCBlock;
-import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnReference;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
@@ -12,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -44,10 +42,4 @@ public class EventsRegistrationHandler {
 		} 
 	}
 	
-	
-	// Clear lazy spawn block list to avoid persisting along different worlds
-	@SubscribeEvent
-	public static void onWorldUnload(WorldEvent.Unload event) {
-		LazyBlockSpawnReference.toSpawn.clear();
-	}
 }
