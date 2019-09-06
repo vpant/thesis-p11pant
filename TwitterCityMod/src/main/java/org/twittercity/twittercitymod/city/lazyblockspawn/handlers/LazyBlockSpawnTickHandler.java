@@ -1,6 +1,7 @@
 package org.twittercity.twittercitymod.city.lazyblockspawn.handlers;
 
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnReference;
 import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
@@ -14,6 +15,8 @@ public class LazyBlockSpawnTickHandler {
 
 	private int blocksToSpawn = 0;
 	private int blocksSpawned = 0;
+	
+	private int tcBlocksSpawned = 0;
 	
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
@@ -35,12 +38,15 @@ public class LazyBlockSpawnTickHandler {
 					if(bd.shouldNotifyNeighbors) {
 						twitterWorld.notifyNeighborsRespectDebug(bd.pos, bd.blockState.getBlock(), false);
 					}
+					if(bd.blockState.getBlock() instanceof TCBlock) {
+						tcBlocksSpawned++;
+					}
 					if (blocksSpawned % LazyBlockSpawnReference.updateDelay == 0) {
-                        TwitterCity.logger.info(String.format("Spawn completed [x:%3d z:%3d] %.3f%% completed", bd.pos.getX(), bd.pos.getZ(), completedPercentage));
-                        
+                        TwitterCity.logger.info(String.format("Spawn completed [x:%3d z:%3d] %.3f%% completed", bd.pos.getX(), bd.pos.getZ(), completedPercentage));  
                     }
 				}
 			}
+			TwitterCity.logger.info("Number of blocks spawned: {}", tcBlocksSpawned);
 		}
 	}
 	

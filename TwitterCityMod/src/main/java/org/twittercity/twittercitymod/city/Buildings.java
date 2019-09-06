@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.twittercity.twittercitymod.DebugData;
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
@@ -36,19 +37,26 @@ import net.minecraftforge.items.IItemHandler;
 
 public class Buildings {
 	
-	private static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
-	
 	private Buildings() {
 		// Do nothing, this is a class to create the buildings
 	}
 	
-	public static void makeInsideCity(World world, int area[][], City city) {
+	public static void makeInsideCity(World world, int area[][], City city, int tcBlocksToSpawn) {
 		// Get city or create one
 		
-		//city is finished
-		if(makeBuildings(world, area, city)) {
+		int remainingBlocksToSpawn;
+		remainingBlocksToSpawn = makeBuildings(world, area, city, tcBlocksToSpawn);
+		
+		if(ConstructionInfo.isCurrentCityFinished) {
 			cityFinishUp(world, area, city);
 		}
+		
+		if(remainingBlocksToSpawn > 0) {
+			// calculate new city position (area, id etc)
+			// update construction info data
+			// build remaining blocks to spawn
+		}
+		
 	}
 	
 	/**
@@ -144,32 +152,33 @@ public class Buildings {
 	/*
 	 * Inserts all the buildings that are defined by id in the area array
 	 */
-	public static boolean makeBuildings(World world, int area[][], City city) {
-		int buildingsCount = 0;
-		boolean cityFinished = false;
+	public static int makeBuildings(World world, int area[][], City city, int tcBlocksToSpawn) {
+
 		Building[] buildings = Buildings.getAllBuildings();
-		if(buildings == null) {
-			return false;
-		}
+		//Should persist x and z from this loop so we can resume where we left
 		for (int x = 0; x < area.length; x++) {
 			for(int z = 0; z < area[1].length; z++) {
 				if(area[x][z] >= 100 && area[x][z] <= 500 ) {
 					int buildingID = area[x][z] - 100;
 					if(buildingID >= 0 && buildingID < buildings.length) {
 						Building currentBuilding = buildings[area[x][z] - 100];
-						insertBuilding(world, city, area, x, z, currentBuilding, -1);
-						
-						area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
-						buildingsCount++;
+						tcBlocksToSpawn = insertBuilding(world, city, area, x, z, currentBuilding, -1, tcBlocksToSpawn);
+						if(tcBlocksToSpawn > 0) {
+							area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
+							ConstructionInfo.currentCityBuildingsCount++;
+						} else {
+							return tcBlocksToSpawn;
+						}	
 					}
 				}
 			}
 		}
-		cityFinished = true;
-		System.out.println("Number of buildings " + buildingsCount);
-		return cityFinished;
+		ConstructionInfo.isCurrentCityFinished = true;
+		//System.out.println("Number of buildings " + buildingsCount);
+		return tcBlocksToSpawn;
 	}
 	
+
 	/**
 	 * Spawns a building in the world
 	 * @param world World object
@@ -179,9 +188,10 @@ public class Buildings {
 	 * @param z1dest Z offset of the building for z = 0
 	 * @param building Current building
 	 * @param rotationFixed Predifined rotation. If negative, rotation will be calculated.
+	 * @return Returns how many blocks remaining to spawn
 	 */
-	private static void insertBuildingStartingFrom(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed) {
-		buildLast.clear();
+	private static int insertBuilding(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed, int tcBlocksToSpawn) {
+		ConstructionInfo.buildLast.clear();
 		int sourceX = 0, sourceZ = 0;
 		int rotate = getBuildingRotation(building, area, x1dest, z1dest, rotationFixed);
 		TemplateStructure templateStructure = building.getTemplateStructure(world);
@@ -218,41 +228,39 @@ public class Buildings {
             		} 
         		}
 				
-				for(int ySource = building.getSourceStartY() - 64; ySource <= sourceEndY; ySource++) {
+				
+				for(int ySource = building.getSourceStartY() - 64; ySource <= sourceEndY && tcBlocksToSpawn > 0; ySource++) {
 					BlockPos currentPos = new BlockPos(city.getBlockStart() + x + x1dest, ySource, city.getBlockStart() + z + z1dest);
-					insertBuildingBlock(world, city, building, currentPos, sourceX, sourceZ, rotate);
+					tcBlocksToSpawn = insertBuildingBlock(world, city, building, currentPos, sourceX, sourceZ, rotate, tcBlocksToSpawn);
 				}
 			}
 		}
-		BlockHelper.spawnOrEnqueue(buildLast, world);
+		//BlockHelper.spawnOrEnqueue(ConstructionInfo.buildLast, world);
+		return tcBlocksToSpawn;
 	}
-	
-	private static void insertBuilding(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed) {
-		insertBuildingStartingFrom(world, city, area, x1dest, z1dest, building, rotationFixed);
-	}
+
 	
 	/**
 	 * Spawns or enqueues for spawning a block from a template structure and returns
 	 * if the block spawned was a Twitter City block (TCBlock) spawned.
 	 */
-	private static boolean insertBuildingBlock(World world, City city, Building building, BlockPos currentPos, int sourceX, int sourceZ, int rotate) {
+	private static int insertBuildingBlock(World world, City city, Building building, BlockPos currentPos, int sourceX, int sourceZ, int rotate, int tcBlocksToSpawn) {
 		TemplateStructure templateStructure = building.getTemplateStructure(world);
 		int structureY = currentPos.getY() + 64;
 		currentPos = currentPos.add(city.getStartingPos().getX(), city.getStartingPos().getY() + 1, city.getStartingPos().getZ());
-		boolean tcBlockSpawned = false;
 		if ((currentPos.getY() != city.getStartingPos().getY() + 1 || world.getBlockState(currentPos).getBlock() == Blocks.AIR)
 				&& world.getBlockState(currentPos).getBlock() != Blocks.PLANKS) { 
 			IBlockState blockState = templateStructure.getBlockStateFromBlockPos(new BlockPos(sourceX + building.getSourceX(), structureY, sourceZ + building.getSourceZ()));
 			
 			if(blockState == null || BlockHelper.isBlockToIgnoreSpawning(blockState.getBlock())) {
-				return false;
+				return tcBlocksToSpawn;
 			}
 			Block block = blockState.getBlock();
 			
 			// Beds consists of 2 parts so they are treated differently from other blocks. Return here to avoid respawning
 			if(block == Blocks.BED) {
 				BlockHelper.spawnOrEnqueueRotatedBed(world, currentPos, blockState, rotate);
-				return false;
+				return tcBlocksToSpawn;
 			} else if(block == Blocks.STANDING_SIGN) {
 				blockState = rotate > 0 ? blockState.withProperty(BlockStandingSign.ROTATION, BlockHelper.rotateStandingSign(blockState.getValue(BlockStandingSign.ROTATION).intValue(), rotate)) : blockState;
 				addTextToSign(block);
@@ -272,12 +280,10 @@ public class Buildings {
 				blockState = rotate > 0 ? blockState.withProperty(BlockPistonExtension.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonExtension.FACING), rotate)) : blockState;
 			} else if(BlockHelper.isStairs(block)) {
 				blockState = rotate > 0 ? blockState.withProperty(BlockStairs.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockStairs.FACING), rotate)) : blockState;
-				//BlockHelper.spawnOrEnqueue(currentPos, blockState, world);
 			} else if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && currentPos.getY() == city.getStartingPos().getY()) {
 				blockState = city.getGroundBlock().getDefaultState();
 			} else if(block == Blocks.LAPIS_ORE){
 				blockState = BlockHelper.replaceWithTCBlockState(Blocks.WOOL.getDefaultState());
-				tcBlockSpawned = true;
 			} else if(block == Blocks.GOLD_ORE && currentPos.getY() == city.getStartingPos().getY()) {
 				blockState = city.getPathBlock().getDefaultState();
 			} else if(block == Blocks.CHEST) {
@@ -299,16 +305,17 @@ public class Buildings {
 				blockState = (rotate > 0) ? blockState.withProperty(BlockButton.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockButton.FACING), rotate)) : blockState;	
 			} else { // default
 				blockState = BlockHelper.replaceWithTCBlockState(blockState);
-				tcBlockSpawned = true;
 			}
-		
+			if (blockState.getBlock() instanceof TCBlock) {
+				tcBlocksToSpawn--;
+			}
 			if(!BlockHelper.needsToBeBuildedLast(block)) {
 				BlockHelper.spawnOrEnqueue(currentPos, blockState, world);
 			} else {
-				buildLast.add(new BlockData(currentPos, blockState));
+				ConstructionInfo.buildLast.add(new BlockData(currentPos, blockState));
 			}		
 		}
-		return tcBlockSpawned;
+		return tcBlocksToSpawn;
 	}
 
 	/*
@@ -400,9 +407,13 @@ public class Buildings {
 		return DebugData.buildings;
 	}
 	
-	public class ConstructionInfo {
-		public int currentBuildingId;
-		public int currentBuildingRotation;
+	public static class ConstructionInfo {
+		public static boolean isCurrentCityFinished;
+		public static int currentBuildingId;
+		public static int currentBuildingRotation;
+		public static int currentCityBuildingsCount = 0;
+		
+		public static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
 		
 		public ConstructionInfo() {
 			

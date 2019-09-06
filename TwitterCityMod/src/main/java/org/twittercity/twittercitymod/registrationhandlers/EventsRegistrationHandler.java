@@ -1,6 +1,7 @@
 package org.twittercity.twittercitymod.registrationhandlers;
 
 import org.twittercity.twittercitymod.blocks.TCBlock;
+import org.twittercity.twittercitymod.config.TwitterCityConfiguration;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
@@ -37,7 +38,7 @@ public class EventsRegistrationHandler {
 
 	@SubscribeEvent
 	public static void onBreakEvent(BlockEvent.BreakEvent event) {		
-		if((event.getState().getBlock() instanceof TCBlock) || BlockHelper.isTCBlockNeighbor(event.getWorld(), event.getPos())) {
+		if(TwitterCityConfiguration.unbreakableCity && ((event.getState().getBlock() instanceof TCBlock) || BlockHelper.isTCBlockNeighbor(event.getWorld(), event.getPos()))) {
 			event.setCanceled(true);
 		} 
 	}

@@ -47,7 +47,7 @@ public class DebugItem extends ItemBase{
 			//TwitterCity.logger.info("TwitterCity id: {}", ws.getCity(2).toString());
 			
 				//ws.setArea(area);
-				Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity);
+				Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity, 1000);
 			//}
 			
 			//TemplateBuildings.getInstance().spawnTemplateBuildings(worldIn);
