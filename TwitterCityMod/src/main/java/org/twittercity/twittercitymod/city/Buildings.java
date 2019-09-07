@@ -235,7 +235,7 @@ public class Buildings {
 				}
 			}
 		}
-		//BlockHelper.spawnOrEnqueue(ConstructionInfo.buildLast, world);
+		BlockHelper.spawnOrEnqueue(ConstructionInfo.buildLast, world);
 		return tcBlocksToSpawn;
 	}
 

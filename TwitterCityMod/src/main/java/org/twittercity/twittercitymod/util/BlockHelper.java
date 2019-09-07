@@ -342,7 +342,7 @@ public class BlockHelper {
 	/**
 	 * Spawns or enqueues a list of BlockData for spawning
 	 */
-	public static void spawnOrEnqueue(List<BlockData> blockList, @Nullable World world) {
+	public static void spawnOrEnqueue(List<BlockData> blockList, @Nullable World world) {	
 		if(blockList.isEmpty()) {
 			return;
 		}
