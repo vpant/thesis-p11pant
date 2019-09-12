@@ -1,7 +1,5 @@
 package org.twittercity.twittercitymod.city;
 
-import java.util.ArrayList;
-
 import org.twittercity.twittercitymod.DebugData;
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
@@ -47,7 +45,8 @@ public class Buildings {
 		int remainingBlocksToSpawn;
 		remainingBlocksToSpawn = makeBuildings(world, area, city, tcBlocksToSpawn);
 		
-		if(ConstructionInfo.isCurrentCityFinished) {
+		boolean falsy = false;
+		if(falsy) {//ConstructionInfo.isCurrentCityFinished) {
 			cityFinishUp(world, area, city);
 		}
 		
@@ -156,25 +155,27 @@ public class Buildings {
 
 		Building[] buildings = Buildings.getAllBuildings();
 		//Should persist x and z from this loop so we can resume where we left
-		for (int x = 0; x < area.length; x++) {
-			for(int z = 0; z < area[1].length; z++) {
+		int x = 0, z = 0, buildingID = -1;
+		for (x = 0; x < area.length; x++) {
+			for(z = 0; z < area[1].length; z++) {
 				if(area[x][z] >= 100 && area[x][z] <= 500 ) {
-					int buildingID = area[x][z] - 100;
+					buildingID = area[x][z] - 100;
 					if(buildingID >= 0 && buildingID < buildings.length) {
-						Building currentBuilding = buildings[area[x][z] - 100];
+						Building currentBuilding = buildings[buildingID];
 						tcBlocksToSpawn = insertBuilding(world, city, area, x, z, currentBuilding, -1, tcBlocksToSpawn);
 						if(tcBlocksToSpawn > 0) {
 							area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
-							ConstructionInfo.currentCityBuildingsCount++;
+							//ConstructionInfo.currentCityBuildingsCount++;
 						} else {
+							//ConstructionInfo.updateInfo(ConstructionInfo.currentConstructingCityId, x, z, buildingID, false);
 							return tcBlocksToSpawn;
 						}	
 					}
 				}
 			}
 		}
-		ConstructionInfo.isCurrentCityFinished = true;
-		//System.out.println("Number of buildings " + buildingsCount);
+		
+		//ConstructionInfo.updateInfo(ConstructionInfo.currentConstructingCityId, x, z, buildingID, true);
 		return tcBlocksToSpawn;
 	}
 	
@@ -195,7 +196,7 @@ public class Buildings {
 		int sourceX = 0, sourceZ = 0;
 		int rotate = getBuildingRotation(building, area, x1dest, z1dest, rotationFixed);
 		TemplateStructure templateStructure = building.getTemplateStructure(world);
-		for(int x = 0; x < building.getSizeX(); x++) {
+		for(int x = 0; x < building.getSizeX() && tcBlocksToSpawn > 0; x++) {
 			for(int z = 0; z < building.getSizeZ(); z++) {
 				switch(rotate) {
 					case 0:
@@ -405,18 +406,5 @@ public class Buildings {
 	
 	public static Building[] getAllBuildings() {
 		return DebugData.buildings;
-	}
-	
-	public static class ConstructionInfo {
-		public static boolean isCurrentCityFinished;
-		public static int currentBuildingId;
-		public static int currentBuildingRotation;
-		public static int currentCityBuildingsCount = 0;
-		
-		public static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
-		
-		public ConstructionInfo() {
-			
-		}
 	}
 }

@@ -24,7 +24,6 @@ public class City {
 	private int mapLength;
 	private int pathExtends;
 
-	// Blocks. For now int ID and not Block object
 	private Block groundBlock;
 	private Block pathBlock;
 
@@ -299,7 +298,4 @@ public class City {
 	public String toString() {
 		return "City id: " + id;
 	}
-	
-	
-
 }

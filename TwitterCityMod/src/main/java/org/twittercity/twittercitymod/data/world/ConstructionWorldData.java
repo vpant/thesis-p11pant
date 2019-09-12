@@ -1,6 +1,7 @@
 package org.twittercity.twittercitymod.data.world;
 
 import org.twittercity.twittercitymod.Reference;
+import org.twittercity.twittercitymod.city.ConstructionInfo;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -11,9 +12,8 @@ public class ConstructionWorldData extends WorldSavedData {
 
 	private static final String DATA_NAME = Reference.MOD_ID + "_ConstructionData";
 	private static ConstructionWorldData instance;
-	
-	private int constructingCityID = -1;
-	private int constructingBuildingID = -1;
+
+	private static ConstructionInfo cInfo;
 	
 	public ConstructionWorldData() {
 		super(DATA_NAME);
@@ -33,13 +33,12 @@ public class ConstructionWorldData extends WorldSavedData {
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		
+		cInfo = new ConstructionInfo(nbt);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		
-		return compound;
+		return cInfo.writeToNBT();
 	}
 
 }

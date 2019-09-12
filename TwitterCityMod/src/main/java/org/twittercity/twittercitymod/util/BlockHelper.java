@@ -2,6 +2,8 @@ package org.twittercity.twittercitymod.util;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.blocks.TCBlockColored;
@@ -14,8 +16,6 @@ import org.twittercity.twittercitymod.blocks.TCBlockStoneBrick;
 import org.twittercity.twittercitymod.blocks.TCBlocks;
 import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnQueue;
 import org.twittercity.twittercitymod.config.TwitterCityConfiguration;
-
-import com.sun.istack.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
