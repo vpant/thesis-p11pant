@@ -17,7 +17,10 @@ public class ConstructionInfo {
 	private int currentCityBuildingsCount = 0;
 	
 	// Check BlockPos#toLong and BlockPos#fromLong to serialize building current construciting BlockPos
-	//private long buildingBlockPos;
+	// Should we encapsulate these fields to an inner class for organizations purposes?
+	//private long constructingBuildingBlockPos;
+	//private int constructingBuildinctRotation;
+	//
 	
 	// This a helper list and does not need to be saved hence why it is static
 	public static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
