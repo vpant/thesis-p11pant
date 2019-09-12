@@ -47,6 +47,8 @@ public class Buildings {
 		
 		boolean falsy = false;
 		if(falsy) {//ConstructionInfo.isCurrentCityFinished) {
+			//Join roads to path should be after everything is spawned. Meaning in case of lazy
+			// block spawn, join paths to road needs to executed after everything is done spawning.
 			cityFinishUp(world, area, city);
 		}
 		
@@ -196,6 +198,10 @@ public class Buildings {
 		int sourceX = 0, sourceZ = 0;
 		int rotate = getBuildingRotation(building, area, x1dest, z1dest, rotationFixed);
 		TemplateStructure templateStructure = building.getTemplateStructure(world);
+		
+		// Need the first x y and z to be the ones of currentConstructingBuildingBlockPos
+		// but then the loop must continue as this one. 
+		// IDEA: Rewrite the loops with while to manipulate x, y, z with an BlocPos object
 		for(int x = 0; x < building.getSizeX() && tcBlocksToSpawn > 0; x++) {
 			for(int z = 0; z < building.getSizeZ(); z++) {
 				switch(rotate) {

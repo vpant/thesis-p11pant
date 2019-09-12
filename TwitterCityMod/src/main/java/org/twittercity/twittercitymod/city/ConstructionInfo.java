@@ -7,25 +7,26 @@ import org.twittercity.twittercitymod.util.BlockData;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ConstructionInfo {
-	public int currentConstructingCityId;
-	public boolean isCurrentCityFinished;
-	public int currentBuildingId, areaArrayFirstLoopCounter, areaArraySecondLoopCounter;
-	public int currentBuildingRotation;
-	public int currentCityBuildingsCount = 0;
 	
+	private static ConstructionInfo instance = null;
+	
+	private int currentConstructingCityId;
+	private boolean isCurrentCityFinished;
+	private int currentBuildingId, areaArrayFirstLoopCounter, areaArraySecondLoopCounter;
+	private int currentBuildingRotation;
+	private int currentCityBuildingsCount = 0;
+	
+	// Check BlockPos#toLong and BlockPos#fromLong to serialize building current construciting BlockPos
+	//private long buildingBlockPos;
+	
+	// This a helper list and does not need to be saved hence why it is static
 	public static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
 	
-	public ConstructionInfo(NBTTagCompound nbt) {
-		this.currentConstructingCityId = nbt.getInteger("currentCityID");
-		this.isCurrentCityFinished = nbt.getBoolean("isCityFinished");
-		this.currentBuildingId = nbt.getInteger("currentBuildingID");
-		this.areaArrayFirstLoopCounter = nbt.getInteger("areaArrayFirstLoopCounter");
-		this.areaArraySecondLoopCounter = nbt.getInteger("areaArraySecondLoopCounter");
-		this.currentBuildingRotation = nbt.getInteger("currentBuildingRotation");
-		this.currentCityBuildingsCount = nbt.getInteger("currentCityBuildingsCount");
+	private ConstructionInfo(NBTTagCompound nbt) {
+		this.readFromNBT(nbt);
 	}
 
-	public ConstructionInfo() {
+	private ConstructionInfo() {
 		this.currentConstructingCityId = -1;
 		this.isCurrentCityFinished = false;
 		this.currentBuildingId = -1;
@@ -36,7 +37,7 @@ public class ConstructionInfo {
 	}
 	
 	public void updateInfo(int cityId, int x, int z, int currentBuildingId, boolean isCurrentCityFinished) {
-		//Mark dirty when implement writeToNBT
+		//Mark dirty after this function call
 		this.currentConstructingCityId = cityId;
 		this.areaArrayFirstLoopCounter = x;
 		this.areaArraySecondLoopCounter = z;
@@ -58,7 +59,74 @@ public class ConstructionInfo {
 		return nbt;
 	}
 	
-	public static ConstructionInfo readFromNbt(NBTTagCompound nbt) {
-		return new ConstructionInfo(nbt);
+	public void readFromNBT(NBTTagCompound nbt) {
+		
+		this.currentConstructingCityId = nbt.getInteger("currentCityID");
+		this.isCurrentCityFinished = nbt.getBoolean("isCityFinished");
+		this.currentBuildingId = nbt.getInteger("currentBuildingID");
+		this.areaArrayFirstLoopCounter = nbt.getInteger("areaArrayFirstLoopCounter");
+		this.areaArraySecondLoopCounter = nbt.getInteger("areaArraySecondLoopCounter");
+		this.currentBuildingRotation = nbt.getInteger("currentBuildingRotation");
+		this.currentCityBuildingsCount = nbt.getInteger("currentCityBuildingsCount");
+	}
+	
+	public static ConstructionInfo getInstance() {
+		return (instance != null) ? instance : new ConstructionInfo();
+	}
+
+	public int getCurrentConstructingCityId() {
+		return currentConstructingCityId;
+	}
+
+	public void setCurrentConstructingCityId(int currentConstructingCityId) {
+		this.currentConstructingCityId = currentConstructingCityId;
+	}
+
+	public boolean isCurrentCityFinished() {
+		return isCurrentCityFinished;
+	}
+
+	public void setCurrentCityFinished(boolean isCurrentCityFinished) {
+		this.isCurrentCityFinished = isCurrentCityFinished;
+	}
+
+	public int getCurrentBuildingId() {
+		return currentBuildingId;
+	}
+
+	public void setCurrentBuildingId(int currentBuildingId) {
+		this.currentBuildingId = currentBuildingId;
+	}
+
+	public int getAreaArrayFirstLoopCounter() {
+		return areaArrayFirstLoopCounter;
+	}
+
+	public void setAreaArrayFirstLoopCounter(int areaArrayFirstLoopCounter) {
+		this.areaArrayFirstLoopCounter = areaArrayFirstLoopCounter;
+	}
+
+	public int getAreaArraySecondLoopCounter() {
+		return areaArraySecondLoopCounter;
+	}
+
+	public void setAreaArraySecondLoopCounter(int areaArraySecondLoopCounter) {
+		this.areaArraySecondLoopCounter = areaArraySecondLoopCounter;
+	}
+
+	public int getCurrentBuildingRotation() {
+		return currentBuildingRotation;
+	}
+
+	public void setCurrentBuildingRotation(int currentBuildingRotation) {
+		this.currentBuildingRotation = currentBuildingRotation;
+	}
+
+	public int getCurrentCityBuildingsCount() {
+		return currentCityBuildingsCount;
+	}
+
+	public void setCurrentCityBuildingsCount(int currentCityBuildingsCount) {
+		this.currentCityBuildingsCount = currentCityBuildingsCount;
 	}
 }

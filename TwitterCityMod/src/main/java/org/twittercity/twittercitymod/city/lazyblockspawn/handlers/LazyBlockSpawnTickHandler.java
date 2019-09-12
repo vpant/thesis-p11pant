@@ -46,7 +46,7 @@ public class LazyBlockSpawnTickHandler {
                     }
 				}
 			}
-			TwitterCity.logger.info("Number of blocks spawned: {}", tcBlocksSpawned);
+			//TwitterCity.logger.info("Number of blocks spawned: {}", tcBlocksSpawned);
 		}
 	}
 	

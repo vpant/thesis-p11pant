@@ -8,6 +8,7 @@ import org.twittercity.twittercitymod.city.ChunksEditor;
 import org.twittercity.twittercitymod.city.Paths;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.city.templatestructures.TwitterCityTemplate;
+import org.twittercity.twittercitymod.data.world.CityWorldData;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,18 +37,18 @@ public class DebugItem extends ItemBase{
 			//if(ChunkPreGenReference.isPreGenFinished) {
 				//TwitterCity.logger.info("Mpika");
 				ChunksEditor.makeFlatChunksForCity(twitterWorld, DebugData.firstCity);
-			//CityWorldData ws = CityWorldData.get(twitterWorld);
+			CityWorldData ws = CityWorldData.get(twitterWorld);
 			area = Paths.makePaths(twitterWorld, DebugData.firstCity);
 			//DebugData.firstCity.setCityArea(area);
 			//DebugData.secondCity.setCityArea(area);
-			//ws.setCity(DebugData.firstCity);
-			//ws.setCity(DebugData.secondCity);
+			ws.setCity(DebugData.firstCity);
+			ws.setCity(DebugData.secondCity);
 			
 			//TwitterCity.logger.info("TwitterCity id: {}", ws.getCity(1).toString());
 			//TwitterCity.logger.info("TwitterCity id: {}", ws.getCity(2).toString());
 			
 				//ws.setArea(area);
-				Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity, 5000);
+				Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity, 20000);
 			//}
 			
 			//TemplateBuildings.getInstance().spawnTemplateBuildings(worldIn);
