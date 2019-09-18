@@ -1,6 +1,7 @@
 package org.twittercity.twittercitymod.proxy;
 
 import org.twittercity.twittercitymod.Reference;
+import org.twittercity.twittercitymod.blocks.TCBlockColor;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.gui.TCGuiTweet;
 
@@ -26,6 +27,9 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent e) {
         super.init(e);
+        
+        //Register block color
+        TCBlockColor.registerBlockColors();
     }
 
     @Override
@@ -47,7 +51,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void openTweetGUI() {
 		Minecraft.getMinecraft().displayGuiScreen(new TCGuiTweet(new Tweet()));
-		//Minecraft.getMinecraft().displayGuiScreen(new TCPopupMessage("ola good", "kati"));
 	}
     
     

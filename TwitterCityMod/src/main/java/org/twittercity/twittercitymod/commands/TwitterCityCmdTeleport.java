@@ -5,12 +5,11 @@ import org.twittercity.twittercitymod.city.City;
 import org.twittercity.twittercitymod.teleport.TeleportationTools;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 	@Override
@@ -49,7 +48,7 @@ public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 			if (currentId != twitterCityDim) {
 				// Maybe teleport to first town coordinates
 				TeleportationTools.teleportToDimension(player, twitterCityDim, x, y, z); 
-				player.sendMessage(new TextComponentString(I18n.format("twittercity.teleport.welcome")));
+				player.sendMessage(new TextComponentTranslation("twittercity.teleport.welcome"));
 			} else {
 				BlockPos spawnPoint = player.getBedLocation(0); //Teleport to players spawn point
 				if(spawnPoint != null) {

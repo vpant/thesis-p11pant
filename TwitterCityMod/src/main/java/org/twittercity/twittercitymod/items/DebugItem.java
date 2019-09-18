@@ -42,13 +42,13 @@ public class DebugItem extends ItemBase{
 			//DebugData.firstCity.setCityArea(area);
 			//DebugData.secondCity.setCityArea(area);
 			ws.setCity(DebugData.firstCity);
-			ws.setCity(DebugData.secondCity);
+			//ws.setCity(DebugData.secondCity);
 			
 			//TwitterCity.logger.info("TwitterCity id: {}", ws.getCity(1).toString());
 			//TwitterCity.logger.info("TwitterCity id: {}", ws.getCity(2).toString());
 			
 				//ws.setArea(area);
-				Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity, 20000);
+				Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity, 200000);
 			//}
 			
 			//TemplateBuildings.getInstance().spawnTemplateBuildings(worldIn);

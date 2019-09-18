@@ -8,7 +8,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -20,7 +19,7 @@ public class TCBlock extends Block {
 
 	public TCBlock(Material material) {
 		super(material);
-		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		//this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 	}
 
 	public TCBlock(Material blockMaterialIn, MapColor blockMapColorIn) {

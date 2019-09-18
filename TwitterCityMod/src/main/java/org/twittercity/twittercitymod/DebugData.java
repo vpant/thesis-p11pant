@@ -33,12 +33,12 @@ public class DebugData {
 		firstCity.setPathExtends(2);
 		firstCity.setStartingPos(new BlockPos(1000,63,1000));
 	
-		secondCity.setId(2);
-		secondCity.setEdgeLength(15);
-		secondCity.setCityLength(4); // * 16 internally
-		secondCity.setMapLength(secondCity.getCityLength() + (secondCity.getEdgeLength() * 2));
-		secondCity.setPathExtends(2);
-		secondCity.setStartingPos(new BlockPos(10000,63,10000)); 
+		//secondCity.setId(2);
+		//secondCity.setEdgeLength(15);
+		//secondCity.setCityLength(4); // * 16 internally
+		//secondCity.setMapLength(secondCity.getCityLength() + (secondCity.getEdgeLength() * 2));
+		//secondCity.setPathExtends(2);
+		//secondCity.setStartingPos(new BlockPos(10000,63,10000)); 
 	}
 	
 }
