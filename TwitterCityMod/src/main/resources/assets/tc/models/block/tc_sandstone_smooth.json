@@ -1,0 +1,7 @@
+{
+    "parent": "tc:block/tc_cube_column",
+    "textures": {
+        "end": "minecraft:blocks/sandstone_top",
+        "side": "minecraft:blocks/sandstone_smooth"
+    }
+}

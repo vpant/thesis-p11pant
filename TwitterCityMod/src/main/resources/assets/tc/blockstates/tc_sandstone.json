@@ -1,7 +1,7 @@
 {
     "variants": {
-        "type=sandstone": { "model": "minecraft:sandstone_normal" },
-		"type=chiseled_sandstone": { "model": "minecraft:sandstone_chiseled" },
-		"type=smooth_sandstone": { "model": "minecraft:sandstone_smooth" }
+        "type=sandstone": { "model": "tc:tc_sandstone_normal" },
+		"type=chiseled_sandstone": { "model": "tc:tc_sandstone_chiseled" },
+		"type=smooth_sandstone": { "model": "tc:tc_sandstone_smooth" }
     }
 }

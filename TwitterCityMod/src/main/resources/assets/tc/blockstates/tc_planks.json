@@ -1,10 +1,10 @@
 {
     "variants": {
-		"variant=jungle": { "model": "minecraft:jungle_planks" },
-		"variant=acacia": { "model": "minecraft:acacia_planks" },
-		"variant=birch": { "model": "minecraft:birch_planks" }, 
-		"variant=dark_oak": { "model": "minecraft:dark_oak_planks" },
-		"variant=oak": { "model": "minecraft:oak_planks" },
-		"variant=spruce": { "model": "minecraft:spruce_planks" }
+		"variant=jungle": { "model": "tc:tc_jungle_planks" },
+		"variant=acacia": { "model": "tc:tc_acacia_planks" },
+		"variant=birch": { "model": "tc:tc_birch_planks" }, 
+		"variant=dark_oak": { "model": "tc:tc_dark_oak_planks" },
+		"variant=oak": { "model": "tc:tc_oak_planks" },
+		"variant=spruce": { "model": "tc:tc_spruce_planks" }
 	}
 }

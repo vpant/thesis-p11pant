@@ -1,6 +1,6 @@
 {
     "parent": "tc:block/tc_template_block",
     "textures": {
-        "tc_block": "tc:blocks/tc_stone"
+        "tc_block": "minecraft:blocks/cobblestone"
     }
 }

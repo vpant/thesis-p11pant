@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "minecraft:cobblestone" }
+        "normal": { "model": "tc:tc_cobblestone" }
     }
 }

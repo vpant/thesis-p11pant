@@ -1,6 +1,6 @@
 {
-    "parent": "block/cube_all",
+    "parent": "tc:block/tc_template_block",
     "textures": {
-        "all": "tc:blocks/tc_stone_granite_smooth"
+        "tc_block": "tc:blocks/tc_stone_granite_smooth"
     }
 }

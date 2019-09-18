@@ -1,8 +1,8 @@
 {
     "variants": {
-		"variant=stonebrick": { "model": "minecraft:stonebrick_normal" },
-		"variant=mossy_stonebrick": { "model": "minecraft:stonebrick_mossy" },
-		"variant=cracked_stonebrick": { "model": "minecraft:stonebrick_cracked" }, 
-		"variant=chiseled_stonebrick": { "model": "minecraft:stonebrick_chiseled" }
+		"variant=stonebrick": { "model": "tc:tc_stonebrick_normal" },
+		"variant=mossy_stonebrick": { "model": "tc:tc_stonebrick_mossy" },
+		"variant=cracked_stonebrick": { "model": "tc:tc_stonebrick_cracked" }, 
+		"variant=chiseled_stonebrick": { "model": "tc:tc_stonebrick_chiseled" }
 	}
 }

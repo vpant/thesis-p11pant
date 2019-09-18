@@ -1,20 +1,20 @@
 {
     "variants": {
-		"color=orange": { "model": "minecraft:orange_wool" },
-		"color=blue": { "model": "minecraft:blue_wool" },
-		"color=light_blue": { "model": "minecraft:light_blue_wool" },
-		"color=gray": { "model": "minecraft:gray_wool" },
-		"color=white": { "model": "minecraft:white_wool" },
-		"color=silver": { "model": "minecraft:silver_wool" },
-		"color=green": { "model": "minecraft:green_wool" },
-		"color=purple": { "model": "minecraft:purple_wool" },
-		"color=brown": { "model": "minecraft:brown_wool" },
-		"color=cyan": { "model": "minecraft:cyan_wool" },
-		"color=magenta": { "model": "minecraft:magenta_wool" },
-		"color=pink": { "model": "minecraft:pink_wool" },
-		"color=red": { "model": "minecraft:red_wool" },
-		"color=black": { "model": "minecraft:black_wool" },
-		"color=lime": { "model": "minecraft:lime_wool" },
-		"color=yellow": { "model": "minecraft:yellow_wool" }
+		"color=orange": { "model": "tc:tc_orange_wool" },
+		"color=blue": { "model": "tc:tc_blue_wool" },
+		"color=light_blue": { "model": "tc:tc_light_blue_wool" },
+		"color=gray": { "model": "tc:tc_gray_wool" },
+		"color=white": { "model": "tc:tc_white_wool" },
+		"color=silver": { "model": "tc:tc_silver_wool" },
+		"color=green": { "model": "tc:tc_green_wool" },
+		"color=purple": { "model": "tc:tc_purple_wool" },
+		"color=brown": { "model": "tc:tc_brown_wool" },
+		"color=cyan": { "model": "tc:tc_cyan_wool" },
+		"color=magenta": { "model": "tc:tc_magenta_wool" },
+		"color=pink": { "model": "tc:tc_pink_wool" },
+		"color=red": { "model": "tc:tc_red_wool" },
+		"color=black": { "model": "tc:tc_black_wool" },
+		"color=lime": { "model": "tc:tc_lime_wool" },
+		"color=yellow": { "model": "tc:tc_yellow_wool" }
 	}
 }
