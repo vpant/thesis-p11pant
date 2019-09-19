@@ -105,16 +105,15 @@ public class City {
 		this.firstDimSize = nbt.hasKey("firstDimSize") ? nbt.getInteger("firstDimSize") : -1;
 		this.secondDimSize = nbt.hasKey("secondDimSize") ? nbt.getInteger("secondDimSize") : -1;
 		
-		if(this.cityArea == null) {
-			if(this.firstDimSize >= 0 && this.secondDimSize >= 0) {
-				this.cityArea = new int[firstDimSize][secondDimSize];
-				for (int i = 0; i < firstDimSize; i++) {
-					for (int j = 0; j < secondDimSize; j++) {
-						this.cityArea[i][j] = nbt.hasKey(i + "," + j) ? nbt.getInteger(i + "," + j) : 0;
-					}
+		if(this.firstDimSize >= 0 && this.secondDimSize >= 0) {
+			this.cityArea = new int[firstDimSize][secondDimSize];
+			for (int i = 0; i < firstDimSize; i++) {
+				for (int j = 0; j < secondDimSize; j++) {
+					this.cityArea[i][j] = nbt.hasKey(i + "," + j) ? nbt.getInteger(i + "," + j) : 0;
 				}
 			}
-		}	
+		}
+			
 	}
 
 	public int getId() {
@@ -281,9 +280,12 @@ public class City {
 		
 		nbt.setInteger("firstDimSize", this.firstDimSize);
 		nbt.setInteger("secondDimSize", this.secondDimSize);
-		for (int i = 0; i < cityArea.length; i++) {
-			for (int j = 0; j < cityArea[1].length; j++) {
-				nbt.setInteger(i + "," + j, cityArea[i][j]);
+		
+		if(cityArea != null ) {
+			for (int i = 0; i < firstDimSize; i++) {
+				for (int j = 0; j < secondDimSize; j++) {
+					nbt.setInteger(i + "," + j, cityArea[i][j]);
+				}
 			}
 		}
 		

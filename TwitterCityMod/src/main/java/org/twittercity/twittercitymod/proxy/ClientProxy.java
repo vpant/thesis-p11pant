@@ -49,8 +49,8 @@ public class ClientProxy extends CommonProxy {
     }
 
 	@Override
-	public void openTweetGUI() {
-		Minecraft.getMinecraft().displayGuiScreen(new TCGuiTweet(new Tweet()));
+	public void openTweetGUI(Tweet tweet) {
+		Minecraft.getMinecraft().displayGuiScreen(new TCGuiTweet(tweet));
 	}
     
     

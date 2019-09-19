@@ -16,6 +16,7 @@ import org.twittercity.twittercitymod.blocks.TCBlockStoneBrick;
 import org.twittercity.twittercitymod.blocks.TCBlocks;
 import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnQueue;
 import org.twittercity.twittercitymod.config.TwitterCityConfiguration;
+import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -30,6 +31,7 @@ import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -313,12 +315,20 @@ public class BlockHelper {
 		if(blockData.blockState.getBlock() != Blocks.BED) {
 			if(TwitterCityConfiguration.spawnImmediately && world != null) {
 				world.setBlockState(blockData.pos, blockData.blockState, blockData.flags);
+				setBlockTileData(blockData, world);
 			} else {
 				LazyBlockSpawnQueue.enqueueBlockForSpawn(blockData);
 			}
 		}
 	}
 	
+	public static void setBlockTileData(BlockData blockData, World world) {
+		TileEntity ent = world.getTileEntity(blockData.pos);
+		if (ent instanceof TileEntityTwitter && blockData.tweet.getID() > 0) {
+			((TileEntityTwitter) ent).setTileData(blockData.tweet.getID(), blockData.tweet.getFeeling());
+		}
+	}
+
 	public static void spawnOrEnqueue(BlockData blockData) {
 		spawnOrEnqueue(blockData, null);
 	}

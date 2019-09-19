@@ -4,6 +4,7 @@ import org.twittercity.twittercitymod.DebugData;
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
+import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.util.RandomHelper;
@@ -35,13 +36,18 @@ import net.minecraftforge.items.IItemHandler;
 
 public class Buildings {
 	
+	private static Tweet[] tweetsToSpawn;
+	
 	private Buildings() {
 		// Do nothing, this is a class to create the buildings
 	}
 	
-	public static void makeInsideCity(World world, int area[][], City city, int tcBlocksToSpawn) {
+	public static void makeInsideCity(World world, int area[][], City city, Tweet[] tweets) {
 		// Get city or create one
+
+		tweetsToSpawn = tweets;
 		
+		int tcBlocksToSpawn = tweetsToSpawn.length - 1;
 		int remainingBlocksToSpawn;
 		remainingBlocksToSpawn = makeBuildings(world, area, city, tcBlocksToSpawn);
 		
@@ -61,7 +67,7 @@ public class Buildings {
 	}
 	
 	/**
-	 * Finish up city by building lights, connect paths to roads etc
+	 * Finish up city by building city lights, connect paths to roads etc
 	 */
 	private static void cityFinishUp(World world, int[][] area, City city) {
 		if(city.hasPaths()) {
@@ -165,7 +171,7 @@ public class Buildings {
 					if(buildingID >= 0 && buildingID < buildings.length) {
 						Building currentBuilding = buildings[buildingID];
 						tcBlocksToSpawn = insertBuilding(world, city, area, x, z, currentBuilding, -1, tcBlocksToSpawn);
-						if(tcBlocksToSpawn > 0) {
+						if(tcBlocksToSpawn >= 0) {
 							area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
 							//ConstructionInfo.currentCityBuildingsCount++;
 						} else {
@@ -202,7 +208,7 @@ public class Buildings {
 		// Need the first x y and z to be the ones of currentConstructingBuildingBlockPos
 		// but then the loop must continue as this one. 
 		// IDEA: Rewrite the loops with while to manipulate x, y, z with an BlocPos object
-		for(int x = 0; x < building.getSizeX() && tcBlocksToSpawn > 0; x++) {
+		for(int x = 0; x < building.getSizeX() && tcBlocksToSpawn >= 0; x++) {
 			for(int z = 0; z < building.getSizeZ(); z++) {
 				switch(rotate) {
 					case 0:
@@ -313,11 +319,15 @@ public class Buildings {
 			} else { // default
 				blockState = BlockHelper.replaceWithTCBlockState(blockState);
 			}
-			if (blockState.getBlock() instanceof TCBlock) {
-				tcBlocksToSpawn--;
-			}
 			if(!BlockHelper.needsToBeBuildedLast(block)) {
-				BlockHelper.spawnOrEnqueue(currentPos, blockState, world);
+				BlockData bd;
+				if (blockState.getBlock() instanceof TCBlock) {
+					bd = new BlockData(currentPos, blockState, tweetsToSpawn[tcBlocksToSpawn]);
+					tcBlocksToSpawn--;
+				} else {
+					bd = new BlockData(currentPos, blockState);
+				}
+				BlockHelper.spawnOrEnqueue(bd, world);
 			} else {
 				ConstructionInfo.buildLast.add(new BlockData(currentPos, blockState));
 			}		

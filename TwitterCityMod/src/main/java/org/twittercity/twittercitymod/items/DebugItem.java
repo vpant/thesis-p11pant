@@ -3,11 +3,13 @@ package org.twittercity.twittercitymod.items;
 import java.util.List;
 
 import org.twittercity.twittercitymod.DebugData;
+import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.city.Buildings;
 import org.twittercity.twittercitymod.city.ChunksEditor;
 import org.twittercity.twittercitymod.city.Paths;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.city.templatestructures.TwitterCityTemplate;
+import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.world.CityWorldData;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
@@ -48,7 +50,13 @@ public class DebugItem extends ItemBase{
 			//TwitterCity.logger.info("TwitterCity id: {}", ws.getCity(2).toString());
 			
 				//ws.setArea(area);
-				Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity, 200000);
+			Tweet[] tweets = new Tweet[200000];
+			for(int i = 0; i < 200000; i++) {
+				tweets[i] = new Tweet();
+			}
+			TwitterCity.logger.info("Done initializing tweets array");
+			
+				Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity, tweets);
 			//}
 			
 			//TemplateBuildings.getInstance().spawnTemplateBuildings(worldIn);

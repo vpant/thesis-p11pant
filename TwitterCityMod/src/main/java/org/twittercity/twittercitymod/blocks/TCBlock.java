@@ -1,6 +1,7 @@
 package org.twittercity.twittercitymod.blocks;
 
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 
 import net.minecraft.block.Block;
@@ -56,9 +57,9 @@ public class TCBlock extends Block {
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		TileEntity ent = worldIn.getTileEntity(pos);
 		if (ent instanceof TileEntityTwitter) {
-				TwitterCity.proxy.openTweetGUI();		
-				//TileEntityTwitter teTwitter = (TileEntityTwitter) ent;
-				//playerIn.sendMessage(new TextComponentString(String.valueOf(teTwitter.getTweetID())));	
+			// Should get the tweet id from tile entity and load it from database
+			Tweet tweet = new Tweet();
+			TwitterCity.proxy.openTweetGUI(tweet);			
 		}
 		return true;
 	}

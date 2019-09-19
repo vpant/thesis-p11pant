@@ -4,6 +4,7 @@ import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnReference;
 import org.twittercity.twittercitymod.util.BlockData;
+import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.world.World;
@@ -38,6 +39,7 @@ public class LazyBlockSpawnTickHandler {
 					if(bd.shouldNotifyNeighbors) {
 						twitterWorld.notifyNeighborsRespectDebug(bd.pos, bd.blockState.getBlock(), false);
 					}
+					BlockHelper.setBlockTileData(bd, twitterWorld);
 					if(bd.blockState.getBlock() instanceof TCBlock) {
 						tcBlocksSpawned++;
 					}
