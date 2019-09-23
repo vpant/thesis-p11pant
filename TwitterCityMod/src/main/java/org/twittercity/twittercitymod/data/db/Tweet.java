@@ -8,23 +8,44 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.Date;
 
 import javax.imageio.ImageIO;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.twittercity.twittercitymod.tileentity.Feeling;
 
+@Entity
+@Table(name = "tweets")
 public class Tweet {
 
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id = - 1;
+	@Column(name = "text")
 	private String text = null;
+	@Column(name = "author")
 	private String author = null;
+	@Column(name = "author_account_id")
 	private String authorAccountId = null;
-	private String idStr = null;
-	private Date date = null;
+	@Column(name = "id_str")
+	private String twitterAccountID = null;
+	@Column(name = "date")
+	//@Temporal(TemporalType.TIMESTAMP)
+	private String date = null;
+	@Column(name = "profile_pic_url")
 	private String profilePicUrl = null;
-	private Feeling feeling = null;
+	@Column(name = "feeling")
+	private int feelingID = -1;
+	@Transient
 	private BufferedImage image = null;
+	@Transient
 	private boolean everythingLoaded;
 
 	public Tweet() {
@@ -33,22 +54,21 @@ public class Tweet {
 		profilePicUrl = "https://pbs.twimg.com/profile_images/880136122604507136/xHrnqf1T_normal.jpg";
 	}
 	
-	public Tweet(int id, String text, String author, String authorAccountId, String idStr, Date date,
+	public Tweet(String text, String author, String authorAccountId, String twitterAccountID, String date,
 			String profilePicUrl, Feeling feeling) {
-		this.id = id;
 		this.text = text;
 		this.author = author;
 		this.authorAccountId = authorAccountId;
-		this.idStr = idStr;
+		this.twitterAccountID = twitterAccountID;
 		this.date = date;
 		this.profilePicUrl = profilePicUrl;
-		this.feeling = feeling;
+		this.feelingID = feeling.getFeelingID();
 		this.everythingLoaded = true;
 	}
 	
 	public Tweet(int id, Feeling feeling) {
 		this.id = id;
-		this.feeling = feeling;
+		this.feelingID = feeling.getFeelingID();
 		everythingLoaded = false;
 	}
 
@@ -57,124 +77,52 @@ public class Tweet {
 	}
 	
 	public Feeling getFeeling() {
-		return feeling;
+		return Feeling.forFeelingID(feelingID);
 	}
 	
 	public String getText() {
-		if(!everythingLoaded) {
-			try {
-				throw new Exception("Data are not loaded for this tweet. "
-						+ "Call Tweet#getOrLoadTweet to get a Tweet object with its "
-						+ "fields populated.");
-			} catch (Exception e) {
-				getOrLoadTweet();
-			}
-		}
+		loadEverything();
 		return text;
 	}
 
 	public String getAuthor() {
-		if(!everythingLoaded) {
-			try {
-				throw new Exception("Data are not loaded for this tweet. "
-						+ "Call Tweet#getOrLoadTweet to get a Tweet object with its "
-						+ "fields populated.");
-			} catch (Exception e) {
-				getOrLoadTweet();
-			}
-		}
+		loadEverything();
 		return author;
 	}
 
 	public String getgetProfilePicUrl() {
-		if(!everythingLoaded) {
-			try {
-				throw new Exception("Data are not loaded for this tweet. "
-						+ "Call Tweet#getOrLoadTweet to get a Tweet object with its "
-						+ "fields populated.");
-			} catch (Exception e) {
-				getOrLoadTweet();
-			}
-		}
+		loadEverything();
 		return author;
 	}
 
 	public int getId() {
-		if(!everythingLoaded) {
-			try {
-				throw new Exception("Data are not loaded for this tweet. "
-						+ "Call Tweet#getOrLoadTweet to get a Tweet object with its "
-						+ "fields populated.");
-			} catch (Exception e) {
-				getOrLoadTweet();
-			}
-		}
+		loadEverything();
 		return id;
 	}
 
 
 	public String getAuthorAccountId() {
-		if(!everythingLoaded) {
-			try {
-				throw new Exception("Data are not loaded for this tweet. "
-						+ "Call Tweet#getOrLoadTweet to get a Tweet object with its "
-						+ "fields populated.");
-			} catch (Exception e) {
-				getOrLoadTweet();
-			}
-		}
+		loadEverything();
 		return authorAccountId;
 	}
 
-	public String getIdStr() {
-		if(!everythingLoaded) {
-			try {
-				throw new Exception("Data are not loaded for this tweet. "
-						+ "Call Tweet#getOrLoadTweet to get a Tweet object with its "
-						+ "fields populated.");
-			} catch (Exception e) {
-				getOrLoadTweet();
-			}
-		}
-		return idStr;
+	public String gettwitterAccountID() {
+		loadEverything();
+		return twitterAccountID;
 	}
 
-	public Date getDate() {
-		if(!everythingLoaded) {
-			try {
-				throw new Exception("Data are not loaded for this tweet. "
-						+ "Call Tweet#getOrLoadTweet to get a Tweet object with its "
-						+ "fields populated.");
-			} catch (Exception e) {
-				getOrLoadTweet();
-			}
-		}
+	public String getDate() {
+		loadEverything();
 		return date;
 	}
 
 	public String getProfilePicUrl() {
-		if(!everythingLoaded) {
-			try {
-				throw new Exception("Data are not loaded for this tweet. "
-						+ "Call Tweet#getOrLoadTweet to get a Tweet object with its "
-						+ "fields populated.");
-			} catch (Exception e) {
-				getOrLoadTweet();
-			}
-		}
+		loadEverything();
 		return profilePicUrl;
 	}
 
 	public void setAuthor(String author) {
-		if(!everythingLoaded) {
-			try {
-				throw new Exception("Data are not loaded for this tweet. "
-						+ "Call Tweet#getOrLoadTweet to get a Tweet object with its "
-						+ "fields populated.");
-			} catch (Exception e) {
-				getOrLoadTweet();
-			}
-		}
+		loadEverything();
 		this.author = author;
 	}
 
@@ -212,6 +160,18 @@ public class Tweet {
 		return this.image;
 	}
 	
+	public void loadEverything() {
+		if(!everythingLoaded) {
+			try {
+				throw new Exception("Data are not loaded for this tweet. "
+						+ "Call Tweet#getOrLoadTweet to get a Tweet object with its "
+						+ "fields populated.");
+			} catch (Exception e) {
+				getOrLoadTweet();
+			}
+		}
+	}
+	
 	/**
 	 *  Gets a tweet object with its fields populated from the database using a tweetID
 	 */
@@ -233,10 +193,10 @@ public class Tweet {
 		this.text = tweet.text;
 		this.author = tweet.author;
 		this.authorAccountId = tweet.authorAccountId;
-		this.idStr = tweet.idStr;
+		this.twitterAccountID = tweet.twitterAccountID;
 		this.date = tweet.date;
 		this.profilePicUrl = tweet.profilePicUrl;
-		this.feeling = tweet.feeling;
+		this.feelingID = tweet.feelingID;
 		this.everythingLoaded = tweet.everythingLoaded;
 	}
 }
