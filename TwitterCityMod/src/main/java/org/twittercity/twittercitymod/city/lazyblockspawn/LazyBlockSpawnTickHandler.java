@@ -1,8 +1,8 @@
-package org.twittercity.twittercitymod.city.lazyblockspawn.handlers;
+package org.twittercity.twittercitymod.city.lazyblockspawn;
 
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
-import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnReference;
+import org.twittercity.twittercitymod.config.ConfigurationManager;
 import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
@@ -26,7 +26,7 @@ public class LazyBlockSpawnTickHandler {
 		World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
 		
 		if(!LazyBlockSpawnReference.toSpawn.isEmpty()) {
-			blocksToSpawn += LazyBlockSpawnReference.blocksPerTick;
+			blocksToSpawn += ConfigurationManager.buildingOptions.blocksPerTick;
 			double completedPercentage = 100 - ((double) LazyBlockSpawnReference.toSpawn.size() / (double) LazyBlockSpawnReference.startingSize) * 100;
 			while(blocksToSpawn > 1) {
 				blocksToSpawn--;

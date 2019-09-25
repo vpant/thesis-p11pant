@@ -15,7 +15,7 @@ import org.twittercity.twittercitymod.blocks.TCBlockStone;
 import org.twittercity.twittercitymod.blocks.TCBlockStoneBrick;
 import org.twittercity.twittercitymod.blocks.TCBlocks;
 import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnQueue;
-import org.twittercity.twittercitymod.config.TwitterCityConfiguration;
+import org.twittercity.twittercitymod.config.ConfigurationManager;
 import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 
 import net.minecraft.block.Block;
@@ -313,7 +313,7 @@ public class BlockHelper {
 	 */
 	public static void spawnOrEnqueue(BlockData blockData, @Nullable World world) {
 		if(blockData.blockState.getBlock() != Blocks.BED) {
-			if(TwitterCityConfiguration.spawnImmediately && world != null) {
+			if(ConfigurationManager.buildingOptions.spawnImmediately.isEnabled() && world != null) {
 				world.setBlockState(blockData.pos, blockData.blockState, blockData.flags);
 				setBlockTileData(blockData, world);
 			} else {
@@ -356,7 +356,7 @@ public class BlockHelper {
 		if(blockList.isEmpty()) {
 			return;
 		}
-		if(TwitterCityConfiguration.spawnImmediately && world != null) { 
+		if(ConfigurationManager.buildingOptions.spawnImmediately.isEnabled() && world != null) { 
 			for(BlockData blockData : blockList) {
 				spawnOrEnqueue(blockData, world);
 			}
@@ -366,7 +366,7 @@ public class BlockHelper {
 	}
 	
 	public static void spawnOrEnqueueRotatedBed(World world, BlockPos currentPos, IBlockState blockState, int rotation) {
-		if(TwitterCityConfiguration.spawnImmediately && world != null) {
+		if(ConfigurationManager.buildingOptions.spawnImmediately.isEnabled() && world != null) {
 			spawnRotatedBed(world, currentPos, blockState, rotation);
 		} else {
 			enqueueRotatedBedForSpawn(world, currentPos, blockState, rotation);

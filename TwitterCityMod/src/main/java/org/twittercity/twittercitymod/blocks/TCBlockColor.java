@@ -3,6 +3,7 @@ package org.twittercity.twittercitymod.blocks;
 import java.awt.Color;
 import java.util.Random;
 
+import org.twittercity.twittercitymod.config.ConfigurationManager;
 import org.twittercity.twittercitymod.util.RandomHelper;
 
 import net.minecraft.block.state.IBlockState;
@@ -19,8 +20,10 @@ public class TCBlockColor implements IBlockColor {
 	
 	@Override
 	public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
-		
-		return new Color(RandomHelper.nextInt(0, 255),RandomHelper.nextInt(0, 255),RandomHelper.nextInt(0, 255),0).getRGB();
+		if (ConfigurationManager.buildingOptions.coloredBlocks.isEnabled()) {
+			return new Color(RandomHelper.nextInt(0, 255),RandomHelper.nextInt(0, 255),RandomHelper.nextInt(0, 255),0).getRGB();	
+		}
+		return -1;
 	}
 	
     /**

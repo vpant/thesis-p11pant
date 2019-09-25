@@ -34,8 +34,8 @@ public class Tweet {
 	private String author = null;
 	@Column(name = "author_account_id")
 	private String authorAccountId = null;
-	@Column(name = "id_str")
-	private String twitterAccountID = null;
+	@Column(name = "twitter_tweet_id")
+	private String tweetID = null;
 	@Column(name = "date")
 	//@Temporal(TemporalType.TIMESTAMP)
 	private String date = null;
@@ -59,7 +59,7 @@ public class Tweet {
 		this.text = text;
 		this.author = author;
 		this.authorAccountId = authorAccountId;
-		this.twitterAccountID = twitterAccountID;
+		this.tweetID = twitterAccountID;
 		this.date = date;
 		this.profilePicUrl = profilePicUrl;
 		this.feelingID = feeling.getFeelingID();
@@ -108,7 +108,7 @@ public class Tweet {
 
 	public String gettwitterAccountID() {
 		loadEverything();
-		return twitterAccountID;
+		return tweetID;
 	}
 
 	public String getDate() {
@@ -193,10 +193,19 @@ public class Tweet {
 		this.text = tweet.text;
 		this.author = tweet.author;
 		this.authorAccountId = tweet.authorAccountId;
-		this.twitterAccountID = tweet.twitterAccountID;
+		this.tweetID = tweet.tweetID;
 		this.date = tweet.date;
 		this.profilePicUrl = tweet.profilePicUrl;
 		this.feelingID = tweet.feelingID;
 		this.everythingLoaded = tweet.everythingLoaded;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "User " + author 
+				+ " with ID " + tweetID 
+				+ " said: " + text 
+				+ " at " + date + "\n";
 	}
 }

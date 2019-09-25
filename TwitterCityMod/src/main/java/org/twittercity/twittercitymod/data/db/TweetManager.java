@@ -1,35 +1,81 @@
 package org.twittercity.twittercitymod.data.db;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import org.twittercity.twittercitymod.Reference;
-import org.twittercity.twittercitymod.tileentity.Feeling;
+import org.twittercity.twittercitymod.TwitterCity;
+
+
 
 public class TweetManager {
 	
-	public static void getTweets() {
-
+	private SessionFactory sessionFactory;
+	private static TweetManager instance;
+	
+	private TweetManager() {
 		File hibernateConfig = new File((TweetManager.class).getClassLoader().getResource("assets/" + Reference.MOD_ID + "/hibernate.cfg.xml").getFile());
-		SessionFactory sf =  new Configuration().configure(hibernateConfig).buildSessionFactory();
-		Session session = sf.openSession();
+		sessionFactory =  new Configuration().configure(hibernateConfig).buildSessionFactory();
+	}
 	
-		//Creating the first object
-		Tweet ob1 = new Tweet("ola good", "32341341", "431423", "asdas", "", "https://mangas.gr/",Feeling.HAPPY);
-		Tweet ob2 = new Tweet("oasdod", "3234112312341", "431412131423", "123fasdqw", "", "https://mangas.gr/",Feeling.NO_FEELING);
-		Tweet ob3 = new Tweet("olfewfwedqwod", "1231231r124", "213", "asdfq", "", "https://mangas.gr/",Feeling.SAD);
+	public void getTweets() {
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			List<Tweet> tweets = session.createQuery("FROM Tweet", Tweet.class).list();
+			for (Iterator<Tweet> iterator = tweets.iterator(); iterator.hasNext();){
+	            Tweet tweet = (Tweet) iterator.next(); 
+	            TwitterCity.logger.info(tweet.toString());
+	         }
+			tx.commit();
+			session.close();
+		} catch (HibernateException e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+	        e.printStackTrace(); 
+	    } finally {
+	    	session.close(); 
+	    }
+	}
 	
-		
-		//Saving the objects
-		session.beginTransaction();
-		session.save(ob1); //Saving the first object
-		session.save(ob2); //Saving the second object
-		session.save(ob3); //Saving the third object
-		session.getTransaction().commit();
-		session.close();
+	public List<Tweet> getTweetsAfter(int id) {		
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+		List<Tweet> tweets = null;
+		try {
+			String hql = "FROM Tweet WHERE id > :id";
+			tx = session.beginTransaction();
+			Query<Tweet> query = session.createQuery(hql, Tweet.class);
+			query.setParameter("id", id);
+			tweets = query.list();
+			for (Iterator<Tweet> iterator = tweets.iterator(); iterator.hasNext();){
+	            Tweet tweet = (Tweet) iterator.next(); 
+	            TwitterCity.logger.info(tweet.toString());
+	         }
+			tx.commit();
+			session.close();
+		} catch (HibernateException e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+	        e.printStackTrace(); 
+	    } finally {
+	    	session.close(); 
+	    }
+		return tweets;
+	}
 	
+	public static TweetManager getInstance() {
+		return instance == null ? new TweetManager() : instance;
 	}
 	
 }

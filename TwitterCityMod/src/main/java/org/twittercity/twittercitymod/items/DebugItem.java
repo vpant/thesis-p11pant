@@ -3,15 +3,12 @@ package org.twittercity.twittercitymod.items;
 import java.util.List;
 
 import org.twittercity.twittercitymod.DebugData;
-import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.city.Buildings;
 import org.twittercity.twittercitymod.city.ChunksEditor;
 import org.twittercity.twittercitymod.city.Paths;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.city.templatestructures.TwitterCityTemplate;
 import org.twittercity.twittercitymod.data.db.Tweet;
-import org.twittercity.twittercitymod.data.db.TweetManager;
-import org.twittercity.twittercitymod.data.world.CityWorldData;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
@@ -35,14 +31,14 @@ public class DebugItem extends ItemBase{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		int[][] area = null;
 		if (!worldIn.isRemote) {
-			//World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
+			World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
 			//MinecraftServer server = playerIn.getServer();
 			//ChunksEditor.makeChunksFlat(worldIn, Blocks.BEDROCK, 0, 0, 10);
 			//if(ChunkPreGenReference.isPreGenFinished) {
 				//TwitterCity.logger.info("Mpika");
-			//	ChunksEditor.makeFlatChunksForCity(twitterWorld, DebugData.firstCity);
+			ChunksEditor.makeFlatChunksForCity(twitterWorld, DebugData.firstCity);
 			//CityWorldData ws = CityWorldData.get(twitterWorld);
-			//area = Paths.makePaths(twitterWorld, DebugData.firstCity);
+			area = Paths.makePaths(twitterWorld, DebugData.firstCity);
 			//DebugData.firstCity.setCityArea(area);
 			//DebugData.secondCity.setCityArea(area);
 			//ws.setCity(DebugData.firstCity);
@@ -52,13 +48,11 @@ public class DebugItem extends ItemBase{
 			//TwitterCity.logger.info("TwitterCity id: {}", ws.getCity(2).toString());
 			
 				//ws.setArea(area);
-			//Tweet[] tweets = new Tweet[200000];
-			////for(int i = 0; i < 200000; i++) {
-			//	tweets[i] = new Tweet();
-		//	}
-			//TwitterCity.logger.info("Done initializing tweets array");
-			
-			//	Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity, tweets);
+			Tweet[] tweets = new Tweet[200000];
+			for(int i = 0; i < 200000; i++) {
+				tweets[i] = new Tweet();
+			}
+			Buildings.makeInsideCity(twitterWorld, area, DebugData.firstCity, tweets);
 			//}
 			
 			//TemplateBuildings.getInstance().spawnTemplateBuildings(worldIn);
@@ -78,7 +72,7 @@ public class DebugItem extends ItemBase{
 			//TemplateStructure ts = TemplateBuildings.getInstance().getSingleBuildingTemplateStructure(worldIn, DebugData.buildings[3]);
 			//System.out.println(ts.getSize().toString());
 			//playerIn.sendMessage(new TextComponentString("BlockStone is instanceof TCAbstractBlock: " + Boolean.toString((TwitterCityBlocks.STONE instanceof TCAbstractBlock))));
-			TweetManager.getTweets();
+			//TweetManager.getInstance().getTweetsAfter(20);
 		}
 
 		
