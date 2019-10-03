@@ -1,6 +1,7 @@
 package org.twittercity.twittercitymod.city.chunkpregen.chunk;
 
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.city.City;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
@@ -48,5 +49,9 @@ public class ChunkGenerationUtils {
 		}
 		ChunkPreGenReference.toGenerate.sort(ChunkPosition.byAngleComparator(new ChunkPosition(x, z, dimensionID, logToChat)));
 		return ChunkPreGenReference.startingSize = ChunkPreGenReference.toGenerate.size();
+	}
+	
+	public static int queueCityChunkGeneration(MinecraftServer server, City city, int dimensionID, boolean logToChat) {
+		return queueChunkGeneration(server, city.getStartingPos().getX(), city.getStartingPos().getZ(), (city.getCityLength() / 16), (city.getCityLength() / 16), dimensionID, logToChat);
 	}
 }

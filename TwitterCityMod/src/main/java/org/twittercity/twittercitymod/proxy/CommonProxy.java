@@ -8,6 +8,7 @@ import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnReferenc
 import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnTickHandler;
 import org.twittercity.twittercitymod.commands.TwitterCityCmdTeleport;
 import org.twittercity.twittercitymod.data.db.Tweet;
+import org.twittercity.twittercitymod.data.db.TweetManager;
 import org.twittercity.twittercitymod.registrationhandlers.TCBlocksRegistrationHandler;
 import org.twittercity.twittercitymod.registrationhandlers.TCItemsRegistrationHandler;
 import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
@@ -51,7 +52,8 @@ public class CommonProxy {
     }
 
     public void postInit(FMLPostInitializationEvent e) {
-    	
+    	// Hibernate init
+    	TweetManager.getInstance();
     }
     
   
@@ -71,6 +73,10 @@ public class CommonProxy {
 	
 	// Proxied method to open tweet GUI. Opening a GUI is client side code so we override this method to ClientProxy
 	public void openTweetGUI(Tweet tweet) {
+		
+	}
+
+	public void openTweetLoadingGUI() {
 		
 	}
 }

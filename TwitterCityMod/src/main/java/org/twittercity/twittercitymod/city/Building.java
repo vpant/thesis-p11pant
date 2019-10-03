@@ -22,8 +22,7 @@ public class Building {
 	private String templateFileName;
 	private TemplateStructure tmpStructure = null;
 	
-	public Building(String name, int sourceX, int sourceStartY, int sourceZ, Frequency frequency, int ID, int sizeX, int sizeZ, int posX,int posZ, String fileName)
-	{
+	public Building(String name, int sourceX, int sourceStartY, int sourceZ, Frequency frequency, int ID, int sizeX, int sizeZ, int posX,int posZ, String fileName) {
 		this.name = name;
 		this.sourceX = sourceX;
 		this.sourceStartY = sourceStartY;
@@ -35,6 +34,14 @@ public class Building {
 		this.posX = posX;
 		this.posZ = posZ;
 		this.templateFileName = fileName;
+	}
+	
+	public Building(BuildingType building) {
+		this(building.name, building.sourceX, building.sourceStartY, building.sourceZ, building.frequency, building.ID, building.sizeX, building.sizeZ, building.posX, building.posZ, building.templateFileName);
+	}
+	
+	public Building(int buildingID) {
+		this(BuildingType.forBuildingID(buildingID));
 	}
 	
 	public String getName() {

@@ -4,6 +4,7 @@ import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.blocks.TCBlockColor;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.gui.TCGuiTweet;
+import org.twittercity.twittercitymod.gui.TCGuiTweetLoading;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -53,5 +54,9 @@ public class ClientProxy extends CommonProxy {
 		Minecraft.getMinecraft().displayGuiScreen(new TCGuiTweet(tweet));
 	}
     
+	@Override
+	public void openTweetLoadingGUI() {
+		Minecraft.getMinecraft().displayGuiScreen(new TCGuiTweetLoading());
+	}
     
 }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -34,7 +36,7 @@ public class TweetManager {
 			for (Iterator<Tweet> iterator = tweets.iterator(); iterator.hasNext();){
 	            Tweet tweet = (Tweet) iterator.next(); 
 	            TwitterCity.logger.info(tweet.toString());
-	         }
+	        }
 			tx.commit();
 			session.close();
 		} catch (HibernateException e) {
@@ -47,7 +49,33 @@ public class TweetManager {
 	    }
 	}
 	
-	public List<Tweet> getTweetsAfter(int id) {		
+	public Tweet getTweet(int id) {
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+		Tweet tweet = null;
+		try {
+			String hql = "FROM Tweet WHERE id = :id";
+			tx = session.beginTransaction();
+			Query<Tweet> query = session.createQuery(hql, Tweet.class);
+			query.setParameter("id", id);
+			tweet = query.getSingleResult();
+			
+			tx.commit();
+			session.close();
+		} catch(NoResultException noResultE) {
+			tweet = null;
+		} catch (HibernateException e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+	        e.printStackTrace(); 
+	    } finally {
+	    	session.close(); 
+	    }
+		return tweet;
+	}
+	
+	public List<Tweet> getAllTweetsAfter(int id) {		
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
 		List<Tweet> tweets = null;

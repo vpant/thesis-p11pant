@@ -9,15 +9,10 @@ import net.minecraft.util.math.BlockPos;
 public class City {
 
 	private int id;
-	// private int x;
-	// private int z;
 	BlockPos startingPos;
 	private int chunkLength; // city_size in theme.xml and its used to calculate x and z
 	// worldCities[CityID].x = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
 	// worldCities[CityID].z = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
-
-	private String outsideLightType;
-	private String streetLightType;
 
 	private int cityLength; // Vgainei random apo 5 mexri city_size sto xml kai meta pollaplasiazete me 16
 	private int edgeLength;
@@ -44,9 +39,6 @@ public class City {
 	public City() {
 		this.id = 0;
 
-		this.outsideLightType = "";
-		this.streetLightType = "";
-
 		this.cityLength = 0 * 16;
 		this.edgeLength = 0;
 		this.mapLength = 0;
@@ -57,22 +49,26 @@ public class City {
 		this.groundBlock = Blocks.OBSIDIAN;
 		this.pathBlock = Blocks.DIAMOND_BLOCK;
 
-		this.blockStart = this.getEdgeLength() + 13;
+		this.blockStart = this.edgeLength + 13;
 	}
 
-	public City(int id, String outsideLightType, String streetLightType, int cityLength, int edgeLenght, int mapLength,
-			Block groundBlock, Block pathBlock) {
+	public City(int id, int citySize, int edgeLenght, int pathExtends, Block groundBlock, Block pathBlock, boolean hasMainStreets, boolean hasPaths) {
 		this.id = id;
 
-		this.outsideLightType = outsideLightType;
-		this.streetLightType = streetLightType;
-
-		this.cityLength = cityLength;
+		this.chunkLength = citySize;
+		
+		this.cityLength = citySize * 16;
 		this.edgeLength = edgeLenght;
-		this.mapLength = mapLength;
+		this.mapLength = cityLength + edgeLenght * 2;
+		this.pathExtends = pathExtends;
+		
+		this.hasMainStreets = hasMainStreets;
+		this.hasPaths = hasPaths;
 
 		this.groundBlock = groundBlock;
 		this.pathBlock = pathBlock;
+		
+		this.blockStart = edgeLenght + 13;
 
 	}
 
@@ -80,9 +76,6 @@ public class City {
 		
 		this.id = nbt.getInteger("id");
 		this.startingPos = new BlockPos(nbt.getInteger("startingPosX"), nbt.getInteger("startingPosY"), nbt.getInteger("startingPosZ"));
-		
-		this.outsideLightType = nbt.getString("outsideLightType");
-		this.streetLightType = nbt.getString("streetLightType");
 
 		this.cityLength = nbt.getInteger("cityLength");
 		this.edgeLength = nbt.getInteger("edgeLength");
@@ -112,8 +105,7 @@ public class City {
 					this.cityArea[i][j] = nbt.hasKey(i + "," + j) ? nbt.getInteger(i + "," + j) : 0;
 				}
 			}
-		}
-			
+		}		
 	}
 
 	public int getId() {
@@ -138,22 +130,6 @@ public class City {
 
 	public void setChunkLength(int chunkLength) {
 		this.chunkLength = chunkLength;
-	}
-
-	public String getOutsideLightType() {
-		return outsideLightType;
-	}
-
-	public void setOutsideLightType(String outsideLightType) {
-		this.outsideLightType = outsideLightType;
-	}
-
-	public String getStreetLightType() {
-		return streetLightType;
-	}
-
-	public void setStreetLightType(String streetLightType) {
-		this.streetLightType = streetLightType;
 	}
 
 	public int getCityLength() {
@@ -263,8 +239,6 @@ public class City {
 		nbt.setInteger("startingPosY", this.startingPos.getY());
 		nbt.setInteger("startingPosZ", this.startingPos.getZ());
 		nbt.setInteger("chunkLength", this.chunkLength);
-		nbt.setString("outsideLightType", this.outsideLightType);
-		nbt.setString("streetLightType", this.streetLightType);
 		nbt.setInteger("cityLength", this.cityLength);
 		nbt.setInteger("edgeLength", this.edgeLength);
 		nbt.setInteger("mapLength", this.mapLength);

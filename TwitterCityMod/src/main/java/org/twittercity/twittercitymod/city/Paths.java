@@ -20,7 +20,7 @@ public class Paths {
 		public int z1;
 		public int z2;
 		
-		public District(){
+		public District() {
 			
 		}
 	}
@@ -29,9 +29,10 @@ public class Paths {
 	private static List<String> lstStreetsUsed = new ArrayList<String>();
 	private static List<Integer> lstAllBuildings = new ArrayList<Integer>();
 	
-	public static int[][] makePaths(World world, City city) {
+	// Here is where every city starts. Calculates the city area as a 2D array then we are using 
+	// the array to build up everything (paths, roads, lights, buildings etc.)
+	public static int[][] createCityArea(City city) {
 		
-		// First builded block testEdgeLength = 8 opote blockStart = 21
 		lstDistricts.clear();
 		lstStreetsUsed.clear();
 		lstAllBuildings.clear();
@@ -75,7 +76,6 @@ public class Paths {
 				}
 			}
 		}
-		makePaths(world, city, area);
 		return area;
 	}
 
@@ -226,8 +226,9 @@ public class Paths {
 		return intFinal;
 	}
 	
-	//This is where the actual building is happening city should be passed as argument instead of using local city variable
-	private static void makePaths(World world, City city, int[][] area) {
+	// Build the paths for the city
+	public static void makePaths(World world, City city) {
+		int[][] area = city.getCityArea();
 		for (int x = 0; x < area.length; x++) {
 			for (int z = 0; z < area[1].length; z++) {
 				if (area[x][z] == 1) {

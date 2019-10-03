@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityTwitter extends TileEntity{
-	private int tweetID = -1;
+	private int tweetID = 1;
 	private Feeling feeling = Feeling.NO_FEELING;
 	
 	public int getTweetID() {

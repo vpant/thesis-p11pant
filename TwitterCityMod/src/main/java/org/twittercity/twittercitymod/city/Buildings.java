@@ -1,10 +1,12 @@
 package org.twittercity.twittercitymod.city;
 
-import org.twittercity.twittercitymod.DebugData;
+import java.util.ArrayList;
+
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.data.db.Tweet;
+import org.twittercity.twittercitymod.data.world.ConstructionWorldData;
 import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.util.RandomHelper;
@@ -27,6 +29,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -36,26 +39,28 @@ import net.minecraftforge.items.IItemHandler;
 
 public class Buildings {
 	
+	// This a helper list and does not need to be saved hence why it is static
+	public static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
 	private static Tweet[] tweetsToSpawn;
 	
 	private Buildings() {
-		// Do nothing, this is a class to create the buildings
+		// Do nothing, this is a class to build the buildings
 	}
 	
-	public static void makeInsideCity(World world, int area[][], City city, Tweet[] tweets) {
+	public static void makeInsideCity(World world, City currentCity, Tweet[] tweets) {
 		// Get city or create one
 
 		tweetsToSpawn = tweets;
 		
 		int tcBlocksToSpawn = tweetsToSpawn.length - 1;
 		int remainingBlocksToSpawn;
-		remainingBlocksToSpawn = makeBuildings(world, area, city, tcBlocksToSpawn);
+		remainingBlocksToSpawn = makeBuildings(world, currentCity, tcBlocksToSpawn);
 		
 		boolean falsy = false;
 		if(falsy) {//ConstructionInfo.isCurrentCityFinished) {
 			//Join roads to path should be after everything is spawned. Meaning in case of lazy
 			// block spawn, join paths to road needs to executed after everything is done spawning.
-			cityFinishUp(world, area, city);
+			cityFinishUp(world, currentCity);
 		}
 		
 		if(remainingBlocksToSpawn > 0) {
@@ -69,12 +74,12 @@ public class Buildings {
 	/**
 	 * Finish up city by building city lights, connect paths to roads etc
 	 */
-	private static void cityFinishUp(World world, int[][] area, City city) {
+	private static void cityFinishUp(World world, City city) {
 		if(city.hasPaths()) {
 			joinPathsToRoad(world, city);
 		}
 		else {
-			removePaths(world, area, city);
+			removePaths(world, city.getCityArea(), city);
 		}
 		if(city.hasMainStreets()) {
 			makeStreetLights(world, city);
@@ -159,9 +164,10 @@ public class Buildings {
 	/*
 	 * Inserts all the buildings that are defined by id in the area array
 	 */
-	public static int makeBuildings(World world, int area[][], City city, int tcBlocksToSpawn) {
+	public static int makeBuildings(World world, City city, int tcBlocksToSpawn) {
 
 		Building[] buildings = Buildings.getAllBuildings();
+		int[][] area = city.getCityArea();
 		//Should persist x and z from this loop so we can resume where we left
 		int x = 0, z = 0, buildingID = -1;
 		for (x = 0; x < area.length; x++) {
@@ -173,9 +179,10 @@ public class Buildings {
 						tcBlocksToSpawn = insertBuilding(world, city, area, x, z, currentBuilding, -1, tcBlocksToSpawn);
 						if(tcBlocksToSpawn >= 0) {
 							area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
-							//ConstructionInfo.currentCityBuildingsCount++;
+							ConstructionWorldData.get(world).increaseCurrentCityBuildingsCount();
 						} else {
-							//ConstructionInfo.updateInfo(ConstructionInfo.currentConstructingCityId, x, z, buildingID, false);
+							TwitterCity.logger.info("Updating info: cityID: {}, X: {}, Z: {}, buildingID: {}", city.getId(), x, z, buildingID);
+							ConstructionWorldData.get(world).updateInfo(city.getId(), x, z, buildingID, false);
 							return tcBlocksToSpawn;
 						}	
 					}
@@ -196,20 +203,22 @@ public class Buildings {
 	 * @param x1dest X offset of the building for x = 0
 	 * @param z1dest Z offset of the building for z = 0
 	 * @param building Current building
-	 * @param rotationFixed Predifined rotation. If negative, rotation will be calculated.
+	 * @param rotationFixed Predefined rotation. If negative, rotation will be calculated.
 	 * @return Returns how many blocks remaining to spawn
 	 */
 	private static int insertBuilding(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed, int tcBlocksToSpawn) {
-		ConstructionInfo.buildLast.clear();
+		buildLast.clear();
+		
 		int sourceX = 0, sourceZ = 0;
 		int rotate = getBuildingRotation(building, area, x1dest, z1dest, rotationFixed);
 		TemplateStructure templateStructure = building.getTemplateStructure(world);
-		
-		// Need the first x y and z to be the ones of currentConstructingBuildingBlockPos
-		// but then the loop must continue as this one. 
-		// IDEA: Rewrite the loops with while to manipulate x, y, z with an BlocPos object
-		for(int x = 0; x < building.getSizeX() && tcBlocksToSpawn >= 0; x++) {
-			for(int z = 0; z < building.getSizeZ(); z++) {
+		ConstructionWorldData constrData = ConstructionWorldData.get(world);
+		BlockPos initialBlockPos = new BlockPos(0, building.getSourceStartY() - 64, 0);
+		BlockPos currentConstructingBlockPos = constrData.getConstructingBuildingBlockPos();
+		currentConstructingBlockPos = currentConstructingBlockPos == null ? initialBlockPos : currentConstructingBlockPos;
+		int x, ySource = currentConstructingBlockPos.getY(), z = currentConstructingBlockPos.getZ();
+		for(x = currentConstructingBlockPos.getX(); x < building.getSizeX() && tcBlocksToSpawn > 0; x++) {
+			while(z < building.getSizeZ() && tcBlocksToSpawn > 0) {
 				switch(rotate) {
 					case 0:
 						sourceX = x;
@@ -231,24 +240,33 @@ public class Buildings {
 						TwitterCity.logger.debug("Invalid switch result!");
 						break;
 				}
-				
+			
 				int sourceEndY;
 				for (sourceEndY = templateStructure.getSize().getY(); sourceEndY > 0; sourceEndY--) {
 					BlockPos pos = new BlockPos(sourceX + building.getSourceX(), sourceEndY + 63, sourceZ + building.getSourceZ());
 					IBlockState bState = templateStructure.getBlockStateFromBlockPos(pos);
 					if(bState != null && bState.getBlock() != Blocks.AIR) {
 						break;
-            		} 
-        		}
-				
-				
-				for(int ySource = building.getSourceStartY() - 64; ySource <= sourceEndY && tcBlocksToSpawn > 0; ySource++) {
+					} 
+				}
+			
+			
+				while(ySource <= sourceEndY && tcBlocksToSpawn > 0) {
 					BlockPos currentPos = new BlockPos(city.getBlockStart() + x + x1dest, ySource, city.getBlockStart() + z + z1dest);
 					tcBlocksToSpawn = insertBuildingBlock(world, city, building, currentPos, sourceX, sourceZ, rotate, tcBlocksToSpawn);
+					ySource++;
 				}
+				//If loop stopped because there is no need to build any more blocks we need to save the current x,y,z values
+				ySource = tcBlocksToSpawn > 0 ? building.getSourceStartY() - 64 : ySource;
+				z++;
 			}
+			z = tcBlocksToSpawn > 0 ? 0 : z;
+			//System.out.println("Edo: " + x + ", " + ySource + ", " + z);
 		}
-		BlockHelper.spawnOrEnqueue(ConstructionInfo.buildLast, world);
+		BlockPos bp = tcBlocksToSpawn > 0 ? initialBlockPos : new BlockPos(x, ySource, z) ;
+		constrData.setCurrentConstructingBlockPos(bp);
+
+		BlockHelper.spawnOrEnqueue(buildLast, world);
 		return tcBlocksToSpawn;
 	}
 
@@ -300,7 +318,8 @@ public class Buildings {
 			} else if(block == Blocks.GOLD_ORE && currentPos.getY() == city.getStartingPos().getY()) {
 				blockState = city.getPathBlock().getDefaultState();
 			} else if(block == Blocks.CHEST) {
-				TileEntityChest chest = (TileEntityChest) world.getTileEntity(currentPos); // This wont work if chest is enqueued for spawning
+				TileEntity entity = world.getTileEntity(currentPos);
+				TileEntityChest chest = (entity instanceof TileEntityChest) ? (TileEntityChest)entity : null; // This wont work if chest is enqueued for spawning
 				if(chest != null) {
 					addItemsToChest(chest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH));					
 				}
@@ -329,7 +348,7 @@ public class Buildings {
 				}
 				BlockHelper.spawnOrEnqueue(bd, world);
 			} else {
-				ConstructionInfo.buildLast.add(new BlockData(currentPos, blockState));
+				buildLast.add(new BlockData(currentPos, blockState));
 			}		
 		}
 		return tcBlocksToSpawn;
@@ -420,7 +439,12 @@ public class Buildings {
 		return buildings[buildingID];
 	}
 	
+	// Initialize all building types
 	public static Building[] getAllBuildings() {
-		return DebugData.buildings;
+		Building[] buildings = new Building[BuildingType.values().length];
+		for(BuildingType buildingType : BuildingType.values()) {
+			buildings[buildingType.ID] = new Building(buildingType); 
+        }
+		return buildings;
 	}
 }

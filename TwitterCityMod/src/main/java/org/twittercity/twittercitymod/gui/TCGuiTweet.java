@@ -29,20 +29,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 //Tweet profile pic 48x48
 public class TCGuiTweet extends GuiScreen {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/gui/tweet.png");
+	private static ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/gui/tweet.png");
 	private static BufferedImage bufImage = null;
-	DynamicTexture dynTextures = null;
+	private DynamicTexture dynTextures = null;
 	
 	public static final int WIDTH = 256, HEIGHT = 140;
 	private Tweet tweet;
 	private List<ITextComponent> cachedComponents;
 	private List<ArrayList<ITextComponent>> textComponentPages;
 
-	TextureManager textManager;	
-	// Should be final but for debugging ignore
-	private int TWEET_TEXT_MAX_ROW_LENGTH = 191;
-	// private final int tweetTextAreaHeight = 97;
-
+	private TextureManager textManager;	
+	private final int TWEET_TEXT_MAX_ROW_LENGTH = 191;
+	
 	private TCGuiTweet.NextPageButton buttonNextPage;
 	private TCGuiTweet.NextPageButton buttonPreviousPage;
 
@@ -52,7 +50,7 @@ public class TCGuiTweet extends GuiScreen {
 	public TCGuiTweet(Tweet tweet) {
 		this.tweet = tweet;
 		
-		bufImage = tweet.getProfilePicture();
+		bufImage = tweet != null ? tweet.getProfilePicture() : null;
 	}
 
 	@Override
@@ -120,20 +118,26 @@ public class TCGuiTweet extends GuiScreen {
 		this.drawTexturedModalRect(x, y, 0, 0, WIDTH, 140);
 
 		if (this.textComponentPages == null) {
-			this.createTextPages(this.tweet.getText());
+			String text = tweet == null ? "There was an error trying to retrieve this block's tweet message." : tweet.getText();
+			this.createTextPages(text);
+		}
+		
+		if(tweet != null) {
+			String s1 = tweet.getAuthor();
+			int k = this.fontRenderer.getStringWidth(s1);
+			this.fontRenderer.drawString(s1, x + 36 + (180 - k) / 2, y + 15, 0);
+			
+			String tweetDate = tweet.getDate();
+			int i1 = this.fontRenderer.getStringWidth(tweetDate);
+			this.fontRenderer.drawString(TextFormatting.GRAY + tweetDate, x + 36 + (180 - i1) / 2, y + 115, 0);
 		}
 
-		String s1 = I18n.format("book.editTitle");
-		int k = this.fontRenderer.getStringWidth(s1);
-		this.fontRenderer.drawString(s1, x + 36 + (180 - k) / 2, y + 15, 0);
-
-		String bookAuthor = I18n.format("book.byAuthor", tweet.getAuthor());
-		int i1 = this.fontRenderer.getStringWidth(bookAuthor);
-		this.fontRenderer.drawString(TextFormatting.RED + bookAuthor, x + 36 + (180 - i1) / 2, y + 115, 0);
-
-		String pagesCountText = I18n.format("book.pageIndicator", this.currPage + 1, this.totalPages);
-		int j1 = this.fontRenderer.getStringWidth(pagesCountText);
-		this.fontRenderer.drawString(TextFormatting.RED + pagesCountText, x - j1 + 285 - 44, y + 15, 0);
+		if(tweet != null && this.totalPages > 1) {
+			String pagesCountText = I18n.format("book.pageIndicator", this.currPage + 1, this.totalPages);
+			int j1 = this.fontRenderer.getStringWidth(pagesCountText);
+			this.fontRenderer.drawString(TextFormatting.RED + pagesCountText, x - j1 + 285 - 44, y + 15, 0);
+		}
+		
 
 		if (this.currPage <= this.totalPages - 1) {
 			for (int l1 = 0; l1 < this.textComponentPages.get(this.currPage).size(); ++l1) {
