@@ -1,13 +1,9 @@
 package org.twittercity.twittercitymod;
 
-import org.twittercity.twittercitymod.city.City;
-
-import net.minecraft.util.math.BlockPos;
-
 public class DebugData {
 	//public static Building[] buildings = new Building[11];
-	public static City firstCity = new City();
-	public static City secondCity = new City();
+	//public static City firstCity = new City();
+	//public static City secondCity = new City();
 	public static void setupData() {
 		//Create BuildingType enum
 		//name, sourceX, sourceStartY, sourceZ, frequency, ID, sizeX, sizeZ, posX, posZ		
@@ -23,12 +19,12 @@ public class DebugData {
 		buildings[9] = new Building("Rich House 1",100,63,45,Frequency.VERY_COMMON,9,12,12,0,0,"rich_house_1");
 		buildings[10] = new Building("Library",112,63,46,Frequency.AVERAGE,10,13,13,0,0,"library");*/
 		
-		firstCity.setId(1);
-		firstCity.setEdgeLength(8);
-		firstCity.setCityLength(5); // * 16 internally
-		firstCity.setMapLength(firstCity.getCityLength() + (firstCity.getEdgeLength() * 2));
-		firstCity.setPathExtends(2);
-		firstCity.setStartingPos(new BlockPos(1000,63,1000));
+		//firstCity.setId(1);
+		//firstCity.setEdgeLength(8);
+		//firstCity.setCityLength(5); // * 16 internally
+		//firstCity.setMapLength(firstCity.getCityLength() + (firstCity.getEdgeLength() * 2));
+		//firstCity.setPathExtends(2);
+		//firstCity.setStartingPos(new BlockPos(1000,63,1000));
 	
 		//secondCity.setId(2);
 		//secondCity.setEdgeLength(15);

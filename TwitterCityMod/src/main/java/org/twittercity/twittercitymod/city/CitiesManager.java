@@ -24,7 +24,6 @@ public class CitiesManager {
 	}
 	
 	private void updateFields() {
-		TwitterCity.logger.info("Stin updateFields");
 		twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
 		cityWData = CityWorldData.get(twitterWorld);
 		constrWorldData = ConstructionWorldData.get(twitterWorld);
@@ -37,29 +36,30 @@ public class CitiesManager {
 		if(constrWorldData.getCurrentConstructingCityId() < 0) {
 			currentConstructingCity = createNewCity();
 			prepareCity(currentConstructingCity);
-			TwitterCity.logger.info("createNewCity");
 		} else {
 			TwitterCity.logger.info("Current constructing id is: {}", constrWorldData.getCurrentConstructingCityId());
 			currentConstructingCity = getCity(constrWorldData.getCurrentConstructingCityId());
-		}	
-
+		}
+		TwitterCity.logger.info("The mapLength is: {}", currentConstructingCity.getMapLength());
+		TwitterCity.logger.info("The startingPos is: {}", currentConstructingCity.getStartingPos().toString());
 		Buildings.makeInsideCity(twitterWorld, currentConstructingCity, tweets);
-		//TwitterCity.logger.info(currentConstructingCity.toString());
 	}
 	
 	public City createNewCity() {
+		TwitterCity.logger.info("Creating new city!");
 		int id = constrWorldData.getCurrentConstructingCityId();
+		
+		//Calculate new city's starting position
+		BlockPos startingPos = new BlockPos(1000,63,1000);
+		
 		// Should make random
-		City newCity = new City(++id, 5, 8, 2, Blocks.OBSIDIAN, Blocks.DIAMOND_BLOCK, true, true);
+		City newCity = new City(++id, startingPos, 5, 8, 4, Blocks.OBSIDIAN, Blocks.DIAMOND_BLOCK, true, true);
 		
 		newCity.setCityArea(Paths.createCityArea(newCity));
-		//Calculate new city's starting position
-		newCity.setStartingPos(new BlockPos(1000,63,1000));
-		//TwitterCity.logger.info(newCity.toString());
+		
 		//Save city
 		cityWData.setCity(newCity);
 		constrWorldData.setCurrentConstructingCityId(id);
-		TwitterCity.logger.info("Stin create newCity");
 		return newCity;
 	}
 	
@@ -67,7 +67,7 @@ public class CitiesManager {
 		//if(ChunkPreGenReference.isPreGenFinished) {}
 		//ChunkGenerationUtils.queueCityChunkGeneration(twitterWorld.getMinecraftServer(), city, TwitterCityWorldGenReference.DIM_ID, true);
 		
-		ChunksEditor.makeFlatChunksForCity(twitterWorld, city);
+		ChunkEditor.makeFlatChunksForCity(twitterWorld, city);
 		Paths.makePaths(twitterWorld, city);
 	}
 	

@@ -1,22 +1,32 @@
 package org.twittercity.twittercitymod.city;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
-/* Data object represents a city */
-public class City {
-
-	private int id;
-	BlockPos startingPos;
-	private int chunkLength; // city_size in theme.xml and its used to calculate x and z
+/* Data object represents a city. Cities are always square. */
+public class City {	
 	// worldCities[CityID].x = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
-	// worldCities[CityID].z = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
-
-	private int cityLength; // Vgainei random apo 5 mexri city_size sto xml kai meta pollaplasiazete me 16
+		// worldCities[CityID].z = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
+		
+	private int id;
+	// BlockPos object to the very first block of this city
+	private BlockPos startingPos;
+	
+	// Size in chunks for one city size where the outside paths starts
+	private int chunkLength;
+	// Size in block for one city size where the outside paths starts
+	private int cityLength;
+	//City expansion at the end of X and Z axis
 	private int edgeLength;
+	// How many blocks will be skipped before start building.
+	private int blockStart;
+	
+	// Size in blocks of the whole city's side (taking into consideration blockStart and edgeLength)
 	private int mapLength;
+	// How many the main roads paths will extend left and right
+	// e.g Path has length 1 block by default, with pathExtends = 2 the main roads will have 
+	// 3 blocks length.
 	private int pathExtends;
 
 	private Block groundBlock;
@@ -24,10 +34,9 @@ public class City {
 
 	private boolean hasMainStreets;
 	private boolean hasPaths;
-
-	private int blockStart = 0;
-
-	int[][] cityArea = null;
+	
+	// Representation of the city in a 2D array
+	private int[][] cityArea = null;
 	private int firstDimSize = -1;
 	private int secondDimSize = -1;
 	
@@ -35,31 +44,18 @@ public class City {
 	// we need to do the last things (make street lights, connect paths to roads) etc
 	private boolean isBuildingsConstructionCompleted = false;
 	private boolean isCityConstructionCompleted = false;
-	
-	public City() {
-		this.id = 0;
 
-		this.cityLength = 0 * 16;
-		this.edgeLength = 0;
-		this.mapLength = 0;
-
-		this.hasMainStreets = true;
-		this.hasPaths = true;
-
-		this.groundBlock = Blocks.OBSIDIAN;
-		this.pathBlock = Blocks.DIAMOND_BLOCK;
-
-		this.blockStart = this.edgeLength + 13;
-	}
-
-	public City(int id, int citySize, int edgeLenght, int pathExtends, Block groundBlock, Block pathBlock, boolean hasMainStreets, boolean hasPaths) {
+	public City(int id, BlockPos startingPos, int citySize, int edgeLenght, int pathExtends, Block groundBlock, Block pathBlock, boolean hasMainStreets, boolean hasPaths) {
 		this.id = id;
-
+		
+		this.startingPos = startingPos;
+		
 		this.chunkLength = citySize;
 		
 		this.cityLength = citySize * 16;
 		this.edgeLength = edgeLenght;
-		this.mapLength = cityLength + edgeLenght * 2;
+		this.mapLength = cityLength + edgeLenght + blockStart;
+
 		this.pathExtends = pathExtends;
 		
 		this.hasMainStreets = hasMainStreets;
@@ -68,21 +64,21 @@ public class City {
 		this.groundBlock = groundBlock;
 		this.pathBlock = pathBlock;
 		
-		this.blockStart = edgeLenght + 13;
+		this.blockStart = edgeLenght;
 
 	}
 
 	public City(NBTTagCompound nbt) {
 		
 		this.id = nbt.getInteger("id");
-		this.startingPos = new BlockPos(nbt.getInteger("startingPosX"), nbt.getInteger("startingPosY"), nbt.getInteger("startingPosZ"));
+		this.startingPos = BlockPos.fromLong(nbt.getLong("startingPosLong"));
 
 		this.cityLength = nbt.getInteger("cityLength");
 		this.edgeLength = nbt.getInteger("edgeLength");
 		this.mapLength = nbt.getInteger("mapLength");
 
-		this.groundBlock = Block.getBlockFromName(nbt.getString("groundBlock"));
-		this.pathBlock = Block.getBlockFromName(nbt.getString("pathBlock"));
+		this.groundBlock = Block.getBlockById(nbt.getInteger("groundBlockID"));
+		this.pathBlock = Block.getBlockById(nbt.getInteger("pathBlockID"));
 		
 		this.hasMainStreets = nbt.getBoolean("hasMainStreets");
 		this.hasPaths = nbt.getBoolean("hasPaths");
@@ -105,7 +101,7 @@ public class City {
 					this.cityArea[i][j] = nbt.hasKey(i + "," + j) ? nbt.getInteger(i + "," + j) : 0;
 				}
 			}
-		}		
+		}
 	}
 
 	public int getId() {
@@ -235,16 +231,14 @@ public class City {
 		NBTTagCompound nbt = new NBTTagCompound();
 		
 		nbt.setInteger("id", this.id);
-		nbt.setInteger("startingPosX", this.startingPos.getX());
-		nbt.setInteger("startingPosY", this.startingPos.getY());
-		nbt.setInteger("startingPosZ", this.startingPos.getZ());
+		nbt.setLong("startingPosLong", this.startingPos.toLong());
 		nbt.setInteger("chunkLength", this.chunkLength);
 		nbt.setInteger("cityLength", this.cityLength);
 		nbt.setInteger("edgeLength", this.edgeLength);
 		nbt.setInteger("mapLength", this.mapLength);
 		nbt.setBoolean("hasPaths", this.hasPaths);
-		nbt.setString("groundBlock", this.groundBlock.getUnlocalizedName());
-		nbt.setString("pathBlock", this.pathBlock.getUnlocalizedName());
+		nbt.setInteger("groundBlockID", Block.getIdFromBlock(this.groundBlock));
+		nbt.setInteger("pathBlockID", Block.getIdFromBlock(this.pathBlock));
 		nbt.setBoolean("hasMainStreets", this.hasMainStreets);
 		nbt.setBoolean("hasPaths", this.hasPaths);
 		nbt.setInteger("blockStart", this.blockStart);
@@ -252,12 +246,13 @@ public class City {
 		nbt.setBoolean("isCityConstructionCompleted", this.isCityConstructionCompleted);
 		nbt.setBoolean("isBuildingsConstructionCompleted", this.isBuildingsConstructionCompleted);
 		
-		nbt.setInteger("firstDimSize", this.firstDimSize);
-		nbt.setInteger("secondDimSize", this.secondDimSize);
+	
 		
 		if(cityArea != null ) {
-			for (int i = 0; i < firstDimSize; i++) {
-				for (int j = 0; j < secondDimSize; j++) {
+			nbt.setInteger("firstDimSize", cityArea.length);
+			nbt.setInteger("secondDimSize", cityArea[1].length);
+			for (int i = 0; i < cityArea.length; i++) {
+				for (int j = 0; j < cityArea[1].length; j++) {
 					nbt.setInteger(i + "," + j, cityArea[i][j]);
 				}
 			}

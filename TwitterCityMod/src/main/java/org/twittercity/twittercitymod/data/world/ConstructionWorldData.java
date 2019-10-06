@@ -1,8 +1,14 @@
 package org.twittercity.twittercitymod.data.world;
 
-import org.twittercity.twittercitymod.Reference;
+import java.util.ArrayList;
 
+import org.twittercity.twittercitymod.Reference;
+import org.twittercity.twittercitymod.util.BlockData;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
@@ -11,12 +17,16 @@ import net.minecraft.world.storage.WorldSavedData;
 public class ConstructionWorldData extends WorldSavedData {
 
 	private static final String DATA_NAME = Reference.MOD_ID + "_ConstructionData";
-	private static ConstructionWorldData instance = null;
+	private static ConstructionWorldData instance;
 
 	private static ConstructionInfo cInfo = null;
 	
 	public ConstructionWorldData() {
 		super(DATA_NAME);
+	}
+	
+	public ConstructionWorldData(String name) {
+		super(name);
 	}
 	
 	public static ConstructionWorldData get(World world) {
@@ -27,13 +37,12 @@ public class ConstructionWorldData extends WorldSavedData {
         	instance = new ConstructionWorldData();
             storage.setData(DATA_NAME, instance);
         }
-        //cInfo = cInfo == null ? new ConstructionWorldData.ConstructionInfo() : cInfo;
         return instance;
     }
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		cInfo.readFromNBT(nbt);
+		cInfo = new ConstructionWorldData.ConstructionInfo(nbt);
 	}
 
 	@Override
@@ -115,13 +124,26 @@ public class ConstructionWorldData extends WorldSavedData {
 		return cInfo.currentCityBuildingsCount;
 	}
 	
+	public void addToBuildLast(BlockData blockData) {
+		cInfo.addToBuildLast(blockData);
+		markDirty();
+	}
+	
+	public void clearBuildLast() {
+		cInfo.buildLast.clear();
+		markDirty();
+	}
+	
+	public ArrayList<BlockData> getBuildLast() {
+		return cInfo.buildLast;
+	}
+	
 	public void updateInfo(int cityId, int x, int z, int currentBuildingId, boolean isCurrentCityFinished) {
 		//Mark dirty after this function call
 		cInfo.currentConstructingCityId = cityId;
 		cInfo.areaArrayFirstLoopCounter = x;
 		cInfo.areaArraySecondLoopCounter = z;
 		cInfo.currentBuildingId = currentBuildingId;
-		//cInfo.constructingBuildingBlockPos = currentConstructingBlockPos;
 		cInfo.isCurrentCityFinished = isCurrentCityFinished;
 		this.markDirty();
 	}
@@ -141,11 +163,11 @@ public class ConstructionWorldData extends WorldSavedData {
 	
 		private int currentConstructingCityId;
 		private boolean isCurrentCityFinished;
-		private int currentBuildingId, areaArrayFirstLoopCounter, areaArraySecondLoopCounter;
+		private int currentBuildingId, areaArrayFirstLoopCounter = 0, areaArraySecondLoopCounter = 0;
 		private int currentBuildingRotation;
 		private int currentCityBuildingsCount = 0;
-
 		private BlockPos constructingBuildingBlockPos;
+		public ArrayList<BlockData> buildLast;
 
 		private ConstructionInfo(NBTTagCompound nbt) {
 			this.readFromNBT(nbt);
@@ -155,10 +177,12 @@ public class ConstructionWorldData extends WorldSavedData {
 			this.currentConstructingCityId = -1;
 			this.isCurrentCityFinished = false;
 			this.currentBuildingId = -1;
-			this.areaArrayFirstLoopCounter = -1;
-			this.areaArraySecondLoopCounter = -1;
+			this.areaArrayFirstLoopCounter = 0;
+			this.areaArraySecondLoopCounter = 0;
 			this.currentBuildingRotation = -1;
 			this.currentCityBuildingsCount = 0;
+			this.constructingBuildingBlockPos = null;
+			this.buildLast = new ArrayList<BlockData>();
 		}
 		
 		private NBTTagCompound writeToNBT() {
@@ -172,12 +196,18 @@ public class ConstructionWorldData extends WorldSavedData {
 			nbt.setInteger("areaArraySecondLoopCounter", this.areaArraySecondLoopCounter);
 			nbt.setInteger("currentBuildingRotation", this.currentBuildingRotation);
 			nbt.setInteger("currentCityBuildingsCount", this.currentCityBuildingsCount);
-			nbt.setLong("constructingBuildingBlockPos", constructingBuildingBlockPos.toLong());
+			nbt.setLong("constructingBuildingBlockPos", this.constructingBuildingBlockPos.toLong());
 			
+			NBTTagList buildLastTag = new NBTTagList();
+			for(BlockData blockData : buildLast) {
+				buildLastTag.appendTag((new BuildLastBlock(blockData.blockState, blockData.pos)).writeToNBT());
+			}
+			
+			nbt.setTag("buildLastBlocks", buildLastTag);
 			return nbt;
 		}
 		
-		public void readFromNBT(NBTTagCompound nbt) {
+		private void readFromNBT(NBTTagCompound nbt) {
 			
 			this.currentConstructingCityId = nbt.getInteger("currentCityID");
 			this.isCurrentCityFinished = nbt.getBoolean("isCityFinished");
@@ -187,6 +217,42 @@ public class ConstructionWorldData extends WorldSavedData {
 			this.currentBuildingRotation = nbt.getInteger("currentBuildingRotation");
 			this.currentCityBuildingsCount = nbt.getInteger("currentCityBuildingsCount");
 			this.constructingBuildingBlockPos = BlockPos.fromLong(nbt.getLong("constructingBuildingBlockPos"));
+			
+			NBTTagList buildLastBlocks = (NBTTagList) nbt.getTag("buildLastBlocks");
+			buildLast = buildLast == null ? new ArrayList<BlockData>() : buildLast;
+			for(int i = 0; i < buildLastBlocks.tagCount(); i++) {
+				BuildLastBlock buildLastBlock = new BuildLastBlock((NBTTagCompound) buildLastBlocks.get(i));
+				this.buildLast.add(new BlockData(buildLastBlock.pos, buildLastBlock.state));
+			}
 		}
+		
+		private void addToBuildLast(BlockData blockData) {
+			buildLast.add(blockData);
+		}
+		
+		// Wrapper-helper class for information about blocks that needed to be build last
+		private static class BuildLastBlock {
+			private IBlockState state;
+			private BlockPos pos;
+			
+			private BuildLastBlock(NBTTagCompound nbt) {
+				this.state = Block.getStateById(nbt.getInteger("blockStateID"));
+				this.pos = BlockPos.fromLong(nbt.getLong("blockPos"));
+			}
+			
+			private BuildLastBlock(IBlockState state, BlockPos pos) {
+				this.state = state;
+				this.pos = pos;
+			}
+			
+			private NBTTagCompound writeToNBT() {
+				NBTTagCompound nbt = new NBTTagCompound();
+				
+				nbt.setInteger("blockStateID", Block.getStateId(state));
+				nbt.setLong("blockPos", pos.toLong());
+				return nbt;	
+			}
+		}
+		
 	}
 }

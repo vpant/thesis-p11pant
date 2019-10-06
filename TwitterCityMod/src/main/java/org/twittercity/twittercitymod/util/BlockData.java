@@ -3,6 +3,8 @@ package org.twittercity.twittercitymod.util;
 import org.twittercity.twittercitymod.data.db.Tweet;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
 /**
