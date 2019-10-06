@@ -3,3 +3,5 @@ item.debug.name=Αντικείμενο αποσφαλμάτωσης
 
 < Custom messages >
 twittercity.teleport.welcome=Καλώς ορίσατε στην πόλη του Twitter
+twittercity.teleport.nosuchcity=Δεν υπάρχει πόλη με id:
+twittercity.teleport.nocityexists=Δεν έχει αναδομηθεί κάποια πόλη ακόμα

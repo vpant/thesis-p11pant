@@ -66,7 +66,11 @@ public class TeleportationTools {
 				new TwitterCityTeleporter(worldServer, x, y, z));
 		player.setPositionAndUpdate(x, y, z);
 	}
-
+	
+	public static void teleportToDimension(EntityPlayer player, int dimension, BlockPos pos) {
+		teleportToDimension(player, dimension, pos.getX(), pos.getY(), pos.getZ());
+	}
+	
 	private static void facePosition(Entity entity, double newX, double newY, double newZ, BlockPos dest) {
 		double d0 = dest.getX() - newX;
 		double d1 = dest.getY() - (newY + entity.getEyeHeight());

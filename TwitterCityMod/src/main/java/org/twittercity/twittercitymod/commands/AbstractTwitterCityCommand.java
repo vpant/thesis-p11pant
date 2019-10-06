@@ -36,7 +36,7 @@ public abstract class AbstractTwitterCityCommand extends CommandBase {
 		try {
 			value = Integer.parseInt(args[index]);
 		} catch (NumberFormatException e) {
-			value = 0;
+			value = -1;
 			ITextComponent component = new TextComponentString(
 					TextFormatting.RED + "Parameter is not a valid integer!");
 			sendMessage(sender, component);
