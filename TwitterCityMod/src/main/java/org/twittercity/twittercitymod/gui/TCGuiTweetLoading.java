@@ -7,11 +7,18 @@ public class TCGuiTweetLoading extends GuiScreen {
 	
 	int counter = 0;
 	public static final int WIDTH = 256, HEIGHT = 140;
-	String dots = ".";
+	private String dots = ".";
 	public TCGuiTweetLoading() {
 		
 	}
 	
+	@Override
+	public void initGui() {
+		
+	}
+
+
+
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;
