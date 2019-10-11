@@ -5,8 +5,8 @@ import java.awt.Color;
 public enum Feeling {
 	HAPPY(0, new Color(255,0,0).getRGB()), SAD(1, new Color(0,255,0).getRGB()), NO_FEELING(-1, -1);
 	
-	private int value;
-	private int colorCode;
+	private final int value;
+	private final int colorCode;
 	
 	private Feeling(int value, int colorCode) {
         this.value = value;

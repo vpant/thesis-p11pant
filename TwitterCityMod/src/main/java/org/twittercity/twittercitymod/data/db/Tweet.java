@@ -11,6 +11,7 @@ import java.net.URLConnection;
 
 import javax.imageio.ImageIO;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,7 +43,8 @@ public class Tweet {
 	@Column(name = "profile_pic_url")
 	private String profilePicUrl = null;
 	@Column(name = "feeling")
-	private int feelingID = -1;
+	@Convert(converter = FeelingEnumConverter.class)
+	private Feeling feeling = Feeling.NO_FEELING;
 	@Transient
 	private BufferedImage image = null;
 	@Transient
@@ -55,7 +57,7 @@ public class Tweet {
 		this.profilePicUrl = "https://pbs.twimg.com/profile_images/880136122604507136/xHrnqf1T_normal.jpg";
 		this.authorAccountId = "10412351231";
 		this.date = "11/12/2050";
-		this.feelingID = Feeling.NO_FEELING.getFeelingID();
+		this.feeling = Feeling.NO_FEELING;
 		this.everythingLoaded = true;
 	}
 	
@@ -67,13 +69,13 @@ public class Tweet {
 		this.tweetID = twitterAccountID;
 		this.date = date;
 		this.profilePicUrl = profilePicUrl;
-		this.feelingID = feeling.getFeelingID();
+		this.feeling = feeling;
 		this.everythingLoaded = true;
 	}
 	
 	public Tweet(int id, Feeling feeling) {
 		this.id = id;
-		this.feelingID = feeling.getFeelingID();
+		this.feeling = feeling;
 		everythingLoaded = false;
 	}
 
@@ -82,7 +84,7 @@ public class Tweet {
 	}
 	
 	public Feeling getFeeling() {
-		return Feeling.forFeelingID(feelingID);
+		return this.feeling;
 	}
 	
 	public String getText() {
@@ -201,7 +203,7 @@ public class Tweet {
 		this.tweetID = tweet.tweetID;
 		this.date = tweet.date;
 		this.profilePicUrl = tweet.profilePicUrl;
-		this.feelingID = tweet.feelingID;
+		this.feeling = tweet.feeling;
 		this.everythingLoaded = tweet.everythingLoaded;
 	}
 	
