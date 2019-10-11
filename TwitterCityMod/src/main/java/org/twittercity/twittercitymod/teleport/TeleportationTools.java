@@ -29,7 +29,7 @@ public class TeleportationTools {
 		float rotationPitch = player.rotationPitch;
 
 		if (oldId != dimension) {
-			teleportToDimension(player, dimension, destX, destY, destZ);
+			teleportToDimension(player, dimension, destX, destY, destZ, null);
 		}
 		if (direction != null) {
 			fixOrientation(player, destX, destY, destZ, direction);
@@ -52,8 +52,7 @@ public class TeleportationTools {
 		return w;
 	}
 
-	public static void teleportToDimension(EntityPlayer player, int dimension, double x, double y, double z) {
-		// int oldDimension = player.getEntityWorld().provider.getDimension();
+	public static void teleportToDimension(EntityPlayer player, int dimension, double x, double y, double z, EnumFacing facing) {
 		EntityPlayerMP entityPlayerMP = (EntityPlayerMP) player;
 		MinecraftServer server = player.getEntityWorld().getMinecraftServer();
 		WorldServer worldServer = server.getWorld(dimension);
@@ -61,14 +60,22 @@ public class TeleportationTools {
 			return;
 		}
 		player.addExperienceLevel(0);
-
+		
+		if(facing != null) {
+			fixOrientation(player, x, y, z, facing);
+		}
+		
 		worldServer.getMinecraftServer().getPlayerList().transferPlayerToDimension(entityPlayerMP, dimension,
 				new TwitterCityTeleporter(worldServer, x, y, z));
 		player.setPositionAndUpdate(x, y, z);
 	}
 	
+	public static void teleportToDimension(EntityPlayer player, int dimension, BlockPos pos, EnumFacing facing) {
+		teleportToDimension(player, dimension, pos.getX(), pos.getY(), pos.getZ(), facing);
+	}
+	
 	public static void teleportToDimension(EntityPlayer player, int dimension, BlockPos pos) {
-		teleportToDimension(player, dimension, pos.getX(), pos.getY(), pos.getZ());
+		teleportToDimension(player, dimension, pos, null);
 	}
 	
 	private static void facePosition(Entity entity, double newX, double newY, double newZ, BlockPos dest) {

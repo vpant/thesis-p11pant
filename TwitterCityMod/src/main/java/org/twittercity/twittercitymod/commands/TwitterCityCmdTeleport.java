@@ -9,6 +9,7 @@ import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -59,14 +60,14 @@ public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 		BlockPos cityStartingPos = city.getStartingPos();
 		if (currentId != twitterCityDim) {
 			// Maybe teleport to first town coordinates
-			TeleportationTools.teleportToDimension(player, twitterCityDim, cityStartingPos.add(0, 2, 0)); 
+			TeleportationTools.teleportToDimension(player, twitterCityDim, cityStartingPos.add(2, 2, 2), EnumFacing.EAST); 
 			player.sendMessage(new TextComponentTranslation("twittercity.teleport.welcome"));
 		} else {
 			BlockPos spawnPoint = player.getBedLocation(0); //Teleport to players spawn point
 			if(spawnPoint != null) {
 				TeleportationTools.teleportToDimension(player, 0, spawnPoint);
 			} else {
-				TeleportationTools.teleportToDimension(player, 0, 0, 63, 0);
+				TeleportationTools.teleportToDimension(player, 0, new BlockPos(0, 63, 0));
 				BlockPos worldSpawn = player.getEntityWorld().getSpawnPoint();
 				player.setPositionAndUpdate(worldSpawn.getX(), 70, worldSpawn.getZ());
 			}	
