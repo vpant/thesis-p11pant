@@ -37,7 +37,7 @@ public class Paths {
 		lstStreetsUsed.clear();
 		lstAllBuildings.clear();
 		
-		int plotBlocks = (1 + city.getMapLength()) - (city.getBlockStart() * 2);
+		int plotBlocks = (1 + city.getMapLength());// - (city.getEdgeLength() * 2);
 		int[][] area = new int[plotBlocks][plotBlocks];
 		
 		if (city.hasMainStreets()) {
@@ -69,7 +69,7 @@ public class Paths {
 		}
 		
 		for (District disCurrent : lstDistricts ) {
-			int[][] district = fillArea(area, (disCurrent.x2 - disCurrent.x1),(disCurrent.z2 - disCurrent.z1), disCurrent.x1, disCurrent.z1, city.getCityLength() > 5 * 16);
+			int[][] district = fillArea(area, (disCurrent.x2 - disCurrent.x1),(disCurrent.z2 - disCurrent.z1), disCurrent.x1, disCurrent.z1, city.getChunkLength() > 5);
 			for (int x = 0; x < (district.length - 2); x++) {
 				for (int y = 0; y < (district[1].length - 2); y++) {
 					area[disCurrent.x1 + x + 1][disCurrent.z1 + y + 1] = district[x + 1][y + 1];
@@ -239,11 +239,11 @@ public class Paths {
 					else if(Math.abs(x - (area.length / 2)) == (city.getPathExtends() + 1) ||
                             Math.abs(z - (area[1].length / 2)) == (city.getPathExtends() + 1)) {
 						if(city.hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
-							world.setBlockState(new BlockPos(city.getBlockStart() + x, 0, city.getBlockStart() + z ).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
+							world.setBlockState(new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
 						}
 					}
 					else {
-						world.setBlockState(new BlockPos(city.getBlockStart() + x, 0, city.getBlockStart() + z ).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
+						world.setBlockState(new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
 					}	
 				}
 			}
@@ -324,7 +324,7 @@ public class Paths {
 					return true;
 				}
 			default:
-				TwitterCity.logger.debug("Unknow frequency type encountered");
+				TwitterCity.logger.debug("Unknown frequency type encountered");
 		}
 		return false;
 	}
