@@ -21,17 +21,11 @@ public class DebugItem extends ItemBase{
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		if (!worldIn.isRemote) {
-			Tweet[] tweets = new Tweet[500];
-			for(int i = 0; i < 500; i++) {
+			Tweet[] tweets = new Tweet[5000];
+			for(int i = 0; i < tweets.length; i++) {
 				tweets[i] = new Tweet();
 			}
-			//CitiesManager.getInstance().startBuilding(tweets);
-			//for(int i = 0; i<=16; i++) {
-				CitiesManager.getInstance().createNewCity();
-				
-			//}
-			//TwitterCity.logger.info("The calculation of cityLength is: {}", CitySettings.getCitySizeFromCityLength(128, 8));//RandomHelper.nextInt(2,6)));
-						
+			CitiesManager.getInstance().startBuilding(tweets);		
 		}	
 		
 		

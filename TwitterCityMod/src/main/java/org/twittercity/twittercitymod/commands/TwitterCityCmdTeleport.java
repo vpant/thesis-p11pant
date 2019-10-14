@@ -34,12 +34,16 @@ public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 	// Maybe add twitter city id you want to teleport and defaulting to 1
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
+		boolean forceStayInTwitterCityDimmension = false;
+		if(args.length > 0 && args[0] != null) {
+			forceStayInTwitterCityDimmension = true;
+		}
 		int cityID = fetchInt(sender, args, 0, 0);
 		City city = CitiesManager.getInstance().getCity(cityID);
 		if (sender instanceof EntityPlayer) {			
 			EntityPlayer player = (EntityPlayer) sender;
 			if(city != null) {
-				teleportPlayerToCity(player, city);
+				teleportPlayerToCity(player, city, forceStayInTwitterCityDimmension);
 			}
 			else if(cityID >= 0) {
 				ITextComponent comp;
@@ -54,14 +58,16 @@ public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 		}
 	}
 	
-	private void teleportPlayerToCity(EntityPlayer player, City city) {
+	private void teleportPlayerToCity(EntityPlayer player, City city, boolean forceStayToTwitterCityDimmension) {
 		int currentId = player.getEntityWorld().provider.getDimension();
 		int twitterCityDim = TwitterCityWorldGenReference.DIM_ID;
 		BlockPos cityStartingPos = city.getStartingPos();
-		if (currentId != twitterCityDim) {
+		if (currentId != twitterCityDim || forceStayToTwitterCityDimmension) {
 			// Maybe teleport to first town coordinates
 			TeleportationTools.teleportToDimension(player, twitterCityDim, cityStartingPos.add(2, 2, 2), EnumFacing.EAST); 
-			player.sendMessage(new TextComponentTranslation("twittercity.teleport.welcome"));
+			if (currentId != twitterCityDim) {
+				player.sendMessage(new TextComponentTranslation("twittercity.teleport.welcome"));
+			}
 		} else {
 			BlockPos spawnPoint = player.getBedLocation(0); //Teleport to players spawn point
 			if(spawnPoint != null) {

@@ -59,9 +59,8 @@ public class Buildings {
 		}
 		
 		if(remainingBlocksToSpawn > 0) {
-			// calculate new city position (area, id etc)
-			// update construction info data
-			// build remaining blocks to spawn
+			City newCity = CitiesManager.getInstance().createNewCity();
+			remainingBlocksToSpawn = makeBuildings(world, newCity, remainingBlocksToSpawn);
 		}
 		
 	}

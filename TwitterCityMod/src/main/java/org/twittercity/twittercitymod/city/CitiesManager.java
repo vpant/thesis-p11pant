@@ -36,8 +36,6 @@ public class CitiesManager {
 		if(currentConstructingCity == null) {
 			currentConstructingCity = createNewCity();
 		}
-		CitySettings.getValidEdgeLengthFromCityLength(108);
-		//TwitterCity.logger.info("citySize is: {}", getCitySizeFromCityLength(124, 0));
 		
 		Buildings.makeInsideCity(twitterWorld, currentConstructingCity, tweets);
 	}
