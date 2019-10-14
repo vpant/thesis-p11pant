@@ -5,248 +5,111 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
 /* Data object represents a city. Cities are always square. */
-public class City {	
-	// worldCities[CityID].x = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
-		// worldCities[CityID].z = RNG.Next(2, (MapChunksLength - worldCities[CityID].ChunkLength) - 1);
-		
-	private int id;
-	// BlockPos object to the very first block of this city
-	private BlockPos startingPos;
-	
-	// Size in chunks for one city size where the outside paths starts
-	private int chunkLength;
-	// Size in block for one city size where the outside paths starts
-	private int cityLength;
-	//City expansion at the end of X and Z axis
-	private int edgeLength;
-	// How many blocks will be skipped before start building.
-	private int blockStart;
-	
-	// Size in blocks of the whole city's side (taking into consideration blockStart and edgeLength)
-	private int mapLength;
-	// How many the main roads paths will extend left and right
-	// e.g Path has length 1 block by default, with pathExtends = 2 the main roads will have 
-	// 3 blocks length.
-	private int pathExtends;
-
-	private Block groundBlock;
-	private Block pathBlock;
-
-	private boolean hasMainStreets;
-	private boolean hasPaths;
+public final class City {	
+	private final CitySettings settings;
 	
 	// Representation of the city in a 2D array
-	private int[][] cityArea = null;
-	private int firstDimSize = -1;
-	private int secondDimSize = -1;
+	private final int[][] cityArea;
+	private final int firstDimSize;
+	private final int secondDimSize;
 	
 	// When buildings construction is finished but not city construction
 	// we need to do the last things (make street lights, connect paths to roads) etc
-	private boolean isBuildingsConstructionCompleted = false;
-	private boolean isCityConstructionCompleted = false;
+	private boolean areAllBuildingsCompleted = false;
+	private boolean isCityCompleted = false;
 
-	public City(int id, BlockPos startingPos, int citySize, int edgeLenght, int pathExtends, Block groundBlock, Block pathBlock, boolean hasMainStreets, boolean hasPaths) {
-		this.id = id;
-		
-		this.startingPos = startingPos;
-		
-		this.chunkLength = citySize;
-		
-		this.cityLength = citySize * 16;
-		this.edgeLength = edgeLenght;
-		this.mapLength = cityLength + edgeLenght + blockStart;
-
-		this.pathExtends = pathExtends;
-		
-		this.hasMainStreets = hasMainStreets;
-		this.hasPaths = hasPaths;
-
-		this.groundBlock = groundBlock;
-		this.pathBlock = pathBlock;
-		
-		this.blockStart = edgeLenght;
-
+	public City(CitySettings settings, int[][] area) {
+		this.settings = settings;
+		this.cityArea = area;
+		this.firstDimSize = area.length;
+		this.secondDimSize = area[1].length;
 	}
 
-	public City(NBTTagCompound nbt) {
-		
-		this.id = nbt.getInteger("id");
-		this.startingPos = BlockPos.fromLong(nbt.getLong("startingPosLong"));
-
-		this.cityLength = nbt.getInteger("cityLength");
-		this.edgeLength = nbt.getInteger("edgeLength");
-		this.mapLength = nbt.getInteger("mapLength");
-
-		this.groundBlock = Block.getBlockById(nbt.getInteger("groundBlockID"));
-		this.pathBlock = Block.getBlockById(nbt.getInteger("pathBlockID"));
-		
-		this.hasMainStreets = nbt.getBoolean("hasMainStreets");
-		this.hasPaths = nbt.getBoolean("hasPaths");
-		
-		this.chunkLength = nbt.getInteger("chunkLength");
-		
-		this.blockStart = nbt.getInteger("blockStart");
-		
-		this.isBuildingsConstructionCompleted = nbt.getBoolean("isBuildingsConstructionCompleted");
-		this.isCityConstructionCompleted = nbt.getBoolean("isCityConstructionCompleted");
-		
+	public City(NBTTagCompound nbt) {			
+		this.settings = new CitySettings(nbt);
+		this.areAllBuildingsCompleted = nbt.getBoolean("isBuildingsConstructionCompleted");
+		this.isCityCompleted = nbt.getBoolean("isCityConstructionCompleted");	
 		
 		this.firstDimSize = nbt.hasKey("firstDimSize") ? nbt.getInteger("firstDimSize") : -1;
 		this.secondDimSize = nbt.hasKey("secondDimSize") ? nbt.getInteger("secondDimSize") : -1;
 		
-		if(this.firstDimSize >= 0 && this.secondDimSize >= 0) {
-			this.cityArea = new int[firstDimSize][secondDimSize];
-			for (int i = 0; i < firstDimSize; i++) {
-				for (int j = 0; j < secondDimSize; j++) {
-					this.cityArea[i][j] = nbt.hasKey(i + "," + j) ? nbt.getInteger(i + "," + j) : 0;
-				}
+		this.cityArea = new int[firstDimSize][secondDimSize];
+		for (int i = 0; i < firstDimSize; i++) {
+			for (int j = 0; j < secondDimSize; j++) {
+				this.cityArea[i][j] = nbt.hasKey(i + "," + j) ? nbt.getInteger(i + "," + j) : 0;
 			}
 		}
 	}
 
 	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public void setStartingPos(BlockPos startingPos) {
-		this.startingPos = startingPos;
+		return settings.getId();
 	}
 
 	public BlockPos getStartingPos() {
-		return startingPos;
+		return settings.getStartingPos();
 	}
 
 	public int getChunkLength() {
-		return chunkLength;
-	}
-
-	public void setChunkLength(int chunkLength) {
-		this.chunkLength = chunkLength;
-	}
-
-	public int getCityLength() {
-		return cityLength;
-	}
-
-	public void setCityLength(int cityLength) {
-		this.cityLength = cityLength * 16;
+		return settings.getChunkLength();
 	}
 
 	public int getEdgeLength() {
-		return edgeLength;
-	}
-
-	public void setEdgeLength(int edgeLength) {
-		this.edgeLength = edgeLength;
+		return settings.getEdgeLength();
 	}
 
 	public int getMapLength() {
-		return mapLength;
-	}
-
-	public void setMapLength(int mapLength) {
-		this.mapLength = mapLength;
-	}
-
-	public int getBlockStart() {
-		return blockStart;
-	}
-
-	public void setBlockStart(int blockStart) {
-		this.blockStart = blockStart;
+		return settings.getMapLength();
 	}
 
 	public Block getGroundBlock() {
-		return groundBlock;
+		return settings.getGroundBlock();
 	}
 
 	public Block getPathBlock() {
-		return pathBlock;
-	}
-
-	public void setGroundBlock(Block groundBlock) {
-		this.groundBlock = groundBlock;
-	}
-
-	public void setPathBlock(Block pathBlock) {
-		this.pathBlock = pathBlock;
+		return settings.getPathBlock();
 	}
 
 	public boolean hasMainStreets() {
-		return hasMainStreets;
-	}
-
-	public void setHasMainStreets(boolean hasMainStreets) {
-		this.hasMainStreets = hasMainStreets;
-	}
-
-	public void hasPaths(boolean hasPaths) {
-
-		this.hasPaths = hasPaths;
+		return settings.hasMainStreets();
 	}
 
 	public boolean hasPaths() {
-
-		return hasPaths;
+		return settings.hasPaths();
 	}
 	
 	public int getPathExtends() {
-		return pathExtends;
+		return settings.getPathExtends();
 	}
 
-	public void setPathExtends(int pathExtends) {
-		this.pathExtends = pathExtends;
-	}
-	
-	public void setCityArea(int[][] area) {
-		this.cityArea = area;
+	public int getCityLength() {
+		return settings.getCityLength();
 	}
 	
 	public int[][] getCityArea() {
 		return this.cityArea;
 	}
-
-	public void setIsBuildingsConstructionCompleted(boolean itIs) {
-		this.isBuildingsConstructionCompleted = itIs;
+	
+	public void setAreAllBuildingsCompleted(boolean itIs) {
+		this.areAllBuildingsCompleted = itIs;
 	}
 
-	public boolean setIsBuildingsConstructionCompleted() {
-		return this.isBuildingsConstructionCompleted;
+	public boolean getAreAllBuildingsCompleted() {
+		return this.areAllBuildingsCompleted;
 	}
 	
-	public void setIsCityConstructionCompleted(boolean itIs) {
-		this.isCityConstructionCompleted = itIs;
+	public void setIsCityCompleted(boolean itIs) {
+		this.isCityCompleted = itIs;
 	}
 
-	public boolean getIsCityConstructionCompleted() {
-		return this.isCityConstructionCompleted;
+	public boolean getIsCityCompleted() {
+		return this.isCityCompleted;
 	}
 	
-	public NBTTagCompound writeToNBT() {
-
-		NBTTagCompound nbt = new NBTTagCompound();
-		
-		nbt.setInteger("id", this.id);
-		nbt.setLong("startingPosLong", this.startingPos.toLong());
-		nbt.setInteger("chunkLength", this.chunkLength);
-		nbt.setInteger("cityLength", this.cityLength);
-		nbt.setInteger("edgeLength", this.edgeLength);
-		nbt.setInteger("mapLength", this.mapLength);
-		nbt.setBoolean("hasPaths", this.hasPaths);
-		nbt.setInteger("groundBlockID", Block.getIdFromBlock(this.groundBlock));
-		nbt.setInteger("pathBlockID", Block.getIdFromBlock(this.pathBlock));
-		nbt.setBoolean("hasMainStreets", this.hasMainStreets);
-		nbt.setBoolean("hasPaths", this.hasPaths);
-		nbt.setInteger("blockStart", this.blockStart);
-		
-		nbt.setBoolean("isCityConstructionCompleted", this.isCityConstructionCompleted);
-		nbt.setBoolean("isBuildingsConstructionCompleted", this.isBuildingsConstructionCompleted);
-		
+	public NBTTagCompound writeToNBT() {		
+		NBTTagCompound nbt = settings.writeToNBT();
 	
+		nbt.setBoolean("isCityConstructionCompleted", this.isCityCompleted);
+		nbt.setBoolean("isBuildingsConstructionCompleted", this.areAllBuildingsCompleted);
 		
 		if(cityArea != null ) {
 			nbt.setInteger("firstDimSize", cityArea.length);
@@ -267,6 +130,6 @@ public class City {
 
 	@Override
 	public String toString() {
-		return "City id: " + id;
+		return "";//"City id: " + settings.id;
 	}
 }

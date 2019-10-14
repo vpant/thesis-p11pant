@@ -3,6 +3,7 @@ package org.twittercity.twittercitymod.data.world;
 import java.util.ArrayList;
 
 import org.twittercity.twittercitymod.Reference;
+import org.twittercity.twittercitymod.city.EnumCityBuildDirection;
 import org.twittercity.twittercitymod.util.BlockData;
 
 import net.minecraft.block.Block;
@@ -50,50 +51,83 @@ public class ConstructionWorldData extends WorldSavedData {
 		return cInfo.writeToNBT();
 	}
 	
-	public void setCurrentConstructingCityId(int currentConstructingCityId) {
+	public ConstructionWorldData setCurrentConstructingCityId(int currentConstructingCityId) {
 		cInfo.currentConstructingCityId = currentConstructingCityId;
 		this.markDirty();
+		return this;
 	}
 
 
-	public void setCurrentCityFinished(boolean isCurrentCityFinished) {
+	public ConstructionWorldData setCurrentCityFinished(boolean isCurrentCityFinished) {
 		cInfo.isCurrentCityFinished = isCurrentCityFinished;
 		this.markDirty();
+		return this;
 	}
 
 
-	public void setCurrentBuildingId(int currentBuildingId) {
+	public ConstructionWorldData setCurrentBuildingId(int currentBuildingId) {
 		cInfo.currentBuildingId = currentBuildingId;
 		this.markDirty();
+		return this;
 	}
 
-	public void setAreaArrayFirstLoopCounter(int areaArrayFirstLoopCounter) {
+	public ConstructionWorldData setAreaArrayFirstLoopCounter(int areaArrayFirstLoopCounter) {
 		cInfo.areaArrayFirstLoopCounter = areaArrayFirstLoopCounter;
 		this.markDirty();
+		return this;
 	}
 
-	public void setAreaArraySecondLoopCounter(int areaArraySecondLoopCounter) {
+	public ConstructionWorldData setAreaArraySecondLoopCounter(int areaArraySecondLoopCounter) {
 		cInfo.areaArraySecondLoopCounter = areaArraySecondLoopCounter;
 		this.markDirty();
+		return this;
 	}
 
-	public void setCurrentBuildingRotation(int currentBuildingRotation) {
+	public ConstructionWorldData setCurrentBuildingRotation(int currentBuildingRotation) {
 		cInfo.currentBuildingRotation = currentBuildingRotation;
 		this.markDirty();
+		return this;
 	}
 
-	public void increaseCurrentCityBuildingsCount() {
+	/**
+	 * Sets the CityBuildDirection to the next index. If there is no CityBuildDirection 
+	 * it is set EnumCityBuildingDirection.CENTER. If index is out of bound it is set to 
+	 * EnumCityBuildingDirection.NORTH_WEST
+	 */
+	public ConstructionWorldData setNextCityDirection() {
+		cInfo.buildDirection = EnumCityBuildDirection.getNextCityDirection(cInfo.buildDirection);
+		this.markDirty();
+		return this;
+	}
+	
+	public ConstructionWorldData increaseCurrentCityBuildingsCount() {
 		cInfo.currentCityBuildingsCount++;
+		this.markDirty();
+		return this;
+	}
+	
+	public ConstructionWorldData setCurrentConstructingBlockPos(BlockPos pos) {
+		cInfo.constructingBuildingBlockPos = pos;
+		this.markDirty();
+		return this;
+	}
+	
+	public void setCityLength(int cityLength) {
+		cInfo.currentCityLength	= cityLength;
 		this.markDirty();
 	}
 	
-	public void setCurrentConstructingBlockPos(BlockPos pos) {
-		cInfo.constructingBuildingBlockPos = pos;
+	public void setCitiesSquareNorthWestCorner(BlockPos pos) {
+		cInfo.citiesSquareNorthWestCorner = pos;
 		this.markDirty();
 	}
 	
 	public BlockPos getConstructingBuildingBlockPos() {
 		return cInfo.constructingBuildingBlockPos;
+	}
+	
+	public EnumCityBuildDirection getCityDirection() {
+		return cInfo.buildDirection;
 	}
 	
 	public int getCurrentConstructingCityId() {
@@ -111,6 +145,10 @@ public class ConstructionWorldData extends WorldSavedData {
 	public int getAreaArrayFirstLoopCounter() {
 		return cInfo.areaArrayFirstLoopCounter;
 	}
+	
+	public int getCityLength() {
+		return cInfo.currentCityLength;
+	}
 
 	public int getAreaArraySecondLoopCounter() {
 		return cInfo.areaArraySecondLoopCounter;
@@ -122,6 +160,10 @@ public class ConstructionWorldData extends WorldSavedData {
 
 	public int getCurrentCityBuildingsCount() {
 		return cInfo.currentCityBuildingsCount;
+	}
+	
+	public BlockPos getCitiesSquareNorthWestCorner() {
+		return cInfo.citiesSquareNorthWestCorner;
 	}
 	
 	public void addToBuildLast(BlockData blockData) {
@@ -161,12 +203,15 @@ public class ConstructionWorldData extends WorldSavedData {
 	
 	private static class ConstructionInfo {
 	
+		private int currentCityLength;
 		private int currentConstructingCityId;
 		private boolean isCurrentCityFinished;
 		private int currentBuildingId, areaArrayFirstLoopCounter = 0, areaArraySecondLoopCounter = 0;
 		private int currentBuildingRotation;
 		private int currentCityBuildingsCount = 0;
-		private BlockPos constructingBuildingBlockPos;
+		private BlockPos constructingBuildingBlockPos = null;
+		private EnumCityBuildDirection buildDirection = null;
+		private BlockPos citiesSquareNorthWestCorner = BlockPos.ORIGIN;
 		public ArrayList<BlockData> buildLast;
 
 		private ConstructionInfo(NBTTagCompound nbt) {
@@ -182,6 +227,7 @@ public class ConstructionWorldData extends WorldSavedData {
 			this.currentBuildingRotation = -1;
 			this.currentCityBuildingsCount = 0;
 			this.constructingBuildingBlockPos = null;
+			this.currentCityLength = 0;
 			this.buildLast = new ArrayList<BlockData>();
 		}
 		
@@ -196,7 +242,14 @@ public class ConstructionWorldData extends WorldSavedData {
 			nbt.setInteger("areaArraySecondLoopCounter", this.areaArraySecondLoopCounter);
 			nbt.setInteger("currentBuildingRotation", this.currentBuildingRotation);
 			nbt.setInteger("currentCityBuildingsCount", this.currentCityBuildingsCount);
-			nbt.setLong("constructingBuildingBlockPos", this.constructingBuildingBlockPos.toLong());
+			nbt.setInteger("currentCityLength", this.currentCityLength);
+			nbt.setLong("constructingBuildingBlockPos", constructingBuildingBlockPos == null ? 
+					0 : this.constructingBuildingBlockPos.toLong());
+			nbt.setLong("citiesSquareNorthWestCorner", citiesSquareNorthWestCorner == null ? 
+					0 : this.citiesSquareNorthWestCorner.toLong());
+			if(this.buildDirection != null) {
+				nbt.setInteger("buildDirectionIndex", this.buildDirection.getIndex());
+			}
 			
 			NBTTagList buildLastTag = new NBTTagList();
 			for(BlockData blockData : buildLast) {
@@ -217,6 +270,10 @@ public class ConstructionWorldData extends WorldSavedData {
 			this.currentBuildingRotation = nbt.getInteger("currentBuildingRotation");
 			this.currentCityBuildingsCount = nbt.getInteger("currentCityBuildingsCount");
 			this.constructingBuildingBlockPos = BlockPos.fromLong(nbt.getLong("constructingBuildingBlockPos"));
+			this.citiesSquareNorthWestCorner = BlockPos.fromLong(nbt.getLong("citiesSquareNorthWestCorner"));
+			this.currentCityLength = nbt.getInteger("currentCityLength");
+			this.buildDirection = nbt.hasKey("buildDirectionIndex") ? 
+					EnumCityBuildDirection.getCityDirectionByIndex(nbt.getInteger("buildDirectionIndex")) : null;
 			
 			NBTTagList buildLastBlocks = (NBTTagList) nbt.getTag("buildLastBlocks");
 			buildLast = buildLast == null ? new ArrayList<BlockData>() : buildLast;
@@ -256,3 +313,4 @@ public class ConstructionWorldData extends WorldSavedData {
 		
 	}
 }
+

@@ -60,8 +60,7 @@ public class TCBlock extends Block {
 		if (!worldIn.isRemote && ent instanceof TileEntityTwitter) {
 			TwitterCity.proxy.openTweetLoadingGUI();
 			Tweet tweet = TweetManager.getInstance().getTweet(((TileEntityTwitter)ent).getTweetID());
-			TwitterCity.proxy.openTweetGUI(tweet);
-			
+			TwitterCity.proxy.openTweetGUI(tweet);	
 		}
 		return true;
 	}

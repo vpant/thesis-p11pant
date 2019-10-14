@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.twittercity.twittercitymod.Reference;
-import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.city.City;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,8 +33,7 @@ public class CityWorldData extends WorldSavedData {
         instance = (CityWorldData) storage.getOrLoadData(CityWorldData.class, DATA_NAME);
        
         if (instance == null) {
-        	TwitterCity.logger.info("Stin get tis CityWorldData instance == null");
-            instance = new CityWorldData();
+        	instance = new CityWorldData();
             storage.setData(DATA_NAME, instance);
         }
         return instance;
@@ -85,5 +83,9 @@ public class CityWorldData extends WorldSavedData {
 	
 	public HashMap<Integer,City> getCities() {
 		return (HashMap<Integer, City>) this.cities;
+	}
+
+	public City getFirstCity() {
+		return getCity(0);
 	}
 }

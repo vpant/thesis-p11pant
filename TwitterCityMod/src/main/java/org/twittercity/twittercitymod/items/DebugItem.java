@@ -25,8 +25,16 @@ public class DebugItem extends ItemBase{
 			for(int i = 0; i < 500; i++) {
 				tweets[i] = new Tweet();
 			}
-			CitiesManager.getInstance().startBuilding(tweets);
-		}		
+			//CitiesManager.getInstance().startBuilding(tweets);
+			//for(int i = 0; i<=16; i++) {
+				CitiesManager.getInstance().createNewCity();
+				
+			//}
+			//TwitterCity.logger.info("The calculation of cityLength is: {}", CitySettings.getCitySizeFromCityLength(128, 8));//RandomHelper.nextInt(2,6)));
+						
+		}	
+		
+		
 		return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
 	}
 	

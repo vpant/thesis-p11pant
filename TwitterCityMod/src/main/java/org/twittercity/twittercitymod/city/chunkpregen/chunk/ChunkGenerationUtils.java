@@ -52,6 +52,6 @@ public class ChunkGenerationUtils {
 	}
 	
 	public static int queueCityChunkGeneration(MinecraftServer server, City city, int dimensionID, boolean logToChat) {
-		return queueChunkGeneration(server, city.getStartingPos().getX(), city.getStartingPos().getZ(), (city.getCityLength() / 16), (city.getCityLength() / 16), dimensionID, logToChat);
+		return queueChunkGeneration(server, city.getStartingPos().getX(), city.getStartingPos().getZ(), city.getChunkLength(), city.getChunkLength(), dimensionID, logToChat);
 	}
 }

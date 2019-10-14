@@ -31,19 +31,19 @@ public class Paths {
 	
 	// Here is where every city starts. Calculates the city area as a 2D array then we are using 
 	// the array to build up everything (paths, roads, lights, buildings etc.)
-	public static int[][] createCityArea(City city) {
+	public static int[][] createCityArea(CitySettings citySettings) {
 		
 		lstDistricts.clear();
 		lstStreetsUsed.clear();
 		lstAllBuildings.clear();
 		
-		int plotBlocks = (1 + city.getMapLength());// - (city.getEdgeLength() * 2);
+		int plotBlocks = (1 + citySettings.getMapLength());// - (city.getEdgeLength() * 2);
 		int[][] area = new int[plotBlocks][plotBlocks];
 		
-		if (city.hasMainStreets()) {
+		if (citySettings.hasMainStreets()) {
 			//make the main streets
 			for (int a = 0; a <= (area.length - 1); a++){
-				for (int c = -city.getPathExtends(); c <= city.getPathExtends(); c++){
+				for (int c = -citySettings.getPathExtends(); c <= citySettings.getPathExtends(); c++){
 					area[a][((area.length - 1) / 2) + c ] = 1;
 					area[((area.length - 1) / 2) + c][a] = 1;
 				}
@@ -51,16 +51,16 @@ public class Paths {
 			
 			//make the districts
 			//top right
-			splitArea(area, 0, 0, (area.length / 2 ) - (city.getPathExtends() +1), (area.length / 2) - (city.getPathExtends() + 1));
+			splitArea(area, 0, 0, (area.length / 2 ) - (citySettings.getPathExtends() +1), (area.length / 2) - (citySettings.getPathExtends() + 1));
 		
 			//bottom left
-			splitArea(area, (area.length / 2) + (city.getPathExtends() + 1), (area.length / 2) + (city.getPathExtends() + 1), (area.length - 1) , (area.length - 1));
+			splitArea(area, (area.length / 2) + (citySettings.getPathExtends() + 1), (area.length / 2) + (citySettings.getPathExtends() + 1), (area.length - 1) , (area.length - 1));
 			
 			//bottom right
-			splitArea(area, (area.length / 2) + (city.getPathExtends() + 1), 0, (area.length - 1), (area.length / 2) - (city.getPathExtends() + 1));
+			splitArea(area, (area.length / 2) + (citySettings.getPathExtends() + 1), 0, (area.length - 1), (area.length / 2) - (citySettings.getPathExtends() + 1));
 			
 			//top left
-			splitArea (area, 0, (area.length / 2) + (city.getPathExtends() + 1), (area.length / 2) - (city.getPathExtends() + 1), (area.length - 1));
+			splitArea (area, 0, (area.length / 2) + (citySettings.getPathExtends() + 1), (area.length / 2) - (citySettings.getPathExtends() + 1), (area.length - 1));
 		
 			shuffleDistricts(lstDistricts);
 		}
@@ -69,7 +69,7 @@ public class Paths {
 		}
 		
 		for (District disCurrent : lstDistricts ) {
-			int[][] district = fillArea(area, (disCurrent.x2 - disCurrent.x1),(disCurrent.z2 - disCurrent.z1), disCurrent.x1, disCurrent.z1, city.getChunkLength() > 5);
+			int[][] district = fillArea(area, (disCurrent.x2 - disCurrent.x1),(disCurrent.z2 - disCurrent.z1), disCurrent.x1, disCurrent.z1, citySettings.getChunkLength() > 5);
 			for (int x = 0; x < (district.length - 2); x++) {
 				for (int y = 0; y < (district[1].length - 2); y++) {
 					area[disCurrent.x1 + x + 1][disCurrent.z1 + y + 1] = district[x + 1][y + 1];

@@ -6,6 +6,7 @@ import org.twittercity.twittercitymod.data.world.CityWorldData;
 import org.twittercity.twittercitymod.data.world.ConstructionWorldData;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -30,44 +31,76 @@ public class CitiesManager {
 	}
 	
 	public void startBuilding(Tweet[] tweets) {
-		
-		//Get latest cities construction info 
-		City currentConstructingCity;
-		if(constrWorldData.getCurrentConstructingCityId() < 0) {
+		//Get latest city's construction info 
+		City currentConstructingCity = getCity(constrWorldData.getCurrentConstructingCityId());
+		if(currentConstructingCity == null) {
 			currentConstructingCity = createNewCity();
-			prepareCity(currentConstructingCity);
-		} else {
-			TwitterCity.logger.info("Current constructing id is: {}", constrWorldData.getCurrentConstructingCityId());
-			currentConstructingCity = getCity(constrWorldData.getCurrentConstructingCityId());
 		}
-		TwitterCity.logger.info("The mapLength is: {}", currentConstructingCity.getMapLength());
-		TwitterCity.logger.info("The startingPos is: {}", currentConstructingCity.getStartingPos().toString());
+		CitySettings.getValidEdgeLengthFromCityLength(108);
+		//TwitterCity.logger.info("citySize is: {}", getCitySizeFromCityLength(124, 0));
+		
 		Buildings.makeInsideCity(twitterWorld, currentConstructingCity, tweets);
 	}
 	
 	public City createNewCity() {
-		TwitterCity.logger.info("Creating new city!");
-		int id = constrWorldData.getCurrentConstructingCityId();
-		
-		//Calculate new city's starting position
-		BlockPos startingPos = new BlockPos(1000,63,1000);
-		
-		// Should make random
-		City newCity = new City(++id, startingPos, 5, 8, 4, Blocks.OBSIDIAN, Blocks.DIAMOND_BLOCK, true, true);
-		
-		newCity.setCityArea(Paths.createCityArea(newCity));
-		
+		CitySettings citySettings = getNewCitySettings();
+		City newCity = new City(citySettings, Paths.createCityArea(citySettings));
+	
 		//Save city
 		cityWData.setCity(newCity);
-		constrWorldData.setCurrentConstructingCityId(id);
+		prepareCity(newCity);
+		
 		return newCity;
 	}
 	
+	
+	private CitySettings getNewCitySettings() {
+		// Initial values for first city
+		int id = constrWorldData.getCurrentConstructingCityId(), citySize, edgeLength, pathExtends = 2;
+		int nextCityLength = 0;
+		BlockPos startingPos;
+		Block groundBlock = Blocks.OBSIDIAN, pathBlock = Blocks.DIAMOND_BLOCK;
+		EnumCityBuildDirection lastCityDirection = constrWorldData.getCityDirection();
+		EnumCityBuildDirection newCityBuildDirection = constrWorldData.setNextCityDirection().getCityDirection();
+		BlockPos squareCornerPos = constrWorldData.getCitiesSquareNorthWestCorner();
+		// Not the first city
+		if(id >= 0) {
+			nextCityLength = constrWorldData.getCityLength();
+			if(lastCityDirection == EnumCityBuildDirection.WEST) {
+				squareCornerPos = squareCornerPos.add((nextCityLength + 1) * newCityBuildDirection.getDirectionVector().getX(), 0, (nextCityLength + 1) * newCityBuildDirection.getDirectionVector().getZ());
+				nextCityLength *= 3;
+				constrWorldData.setCitiesSquareNorthWestCorner(squareCornerPos);
+				TwitterCity.logger.info("The corner is: {}", squareCornerPos.toString());
+			}
+
+			//Calculate new city's starting position
+			startingPos = CitySettings.getNewCityPosition(squareCornerPos.add(newCityBuildDirection.getDirectionVector()), newCityBuildDirection, nextCityLength);
+			edgeLength = CitySettings.getValidEdgeLengthFromCityLength(nextCityLength);
+			citySize = CitySettings.getCitySizeFromCityLength(nextCityLength, edgeLength); 
+		}
+		else { // First city
+			citySize = 6;
+			edgeLength = 3;
+			startingPos = new BlockPos(0, 63, 0);
+			constrWorldData.setCitiesSquareNorthWestCorner(startingPos);
+		}
+
+		CitySettings citySettings = new CitySettings(++id, startingPos, citySize,
+				edgeLength, pathExtends, groundBlock, pathBlock, true, true);
+		TwitterCity.logger.info(citySettings.toString());
+		
+		constrWorldData.setCityLength(citySettings.getCityLength());
+		constrWorldData.setCurrentConstructingCityId(id);
+
+		return citySettings;
+	}
+
+
 	public void prepareCity(City city) {
 		//if(ChunkPreGenReference.isPreGenFinished) {}
 		//ChunkGenerationUtils.queueCityChunkGeneration(twitterWorld.getMinecraftServer(), city, TwitterCityWorldGenReference.DIM_ID, true);
 		
-		ChunkEditor.makeFlatChunksForCity(twitterWorld, city);
+		ChunkEditor.makeFlatAreaForCity(twitterWorld, city);
 		Paths.makePaths(twitterWorld, city);
 	}
 	
