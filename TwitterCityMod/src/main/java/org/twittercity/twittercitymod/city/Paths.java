@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.util.ArrayUtils;
+import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.util.RandomHelper;
 
 import net.minecraft.util.math.BlockPos;
@@ -239,11 +240,13 @@ public class Paths {
 					else if(Math.abs(x - (area.length / 2)) == (city.getPathExtends() + 1) ||
                             Math.abs(z - (area[1].length / 2)) == (city.getPathExtends() + 1)) {
 						if(city.hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
-							world.setBlockState(new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
+							BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos());
+							BlockHelper.spawnOrEnqueue(pos, city.getPathBlock().getDefaultState());
 						}
 					}
 					else {
-						world.setBlockState(new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos()), city.getPathBlock().getDefaultState());
+						BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos());
+						BlockHelper.spawnOrEnqueue(pos, city.getPathBlock().getDefaultState());
 					}	
 				}
 			}

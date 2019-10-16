@@ -15,7 +15,7 @@ public final class City {
 	
 	// When buildings construction is finished but not city construction
 	// we need to do the last things (make street lights, connect paths to roads) etc
-	private boolean areAllBuildingsCompleted = false;
+	private boolean areChunksPregenerated = false;
 	private boolean isCityCompleted = false;
 
 	public City(CitySettings settings, int[][] area) {
@@ -27,7 +27,6 @@ public final class City {
 
 	public City(NBTTagCompound nbt) {			
 		this.settings = new CitySettings(nbt);
-		this.areAllBuildingsCompleted = nbt.getBoolean("isBuildingsConstructionCompleted");
 		this.isCityCompleted = nbt.getBoolean("isCityConstructionCompleted");	
 		
 		this.firstDimSize = nbt.hasKey("firstDimSize") ? nbt.getInteger("firstDimSize") : -1;
@@ -89,14 +88,6 @@ public final class City {
 		return this.cityArea;
 	}
 	
-	public void setAreAllBuildingsCompleted(boolean itIs) {
-		this.areAllBuildingsCompleted = itIs;
-	}
-
-	public boolean getAreAllBuildingsCompleted() {
-		return this.areAllBuildingsCompleted;
-	}
-	
 	public void setIsCityCompleted(boolean itIs) {
 		this.isCityCompleted = itIs;
 	}
@@ -105,11 +96,18 @@ public final class City {
 		return this.isCityCompleted;
 	}
 	
+	public void setAreChunksPregenerated(boolean itIs) {
+		this.areChunksPregenerated = itIs;
+	}
+
+	public boolean getAreChunksPregenerated() {
+		return this.areChunksPregenerated;
+	}
+	
 	public NBTTagCompound writeToNBT() {		
 		NBTTagCompound nbt = settings.writeToNBT();
 	
 		nbt.setBoolean("isCityConstructionCompleted", this.isCityCompleted);
-		nbt.setBoolean("isBuildingsConstructionCompleted", this.areAllBuildingsCompleted);
 		
 		if(cityArea != null ) {
 			nbt.setInteger("firstDimSize", cityArea.length);

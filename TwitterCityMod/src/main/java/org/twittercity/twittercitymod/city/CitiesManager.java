@@ -1,5 +1,6 @@
 package org.twittercity.twittercitymod.city;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.world.CityWorldData;
@@ -20,7 +21,9 @@ public class CitiesManager {
 	private CityWorldData cityWData = null;
 	private World twitterWorld = null;
 	
-	private CitiesManager( ) {
+	private Tweet[] tweets;
+	
+	private CitiesManager() {
 		updateFields();
 	}
 	
@@ -30,11 +33,16 @@ public class CitiesManager {
 		constrWorldData = ConstructionWorldData.get(twitterWorld);
 	}
 	
-	public void startBuilding(Tweet[] tweets) {
+	public void startBuilding() {
 		//Get latest city's construction info 
 		City currentConstructingCity = getCity(constrWorldData.getCurrentConstructingCityId());
 		if(currentConstructingCity == null) {
 			currentConstructingCity = createNewCity();
+		}
+		
+		if(ArrayUtils.isEmpty(tweets)) {
+			TwitterCity.logger.error("Tweets array is empty!");
+			return;
 		}
 		
 		Buildings.makeInsideCity(twitterWorld, currentConstructingCity, tweets);
@@ -68,7 +76,6 @@ public class CitiesManager {
 				squareCornerPos = squareCornerPos.add((nextCityLength + 1) * newCityBuildDirection.getDirectionVector().getX(), 0, (nextCityLength + 1) * newCityBuildDirection.getDirectionVector().getZ());
 				nextCityLength *= 3;
 				constrWorldData.setCitiesSquareNorthWestCorner(squareCornerPos);
-				TwitterCity.logger.info("The corner is: {}", squareCornerPos.toString());
 			}
 
 			//Calculate new city's starting position
@@ -85,8 +92,6 @@ public class CitiesManager {
 
 		CitySettings citySettings = new CitySettings(++id, startingPos, citySize,
 				edgeLength, pathExtends, groundBlock, pathBlock, true, true);
-		TwitterCity.logger.info(citySettings.toString());
-		
 		constrWorldData.setCityLength(citySettings.getCityLength());
 		constrWorldData.setCurrentConstructingCityId(id);
 
@@ -95,7 +100,6 @@ public class CitiesManager {
 
 
 	public void prepareCity(City city) {
-		//if(ChunkPreGenReference.isPreGenFinished) {}
 		//ChunkGenerationUtils.queueCityChunkGeneration(twitterWorld.getMinecraftServer(), city, TwitterCityWorldGenReference.DIM_ID, true);
 		
 		ChunkEditor.makeFlatAreaForCity(twitterWorld, city);
@@ -107,6 +111,11 @@ public class CitiesManager {
 		return cityWData.getCity(id);
 	}
 	
+	public CitiesManager setTweets(Tweet[] tweets) {
+		this.tweets = tweets;
+		return instance;
+	}
+	
 	public static CitiesManager getInstance() {
 		if(instance == null) {
 			instance = new CitiesManager();
@@ -115,5 +124,5 @@ public class CitiesManager {
 		}
 		return instance;
 	}
-	
+
 }

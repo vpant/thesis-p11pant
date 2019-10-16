@@ -8,12 +8,14 @@ public class ChunkPosition {
 	private int z;
 	private int dimensionID;
 	private boolean logToChat;
-
-	public ChunkPosition(int x, int z, int dimensionID, boolean logToChat) {
+	private int cityID;
+	
+	public ChunkPosition(int cityID, int x, int z, int dimensionID, boolean logToChat) {
 		this.x = x;
 		this.z = z;
 		this.dimensionID = dimensionID;
 		this.logToChat = logToChat;
+		this.cityID = cityID;
 	}
 
 	public int getX() {
@@ -38,6 +40,14 @@ public class ChunkPosition {
 
 	public void setDimensionID(int dimensionID) {
 		this.dimensionID = dimensionID;
+	}
+	
+	public int getCityID() {
+		return cityID;
+	}
+
+	public void setCityID(int cityID) {
+		this.cityID = cityID;
 	}
 
 	public boolean logToChat() {

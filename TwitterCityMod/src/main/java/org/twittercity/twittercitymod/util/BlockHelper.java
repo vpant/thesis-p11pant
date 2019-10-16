@@ -322,6 +322,15 @@ public class BlockHelper {
 		}
 	}
 	
+	public static void destroyOrEnqueue(BlockPos pos, @Nullable World world) {
+		if(ConfigurationManager.buildingOptions.spawnImmediately.isEnabled() && world != null) {
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+		} else {
+			LazyBlockSpawnQueue.enqueueBlockForSpawn(pos, Blocks.AIR.getDefaultState());
+		}
+		
+	}
+	
 	public static void setBlockTileData(BlockData blockData, World world) {
 		TileEntity ent = world.getTileEntity(blockData.pos);
 		if (ent instanceof TileEntityTwitter && blockData.tweet.getID() > 0) {

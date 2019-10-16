@@ -5,6 +5,7 @@ import java.util.List;
 import org.twittercity.twittercitymod.util.BlockData;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 
 public class LazyBlockSpawnQueue {
@@ -43,5 +44,18 @@ public class LazyBlockSpawnQueue {
 		}
 		LazyBlockSpawnReference.toSpawn.addAll(blockList);
 		LazyBlockSpawnReference.startingSize = LazyBlockSpawnReference.toSpawn.size();
+	}
+	
+	public static void enqeueBlockForDestroy(BlockData blockData) {
+		if(blockData == null) {
+			return;
+		}
+		LazyBlockDestroyReference.toDestroy.add(blockData);
+		LazyBlockDestroyReference.destroyStartingSize = LazyBlockDestroyReference.toDestroy.size();
+		LazyBlockDestroyReference.destroyInProgress = true;
+	}
+	
+	public static void enqeueBlockForDestroy(BlockPos pos) {
+		enqeueBlockForDestroy(new BlockData(pos, Blocks.AIR.getDefaultState()));
 	}
 }

@@ -58,7 +58,7 @@ public class Buildings {
 			cityFinishUp(world, currentCity);
 		}
 		
-		if(remainingBlocksToSpawn > 0) {
+		while(remainingBlocksToSpawn > 0) {
 			City newCity = CitiesManager.getInstance().createNewCity();
 			remainingBlocksToSpawn = makeBuildings(world, newCity, remainingBlocksToSpawn);
 		}

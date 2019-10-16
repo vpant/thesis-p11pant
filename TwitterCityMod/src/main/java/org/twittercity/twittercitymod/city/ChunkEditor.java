@@ -1,5 +1,7 @@
 package org.twittercity.twittercitymod.city;
 
+import org.twittercity.twittercitymod.util.BlockHelper;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -15,12 +17,13 @@ public class ChunkEditor {
 		for(int x = sourceX; x <= sourceX + endX; x++) {
 			for(int z = sourceZ; z <= sourceZ + endZ; z++) {
 				for(int y = sourceY; y <= sourceY; y++) {
-					world.setBlockState(new BlockPos(x, y, z), baseBlock.getDefaultState());
+					BlockHelper.spawnOrEnqueue(new BlockPos(x, y, z), baseBlock.getDefaultState());
 				}
 
 				for(int y = sourceY + 1; y <= 128; y++) {
 					if(world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.AIR) {
-						world.destroyBlock(new BlockPos(x, y, z), false);
+						BlockHelper.spawnOrEnqueue(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
+						//world.destroyBlock(new BlockPos(x, y, z), false);
 					}
 				}
 			}
@@ -37,7 +40,6 @@ public class ChunkEditor {
 	 * @param city
 	 */
 	public static void makeFlatAreaForCity(World world, City city) {
-		//makeChunksFlat(world, city.getGroundBlock(), city.getStartingPos().getX(), city.getStartingPos().getY(), city.getStartingPos().getZ(), city.getCityLength()/16);
 		makeAreaFlat(world, city.getGroundBlock(), city.getStartingPos(), city.getCityLength());
 	}
 	

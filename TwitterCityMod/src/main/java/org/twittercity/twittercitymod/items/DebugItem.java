@@ -25,10 +25,11 @@ public class DebugItem extends ItemBase{
 			for(int i = 0; i < tweets.length; i++) {
 				tweets[i] = new Tweet();
 			}
-			CitiesManager.getInstance().startBuilding(tweets);		
-		}	
-		
-		
+			CitiesManager.getInstance().setTweets(tweets).startBuilding();
+			
+			//CitiesManager.getInstance().startBuilding(tweets);
+			
+		}		
 		return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
 	}
 	

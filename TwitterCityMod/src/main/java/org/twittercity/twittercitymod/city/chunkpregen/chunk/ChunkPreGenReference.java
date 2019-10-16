@@ -11,5 +11,5 @@ public class ChunkPreGenReference {
 	public static int startingSize;
 	public static int updateDelay = 40; // Number of chunks inbetween percentage updates
 
-	public static boolean isPreGenFinished = false;
+	public static boolean chunkGenerationInProgress = false;
 }

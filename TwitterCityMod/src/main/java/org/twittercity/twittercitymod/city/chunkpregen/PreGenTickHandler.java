@@ -4,6 +4,8 @@ import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.city.chunkpregen.chunk.ChunkGenerationUtils;
 import org.twittercity.twittercitymod.city.chunkpregen.chunk.ChunkPosition;
 import org.twittercity.twittercitymod.city.chunkpregen.chunk.ChunkPreGenReference;
+import org.twittercity.twittercitymod.data.world.CityWorldData;
+import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -38,10 +40,14 @@ public class PreGenTickHandler {
 						if (ChunkPreGenReference.toGenerate.peek() == null) {
 							TextComponentTranslation chatTranslation = new TextComponentTranslation("chunkgen.success");
 							server.sendMessage(chatTranslation);
-							ChunkPreGenReference.isPreGenFinished = true;
+							CityWorldData.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID))
+									.getCity(cp.getCityID()).setAreChunksPregenerated(true);
 							server.saveAllWorlds(true);
+							ChunkPreGenReference.chunkGenerationInProgress = false;
 						}
 					}
+				} else {
+					ChunkPreGenReference.chunkGenerationInProgress = false;
 				}
 			}
 		}

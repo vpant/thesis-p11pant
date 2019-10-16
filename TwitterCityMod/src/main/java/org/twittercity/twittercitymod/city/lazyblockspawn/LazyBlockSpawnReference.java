@@ -11,6 +11,4 @@ public class LazyBlockSpawnReference {
 	public static int startingSize = 0;
 
 	public static int updateDelay = 1000;
-	
-	public static boolean isLazySpawnPaused = false;
 }

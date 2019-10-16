@@ -32,7 +32,7 @@ public class ChunkGenerationUtils {
 		return true;
 	}
 
-	public static int queueChunkGeneration(MinecraftServer server, int x, int z, int xSize, int zSize, int dimensionID,
+	public static int queueChunkGeneration(MinecraftServer server, int cityID, int x, int z, int xSize, int zSize, int dimensionID,
 			boolean logToChat) {
 		final int xmax = x + xSize;
 		final int xmin = x - xSize;
@@ -41,17 +41,18 @@ public class ChunkGenerationUtils {
 		for (int xPos = xmin; xPos < xmax; xPos++) {
 			for (int zPos = zmin; zPos < zmax; zPos++) {
 				if (!chunksExist(server, xPos, zPos, dimensionID)) {
-					ChunkPreGenReference.toGenerate.add(new ChunkPosition(xPos, zPos, dimensionID, logToChat));
+					ChunkPreGenReference.toGenerate.add(new ChunkPosition(cityID, xPos, zPos, dimensionID, logToChat));
+					ChunkPreGenReference.chunkGenerationInProgress = true;
 				} else {
 					TwitterCity.logger.info("Chunk exists");
 				}
 			}
 		}
-		ChunkPreGenReference.toGenerate.sort(ChunkPosition.byAngleComparator(new ChunkPosition(x, z, dimensionID, logToChat)));
+		ChunkPreGenReference.toGenerate.sort(ChunkPosition.byAngleComparator(new ChunkPosition(cityID, x, z, dimensionID, logToChat)));
 		return ChunkPreGenReference.startingSize = ChunkPreGenReference.toGenerate.size();
 	}
 	
 	public static int queueCityChunkGeneration(MinecraftServer server, City city, int dimensionID, boolean logToChat) {
-		return queueChunkGeneration(server, city.getStartingPos().getX(), city.getStartingPos().getZ(), city.getChunkLength(), city.getChunkLength(), dimensionID, logToChat);
+		return queueChunkGeneration(server, city.getId(), city.getStartingPos().getX(), city.getStartingPos().getZ(), city.getChunkLength(), city.getChunkLength(), dimensionID, logToChat);
 	}
 }
