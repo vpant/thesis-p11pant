@@ -1,16 +1,17 @@
 package org.twittercity.twittercitymod.proxy;
 
-import org.twittercity.twittercitymod.DebugData;
 import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.city.BuildingReference;
 import org.twittercity.twittercitymod.city.chunkpregen.PreGenTickHandler;
-import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnReference;
-import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnTickHandler;
 import org.twittercity.twittercitymod.commands.TwitterCityCmdTeleport;
+import org.twittercity.twittercitymod.concurrency.ExecutorProvider;
+import org.twittercity.twittercitymod.concurrency.InitRunnable;
 import org.twittercity.twittercitymod.data.db.Tweet;
-import org.twittercity.twittercitymod.data.db.TweetManager;
 import org.twittercity.twittercitymod.registrationhandlers.TCBlocksRegistrationHandler;
 import org.twittercity.twittercitymod.registrationhandlers.TCItemsRegistrationHandler;
+import org.twittercity.twittercitymod.tickhandlers.LazyBlockProcessTickHandler;
+import org.twittercity.twittercitymod.tickhandlers.TickHanlder;
 import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 import org.twittercity.twittercitymod.worldgen.TwitterCityBiomes;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
@@ -40,9 +41,8 @@ public class CommonProxy {
 		
 		// Tick Handlers
 		MinecraftForge.EVENT_BUS.register(new PreGenTickHandler());
-		MinecraftForge.EVENT_BUS.register(new LazyBlockSpawnTickHandler());
-		
-		DebugData.setupData(); // Initialize debug data to use throughout the mod
+		MinecraftForge.EVENT_BUS.register(new LazyBlockProcessTickHandler());
+		MinecraftForge.EVENT_BUS.register(new TickHanlder());
     }
 
     public void init(FMLInitializationEvent e) {
@@ -52,8 +52,7 @@ public class CommonProxy {
     }
 
     public void postInit(FMLPostInitializationEvent e) {
-    	// Hibernate init
-    	TweetManager.getInstance();
+    	ExecutorProvider.getExecutorService().execute(new InitRunnable());
     }
     
   
@@ -62,9 +61,8 @@ public class CommonProxy {
 	}
 
 	public void serverStopping(FMLServerStoppedEvent e) {
-		TwitterCity.logger.info("Clearing lazy spawning block list");
-		// Clear lazy spawn block list to avoid persisting along different worlds
-		LazyBlockSpawnReference.toSpawn.clear();
+		TwitterCity.logger.info("Clearing tweets list.");
+		BuildingReference.tweetsToBuild.clear();
 	}
 	
 	public void registerItemRenderer(Item item, int meta, String id) {
@@ -72,8 +70,8 @@ public class CommonProxy {
 	}
 	
 	// Proxied method to open tweet GUI. Opening a GUI is client side code so we override this method to ClientProxy
-	public void openTweetGUI(Tweet tweet) {
-		
+	public Runnable openTweetGUI(Tweet tweet) {
+		return null;
 	}
 
 	public void openTweetLoadingGUI() {

@@ -1,5 +1,8 @@
 package org.twittercity.twittercitymod.city;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
@@ -39,17 +42,17 @@ public class Buildings {
 	
 	// This a helper list and does not need to be saved hence why it is static
 	//public static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
-	private static Tweet[] tweetsToSpawn;
+	private static List<Tweet> tweetsToSpawn = new ArrayList<Tweet>();
 	
 	private Buildings() {
 		// Do nothing, this is a class to build the buildings
 	}
 	
-	public static void makeInsideCity(World world, City currentCity, Tweet[] tweets) {
+	public static void makeInsideCity(World world, City currentCity, List<Tweet> tweets) {
 		// Get city or create one
 
 		tweetsToSpawn = tweets;
-		int remainingBlocksToSpawn = makeBuildings(world, currentCity, tweetsToSpawn.length);
+		int remainingBlocksToSpawn = makeBuildings(world, currentCity, tweetsToSpawn.size());
 		
 		boolean falsy = false;
 		if(falsy) {//ConstructionInfo.isCurrentCityFinished) {
@@ -191,7 +194,6 @@ public class Buildings {
 			z = 0;
 		}
 		constructionData.updateInfo(city.getId(), 0, 0, buildingID, true);
-		TwitterCity.logger.info("Sto telos tis makeBuildings constructionData is: {}", constructionData.toString());
 		return tcBlocksToSpawn;
 	}
 	
@@ -355,7 +357,9 @@ public class Buildings {
 			if(!BlockHelper.needsToBeBuildedLast(block)) {
 				BlockData bd;
 				if (blockState.getBlock() instanceof TCBlock) {
-					bd = new BlockData(currentPos, blockState, tweetsToSpawn[tcBlocksToSpawn - 1]);
+					Tweet tweetForThisBlock = tweetsToSpawn.get(tcBlocksToSpawn - 1);
+					bd = new BlockData(currentPos, blockState, tweetForThisBlock);
+					setLatestTweetID(world, tweetForThisBlock.getID());
 					tcBlocksToSpawn--;
 				} else {
 					bd = new BlockData(currentPos, blockState);
@@ -366,6 +370,13 @@ public class Buildings {
 			}		
 		}
 		return tcBlocksToSpawn;
+	}
+
+	private static void setLatestTweetID(World world, int id) {
+		ConstructionWorldData wd = ConstructionWorldData.get(world);
+		if(wd.getLatestTweetID() < id) {
+			wd.setLatestTweetID(id);
+		}
 	}
 
 	/*

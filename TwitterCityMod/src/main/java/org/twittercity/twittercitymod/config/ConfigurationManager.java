@@ -38,6 +38,7 @@ public class ConfigurationManager {
 		@RequiresMcRestart
 		public BinarySetting coloredBlocks = BinarySetting.Enable;
 		
+		
         @Name("4) Blocks spawned per tick.")
         @Comment
         ({
@@ -47,6 +48,14 @@ public class ConfigurationManager {
         })
         @RangeInt(min = 0, max = 100)
         public int blocksPerTick = 10;
+        
+        @Name("5) Minutes between database checks")
+        @Comment
+        ({
+        	"How many minutes should pass before checking database for new tweets.",
+        })
+        @RangeInt(min = 0, max = 60)
+        public int minutesBetweenCheckingForNewTweets = 1;
 	}
 	
 	public enum BinarySetting

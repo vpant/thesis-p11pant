@@ -14,7 +14,8 @@ import org.twittercity.twittercitymod.blocks.TCBlockSandStone;
 import org.twittercity.twittercitymod.blocks.TCBlockStone;
 import org.twittercity.twittercitymod.blocks.TCBlockStoneBrick;
 import org.twittercity.twittercitymod.blocks.TCBlocks;
-import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockSpawnQueue;
+import org.twittercity.twittercitymod.city.BuildingReference;
+import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockProcessQueueManagement;
 import org.twittercity.twittercitymod.config.ConfigurationManager;
 import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 
@@ -240,8 +241,8 @@ public class BlockHelper {
 		IBlockState iBlockState2 = Blocks.BED.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.valueOf(false)).withProperty(BlockBed.FACING, enumFacing).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
 		BlockPos blockPos = currentPos.offset(enumFacing);
 		
-		LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockData(currentPos, iBlockState2, 10, true));
-		LazyBlockSpawnQueue.enqueueBlockForSpawn(new BlockData(blockPos, iBlockState2.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD), 10, true));
+		LazyBlockProcessQueueManagement.enqueueBlockForSpawn(new BlockData(currentPos, iBlockState2, 10, true));
+		LazyBlockProcessQueueManagement.enqueueBlockForSpawn(new BlockData(blockPos, iBlockState2.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD), 10, true));
 	}
 	
 
@@ -317,7 +318,7 @@ public class BlockHelper {
 				world.setBlockState(blockData.pos, blockData.blockState, blockData.flags);
 				setBlockTileData(blockData, world);
 			} else {
-				LazyBlockSpawnQueue.enqueueBlockForSpawn(blockData);
+				LazyBlockProcessQueueManagement.enqueueBlockForSpawn(blockData);
 			}
 		}
 	}
@@ -326,12 +327,16 @@ public class BlockHelper {
 		if(ConfigurationManager.buildingOptions.spawnImmediately.isEnabled() && world != null) {
 			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 		} else {
-			LazyBlockSpawnQueue.enqueueBlockForSpawn(pos, Blocks.AIR.getDefaultState());
+			BuildingReference.cityPreparationActive = true;
+			LazyBlockProcessQueueManagement.enqeueBlockForDestroy(pos);
 		}
 		
 	}
 	
 	public static void setBlockTileData(BlockData blockData, World world) {
+		if(blockData.tweet == null) {
+			return;
+		}
 		TileEntity ent = world.getTileEntity(blockData.pos);
 		if (ent instanceof TileEntityTwitter && blockData.tweet.getID() > 0) {
 			((TileEntityTwitter) ent).setTileData(blockData.tweet.getID(), blockData.tweet.getFeeling());
@@ -370,7 +375,7 @@ public class BlockHelper {
 				spawnOrEnqueue(blockData, world);
 			}
 		} else {
-			LazyBlockSpawnQueue.enqeueBlockListForSpawn(blockList);
+			LazyBlockProcessQueueManagement.enqeueBlockListForSpawn(blockList);
 		}
 	}
 	

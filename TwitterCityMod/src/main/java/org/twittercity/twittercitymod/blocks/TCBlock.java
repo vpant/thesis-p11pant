@@ -1,8 +1,8 @@
 package org.twittercity.twittercitymod.blocks;
 
 import org.twittercity.twittercitymod.TwitterCity;
-import org.twittercity.twittercitymod.data.db.Tweet;
-import org.twittercity.twittercitymod.data.db.TweetManager;
+import org.twittercity.twittercitymod.concurrency.ExecutorProvider;
+import org.twittercity.twittercitymod.concurrency.GetTweetRunnable;
 import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 
 import net.minecraft.block.Block;
@@ -59,11 +59,8 @@ public class TCBlock extends Block {
 		TileEntity ent = worldIn.getTileEntity(pos);
 		if (!worldIn.isRemote && ent instanceof TileEntityTwitter) {
 			TwitterCity.proxy.openTweetLoadingGUI();
-			Tweet tweet = TweetManager.getInstance().getTweet(((TileEntityTwitter)ent).getTweetID());
-			TwitterCity.proxy.openTweetGUI(tweet);	
+			ExecutorProvider.getExecutorService().execute(new GetTweetRunnable((TileEntityTwitter)ent));
 		}
 		return true;
-	}
-
-	
+	}	
 }

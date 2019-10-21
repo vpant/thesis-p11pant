@@ -122,6 +122,14 @@ public class ConstructionWorldData extends WorldSavedData {
 		this.markDirty();
 	}
 	
+	public void setLatestTweetID(int id) {
+		cInfo.latestTweetID = id;
+	}
+
+	public int getLatestTweetID() {
+		return cInfo.latestTweetID;
+	}
+	
 	public BlockPos getConstructingBuildingBlockPos() {
 		return cInfo.constructingBuildingBlockPos;
 	}
@@ -203,6 +211,7 @@ public class ConstructionWorldData extends WorldSavedData {
 	
 	private static class ConstructionInfo {
 	
+		private int latestTweetID = 0;
 		private int currentCityLength;
 		private int currentConstructingCityId;
 		private boolean isCurrentCityFinished;
@@ -229,6 +238,7 @@ public class ConstructionWorldData extends WorldSavedData {
 			this.constructingBuildingBlockPos = null;
 			this.currentCityLength = 0;
 			this.buildLast = new ArrayList<BlockData>();
+			this.latestTweetID = 0;
 		}
 		
 		private NBTTagCompound writeToNBT() {
@@ -243,6 +253,7 @@ public class ConstructionWorldData extends WorldSavedData {
 			nbt.setInteger("currentBuildingRotation", this.currentBuildingRotation);
 			nbt.setInteger("currentCityBuildingsCount", this.currentCityBuildingsCount);
 			nbt.setInteger("currentCityLength", this.currentCityLength);
+			nbt.setInteger("latestTweetID", this.latestTweetID);
 			nbt.setLong("constructingBuildingBlockPos", constructingBuildingBlockPos == null ? 
 					0 : this.constructingBuildingBlockPos.toLong());
 			nbt.setLong("citiesSquareNorthWestCorner", citiesSquareNorthWestCorner == null ? 
@@ -272,6 +283,7 @@ public class ConstructionWorldData extends WorldSavedData {
 			this.constructingBuildingBlockPos = BlockPos.fromLong(nbt.getLong("constructingBuildingBlockPos"));
 			this.citiesSquareNorthWestCorner = BlockPos.fromLong(nbt.getLong("citiesSquareNorthWestCorner"));
 			this.currentCityLength = nbt.getInteger("currentCityLength");
+			this.latestTweetID = nbt.getInteger("latestTweetID");
 			this.buildDirection = nbt.hasKey("buildDirectionIndex") ? 
 					EnumCityBuildDirection.getCityDirectionByIndex(nbt.getInteger("buildDirectionIndex")) : null;
 			

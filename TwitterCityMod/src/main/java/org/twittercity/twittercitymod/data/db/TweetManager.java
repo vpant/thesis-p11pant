@@ -1,6 +1,7 @@
 package org.twittercity.twittercitymod.data.db;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,8 +15,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.TwitterCity;
-
-
 
 public class TweetManager {
 	
@@ -75,20 +74,20 @@ public class TweetManager {
 		return tweet;
 	}
 	
-	public List<Tweet> getAllTweetsAfter(int id) {		
+	public ArrayList<Tweet> getAllTweetsAfter(int id) {		
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
-		List<Tweet> tweets = null;
+		ArrayList<Tweet> tweets = null;
 		try {
 			String hql = "FROM Tweet WHERE id > :id";
 			tx = session.beginTransaction();
 			Query<Tweet> query = session.createQuery(hql, Tweet.class);
 			query.setParameter("id", id);
-			tweets = query.list();
-			for (Iterator<Tweet> iterator = tweets.iterator(); iterator.hasNext();){
+			tweets = (ArrayList<Tweet>) query.list();
+			/*for (Iterator<Tweet> iterator = tweets.iterator(); iterator.hasNext();){
 	            Tweet tweet = (Tweet) iterator.next(); 
-	            TwitterCity.logger.info(tweet.toString());
-	         }
+	            //TwitterCity.logger.info(tweet.toString());
+	         }*/
 			tx.commit();
 			session.close();
 		} catch (HibernateException e) {

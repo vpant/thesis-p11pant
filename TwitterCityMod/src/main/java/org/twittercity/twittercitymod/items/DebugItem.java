@@ -1,7 +1,13 @@
 package org.twittercity.twittercitymod.items;
 
-import org.twittercity.twittercitymod.city.CitiesManager;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.city.BuildingReference;
 import org.twittercity.twittercitymod.data.db.Tweet;
+import org.twittercity.twittercitymod.data.world.ConstructionWorldData;
+import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,6 +15,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 
 public class DebugItem extends ItemBase{
 
@@ -21,14 +28,18 @@ public class DebugItem extends ItemBase{
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		if (!worldIn.isRemote) {
-			Tweet[] tweets = new Tweet[5000];
-			for(int i = 0; i < tweets.length; i++) {
-				tweets[i] = new Tweet();
+			ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+			for(int i = 0; i < 50000; i++) {
+				tweets.add(new Tweet());
 			}
-			CitiesManager.getInstance().setTweets(tweets).startBuilding();
-			
 			//CitiesManager.getInstance().startBuilding(tweets);
-			
+			int latestID = ConstructionWorldData.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID)).getLatestTweetID();
+			Collections.sort(tweets);
+			TwitterCity.logger.info("The latest Tweet ID is: {}", latestID);
+			//for(Tweet tweet : tweets) {
+				//TwitterCity.logger.info(tweet.toString());
+			//}
+			BuildingReference.tweetsToBuild.addAll(tweets);			
 		}		
 		return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
 	}

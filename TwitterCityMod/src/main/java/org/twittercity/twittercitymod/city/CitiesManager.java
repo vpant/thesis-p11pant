@@ -1,7 +1,7 @@
 package org.twittercity.twittercitymod.city;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.twittercity.twittercitymod.TwitterCity;
+import java.util.List;
+
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.world.CityWorldData;
 import org.twittercity.twittercitymod.data.world.ConstructionWorldData;
@@ -20,8 +20,7 @@ public class CitiesManager {
 	private ConstructionWorldData constrWorldData = null;
 	private CityWorldData cityWData = null;
 	private World twitterWorld = null;
-	
-	private Tweet[] tweets;
+
 	
 	private CitiesManager() {
 		updateFields();
@@ -33,19 +32,22 @@ public class CitiesManager {
 		constrWorldData = ConstructionWorldData.get(twitterWorld);
 	}
 	
-	public void startBuilding() {
+	public boolean startBuilding(List<Tweet> tweets) {
 		//Get latest city's construction info 
 		City currentConstructingCity = getCity(constrWorldData.getCurrentConstructingCityId());
 		if(currentConstructingCity == null) {
 			currentConstructingCity = createNewCity();
 		}
 		
-		if(ArrayUtils.isEmpty(tweets)) {
-			TwitterCity.logger.error("Tweets array is empty!");
-			return;
+		if(tweets.isEmpty()) {
+			//TwitterCity.logger.error("Tweets array is empty!");
+			return false;
 		}
-		
+		if(BuildingReference.cityPreparationActive) {//currentConstructingCity.isCityPreparationActive()) {
+			return false;
+		}
 		Buildings.makeInsideCity(twitterWorld, currentConstructingCity, tweets);
+		return true;
 	}
 	
 	public City createNewCity() {
@@ -101,7 +103,6 @@ public class CitiesManager {
 
 	public void prepareCity(City city) {
 		//ChunkGenerationUtils.queueCityChunkGeneration(twitterWorld.getMinecraftServer(), city, TwitterCityWorldGenReference.DIM_ID, true);
-		
 		ChunkEditor.makeFlatAreaForCity(twitterWorld, city);
 		Paths.makePaths(twitterWorld, city);
 	}
@@ -109,11 +110,6 @@ public class CitiesManager {
 	
 	public City getCity(int id) {
 		return cityWData.getCity(id);
-	}
-	
-	public CitiesManager setTweets(Tweet[] tweets) {
-		this.tweets = tweets;
-		return instance;
 	}
 	
 	public static CitiesManager getInstance() {

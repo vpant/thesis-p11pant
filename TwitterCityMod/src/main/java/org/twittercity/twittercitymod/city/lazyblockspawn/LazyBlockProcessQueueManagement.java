@@ -2,13 +2,17 @@ package org.twittercity.twittercitymod.city.lazyblockspawn;
 
 import java.util.List;
 
+import org.twittercity.twittercitymod.city.BuildingReference;
+import org.twittercity.twittercitymod.data.world.BuildingQueuesWorldData;
 import org.twittercity.twittercitymod.util.BlockData;
+import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.DimensionManager;
 
-public class LazyBlockSpawnQueue {
+public class LazyBlockProcessQueueManagement {
 	
 	/**
 	 * Enqueue a block to spawn
@@ -34,25 +38,31 @@ public class LazyBlockSpawnQueue {
 		if(blockData == null) {
 			return;
 		}
-		LazyBlockSpawnReference.toSpawn.add(blockData);
-		LazyBlockSpawnReference.startingSize = LazyBlockSpawnReference.toSpawn.size();
+		BuildingQueuesWorldData
+			.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID))
+				.addToList(blockData, true);
+		//LazyBlockSpawnReference.toSpawn.add(blockData);
 	}
 	
 	public static void enqeueBlockListForSpawn(List<BlockData> blockList) {
 		if(blockList.isEmpty()) {
 			return;
 		}
-		LazyBlockSpawnReference.toSpawn.addAll(blockList);
-		LazyBlockSpawnReference.startingSize = LazyBlockSpawnReference.toSpawn.size();
+		BuildingQueuesWorldData
+			.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID))
+				.addAllToList(blockList, true);
+		//LazyBlockSpawnReference.toSpawn.addAll(blockList);
 	}
 	
 	public static void enqeueBlockForDestroy(BlockData blockData) {
 		if(blockData == null) {
 			return;
 		}
-		LazyBlockDestroyReference.toDestroy.add(blockData);
-		LazyBlockDestroyReference.destroyStartingSize = LazyBlockDestroyReference.toDestroy.size();
-		LazyBlockDestroyReference.destroyInProgress = true;
+		BuildingQueuesWorldData
+			.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID))
+				.addToList(blockData, false);
+		//LazyBlockDestroyReference.toDestroy.add(blockData);
+		BuildingReference.cityPreparationActive = true;
 	}
 	
 	public static void enqeueBlockForDestroy(BlockPos pos) {

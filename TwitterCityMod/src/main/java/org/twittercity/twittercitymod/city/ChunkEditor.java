@@ -22,7 +22,7 @@ public class ChunkEditor {
 
 				for(int y = sourceY + 1; y <= 128; y++) {
 					if(world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.AIR) {
-						BlockHelper.spawnOrEnqueue(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
+						BlockHelper.destroyOrEnqueue(new BlockPos(x, y, z), world);
 						//world.destroyBlock(new BlockPos(x, y, z), false);
 					}
 				}
