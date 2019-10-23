@@ -34,7 +34,7 @@ public class TCGuiTweet extends GuiScreen {
 	private DynamicTexture dynTextures = null;
 	
 	public static final int WIDTH = 256, HEIGHT = 140;
-	private Tweet tweet;
+	public Tweet tweet;
 	private List<ITextComponent> cachedComponents;
 	private List<ArrayList<ITextComponent>> textComponentPages;
 
@@ -123,9 +123,9 @@ public class TCGuiTweet extends GuiScreen {
 		}
 		
 		if(tweet != null) {
-			String s1 = tweet.getAuthor();
-			int k = this.fontRenderer.getStringWidth(s1);
-			this.fontRenderer.drawString(s1, x + 36 + (180 - k) / 2, y + 15, 0);
+			String author = String.valueOf(tweet.getID());//tweet.getAuthor();
+			int k = this.fontRenderer.getStringWidth(author);
+			this.fontRenderer.drawString(author, x + 36 + (180 - k) / 2, y + 15, 0);
 			
 			String tweetDate = tweet.getDate();
 			int i1 = this.fontRenderer.getStringWidth(tweetDate);

@@ -3,12 +3,14 @@ package org.twittercity.twittercitymod.registrationhandlers;
 import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.config.ConfigurationManager;
+import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.gui.TCGuiTweet;
 import org.twittercity.twittercitymod.gui.TCGuiTweetLoading;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,8 +65,16 @@ public class EventsRegistrationHandler {
 	@SubscribeEvent
 	public static void onGuiOpen(GuiOpenEvent event) {
 		if (event.getGui() instanceof TCGuiTweet) {
-			if (!(Minecraft.getMinecraft().currentScreen instanceof TCGuiTweetLoading)) {
+			GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+			if (!(currentScreen instanceof TCGuiTweetLoading)) {
 				event.setCanceled(true);
+			} 
+			else {
+				Tweet guiTweet = ((TCGuiTweet)event.getGui()).tweet;
+				if(guiTweet != null && ((TCGuiTweetLoading)currentScreen).tweetIdToBeOpened 
+						!= guiTweet.getID()) {
+					event.setCanceled(true);
+				}
 			}
 		}
 	}

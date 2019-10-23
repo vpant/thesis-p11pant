@@ -74,7 +74,7 @@ public class CommonProxy {
 		return null;
 	}
 
-	public void openTweetLoadingGUI() {
+	public void openTweetLoadingGUI(int tweetID) {
 		
 	}
 }

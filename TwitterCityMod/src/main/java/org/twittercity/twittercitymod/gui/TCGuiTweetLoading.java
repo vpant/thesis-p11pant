@@ -5,19 +5,19 @@ import net.minecraft.client.resources.I18n;
 
 public class TCGuiTweetLoading extends GuiScreen {
 	
+	public int tweetIdToBeOpened = -1;
+	
 	int counter = 0;
 	public static final int WIDTH = 256, HEIGHT = 140;
 	private String dots = ".";
-	public TCGuiTweetLoading() {
-		
+	public TCGuiTweetLoading(int tweetIdToBeOpened) {
+		this.tweetIdToBeOpened = tweetIdToBeOpened;
 	}
 	
 	@Override
 	public void initGui() {
 		
 	}
-
-
 
 	@Override
 	public boolean doesGuiPauseGame() {
@@ -39,7 +39,6 @@ public class TCGuiTweetLoading extends GuiScreen {
         	dots = "";
         } else {
         	counter++;
-        }
-        
+        }  
 	}	
 }
