@@ -1,7 +1,6 @@
 package org.twittercity.twittercitymod.items;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.city.BuildingReference;
@@ -34,12 +33,12 @@ public class DebugItem extends ItemBase{
 			}
 			//CitiesManager.getInstance().startBuilding(tweets);
 			int latestID = ConstructionWorldData.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID)).getLatestTweetID();
-			Collections.sort(tweets);
 			TwitterCity.logger.info("The latest Tweet ID is: {}", latestID);
 			//for(Tweet tweet : tweets) {
 				//TwitterCity.logger.info(tweet.toString());
 			//}
-			BuildingReference.tweetsToBuild.addAll(tweets);			
+			TwitterCity.logger.info("tweetsToBuild size is: {}", BuildingReference.tweetsToBuild.size());
+					
 		}		
 		return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
 	}
