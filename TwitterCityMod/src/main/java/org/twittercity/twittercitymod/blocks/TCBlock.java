@@ -2,7 +2,7 @@ package org.twittercity.twittercitymod.blocks;
 
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.concurrency.ExecutorProvider;
-import org.twittercity.twittercitymod.concurrency.GetTweetRunnable;
+import org.twittercity.twittercitymod.concurrency.OpenTweetGuiRunnable;
 import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 
 import net.minecraft.block.Block;
@@ -52,14 +52,14 @@ public class TCBlock extends Block {
 		return new TileEntityTwitter();	
 	}
 
-	//Open the tweet GUI
+	//Open tweet GUI
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		TileEntity ent = worldIn.getTileEntity(pos);
 		if (!worldIn.isRemote && ent instanceof TileEntityTwitter) {
-			TwitterCity.proxy.openTweetLoadingGUI();
-			ExecutorProvider.getExecutorService().execute(new GetTweetRunnable((TileEntityTwitter)ent));
+			TwitterCity.proxy.openTweetLoadingGUI(((TileEntityTwitter)ent).getTweetID());
+			ExecutorProvider.getExecutorService().execute(new OpenTweetGuiRunnable((TileEntityTwitter)ent));	
 		}
 		return true;
 	}	
