@@ -9,10 +9,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class GetTweetRunnable implements Runnable {
+public class OpenTweetGuiRunnable implements Runnable {
 	private TileEntityTwitter entity;
 	
-	public GetTweetRunnable(TileEntityTwitter entity) {
+	public OpenTweetGuiRunnable(TileEntityTwitter entity) {
 		this.entity = entity;
 	}
 	
@@ -21,5 +21,6 @@ public class GetTweetRunnable implements Runnable {
 	public void run() {
 		Tweet tweet = TweetManager.getInstance().getTweet((entity).getTweetID());
 		Minecraft.getMinecraft().addScheduledTask(TwitterCity.proxy.openTweetGUI(tweet));
+
 	}
 }
