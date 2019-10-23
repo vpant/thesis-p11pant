@@ -2,8 +2,6 @@ package org.twittercity.twittercitymod.data.db;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.persistence.NoResultException;
 
@@ -14,38 +12,15 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.twittercity.twittercitymod.Reference;
-import org.twittercity.twittercitymod.TwitterCity;
 
 public class TweetManager {
 	
 	private SessionFactory sessionFactory;
-	private static TweetManager instance;
+	private static TweetManager instance = new TweetManager();
 	
 	private TweetManager() {
 		File hibernateConfig = new File((TweetManager.class).getClassLoader().getResource("assets/" + Reference.MOD_ID + "/hibernate.cfg.xml").getFile());
 		sessionFactory =  new Configuration().configure(hibernateConfig).buildSessionFactory();
-	}
-	
-	public void getTweets() {
-		Session session = sessionFactory.openSession();
-		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			List<Tweet> tweets = session.createQuery("FROM Tweet", Tweet.class).list();
-			for (Iterator<Tweet> iterator = tweets.iterator(); iterator.hasNext();){
-	            Tweet tweet = (Tweet) iterator.next(); 
-	            TwitterCity.logger.info(tweet.toString());
-	        }
-			tx.commit();
-			session.close();
-		} catch (HibernateException e) {
-			if (tx != null) {
-				tx.rollback();
-			}
-	        e.printStackTrace(); 
-	    } finally {
-	    	session.close(); 
-	    }
 	}
 	
 	public Tweet getTweet(int id) {
@@ -58,7 +33,6 @@ public class TweetManager {
 			Query<Tweet> query = session.createQuery(hql, Tweet.class);
 			query.setParameter("id", id);
 			tweet = query.getSingleResult();
-			
 			tx.commit();
 			session.close();
 		} catch(NoResultException noResultE) {
@@ -84,10 +58,6 @@ public class TweetManager {
 			Query<Tweet> query = session.createQuery(hql, Tweet.class);
 			query.setParameter("id", id);
 			tweets = (ArrayList<Tweet>) query.list();
-			/*for (Iterator<Tweet> iterator = tweets.iterator(); iterator.hasNext();){
-	            Tweet tweet = (Tweet) iterator.next(); 
-	            //TwitterCity.logger.info(tweet.toString());
-	         }*/
 			tx.commit();
 			session.close();
 		} catch (HibernateException e) {
