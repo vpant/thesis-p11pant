@@ -36,8 +36,10 @@ public class TickHanlder {
 	
 	@SubscribeEvent
 	public void checkForNewTweets(TickEvent.WorldTickEvent event) {
+		if(ConfigurationManager.buildingOptions.pauseNewTweetsCheck.isEnabled()) {
+			return;
+		}
 		if(event.side == Side.CLIENT && !BuildingReference.tweetsToBuild.isEmpty()) {
-			
 			return;
 		}
 		WorldServer worldServer = (WorldServer)event.world; 

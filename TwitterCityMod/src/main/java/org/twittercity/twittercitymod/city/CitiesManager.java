@@ -2,6 +2,7 @@ package org.twittercity.twittercitymod.city;
 
 import java.util.List;
 
+import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.world.CityWorldData;
 import org.twittercity.twittercitymod.data.world.ConstructionWorldData;
@@ -40,10 +41,9 @@ public class CitiesManager {
 		}
 		
 		if(tweets.isEmpty()) {
-			//TwitterCity.logger.error("Tweets array is empty!");
 			return false;
 		}
-		if(BuildingReference.cityPreparationActive) {//currentConstructingCity.isCityPreparationActive()) {
+		if(BuildingReference.cityPreparationActive) {
 			return false;
 		}
 		Buildings.makeInsideCity(twitterWorld, currentConstructingCity, tweets);
@@ -54,9 +54,9 @@ public class CitiesManager {
 		CitySettings citySettings = getNewCitySettings();
 		City newCity = new City(citySettings, Paths.createCityArea(citySettings));
 	
+		prepareCity(newCity);
 		//Save city
 		cityWData.setCity(newCity);
-		prepareCity(newCity);
 		
 		return newCity;
 	}
@@ -102,7 +102,6 @@ public class CitiesManager {
 
 
 	public void prepareCity(City city) {
-		//ChunkGenerationUtils.queueCityChunkGeneration(twitterWorld.getMinecraftServer(), city, TwitterCityWorldGenReference.DIM_ID, true);
 		ChunkEditor.makeFlatAreaForCity(twitterWorld, city);
 		Paths.makePaths(twitterWorld, city);
 	}

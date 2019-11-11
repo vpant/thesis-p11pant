@@ -18,12 +18,13 @@ public class LazyBlockProcessTickHandler {
 	private int blocksToProcess = 0;
 
 	@SubscribeEvent
-	public void onServerTick(TickEvent.ServerTickEvent event) {
+	public void onServerTickProcessBlock(TickEvent.ServerTickEvent event) {
 		World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
 		BuildingQueuesWorldData data = BuildingQueuesWorldData.get(twitterWorld);
 		if(!data.isListEmpty(true) && !BuildingReference.cityPreparationActive) {
 			processBlocks(twitterWorld, data, true);
-		}else if(!data.isListEmpty(false)) {
+		} 
+		else if(!data.isListEmpty(false)) {
 			processBlocks(twitterWorld, data, false);
 		}
 		else {

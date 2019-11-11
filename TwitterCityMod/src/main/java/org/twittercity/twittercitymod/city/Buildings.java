@@ -175,7 +175,7 @@ public class Buildings {
 				if(area[x][z] >= 100 && area[x][z] <= 500 ) {
 					buildingID = area[x][z] - 100;
 					if(buildingID >= 0 && buildingID < buildings.length) {
-						Building currentBuilding = buildings[buildingID];
+						Building currentBuilding =  buildings[buildingID];
 						tcBlocksToSpawn = insertBuilding(world, city, area, x, z, currentBuilding, constructionData.getCurrentBuildingRotation(), tcBlocksToSpawn);
 						if(tcBlocksToSpawn > 0) {
 							area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
@@ -257,10 +257,7 @@ public class Buildings {
 				while(ySource <= sourceEndY && tcBlocksToSpawn > 0) {
 					BlockPos currentPos = new BlockPos(city.getEdgeLength() + x + x1dest, ySource, city.getEdgeLength() + z + z1dest);
 					tcBlocksToSpawn = insertBuildingBlock(world, city, building, currentPos, sourceX, sourceZ, rotate, tcBlocksToSpawn);
-					if(tcBlocksToSpawn > 0) {
-						ySource++;
-					}
-					
+					ySource++;
 				}
 				//If loop stopped because there is no need to build any more blocks we need to save the current x,y,z values
 				if(tcBlocksToSpawn > 0) {
@@ -366,7 +363,7 @@ public class Buildings {
 				}
 				BlockHelper.spawnOrEnqueue(bd, world);
 			} else {
-				ConstructionWorldData.get(world).addToBuildLast(new BlockData(currentPos, blockState));
+				ConstructionWorldData.get(world).addToBuildLastList(new BlockData(currentPos, blockState));
 			}		
 		}
 		return tcBlocksToSpawn;

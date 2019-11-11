@@ -174,7 +174,7 @@ public class ConstructionWorldData extends WorldSavedData {
 		return cInfo.citiesSquareNorthWestCorner;
 	}
 	
-	public void addToBuildLast(BlockData blockData) {
+	public void addToBuildLastList(BlockData blockData) {
 		cInfo.addToBuildLast(blockData);
 		markDirty();
 	}

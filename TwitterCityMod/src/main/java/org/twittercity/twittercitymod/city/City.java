@@ -9,7 +9,7 @@ public final class City {
 	private final CitySettings settings;
 	
 	// Representation of the city in a 2D array
-	private final int[][] cityArea;
+	private int[][] cityArea;
 	private final int firstDimSize;
 	private final int secondDimSize;
 	
@@ -100,6 +100,10 @@ public final class City {
 		this.areChunksPregenerated = itIs;
 	}
 
+	public void setCityArea(int[][] cityArea) {
+		this.cityArea = cityArea;
+	}
+	
 	public boolean getAreChunksPregenerated() {
 		return this.areChunksPregenerated;
 	}

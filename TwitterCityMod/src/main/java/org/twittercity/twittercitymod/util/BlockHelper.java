@@ -314,6 +314,9 @@ public class BlockHelper {
 	 */
 	public static void spawnOrEnqueue(BlockData blockData, @Nullable World world) {
 		if(blockData.blockState.getBlock() != Blocks.BED) {
+			if(blockData.blockState.getBlock() instanceof TCBlock) {
+				TwitterCity.logger.info(blockData.pos.toString());
+			}
 			if(ConfigurationManager.buildingOptions.spawnImmediately.isEnabled() && world != null) {
 				world.setBlockState(blockData.pos, blockData.blockState, blockData.flags);
 				setBlockTileData(blockData, world);

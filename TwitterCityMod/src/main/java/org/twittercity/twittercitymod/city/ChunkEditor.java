@@ -17,13 +17,12 @@ public class ChunkEditor {
 		for(int x = sourceX; x <= sourceX + endX; x++) {
 			for(int z = sourceZ; z <= sourceZ + endZ; z++) {
 				for(int y = sourceY; y <= sourceY; y++) {
-					BlockHelper.spawnOrEnqueue(new BlockPos(x, y, z), baseBlock.getDefaultState());
+					BlockHelper.spawnOrEnqueue(new BlockPos(x, y, z), baseBlock.getDefaultState(), world);
 				}
 
 				for(int y = sourceY + 1; y <= 128; y++) {
 					if(world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.AIR) {
 						BlockHelper.destroyOrEnqueue(new BlockPos(x, y, z), world);
-						//world.destroyBlock(new BlockPos(x, y, z), false);
 					}
 				}
 			}

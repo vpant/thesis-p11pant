@@ -16,21 +16,28 @@ public class ConfigurationManager {
     public static final BuildingOptions buildingOptions = new BuildingOptions();
 		
 	public static class BuildingOptions {
-		@Name("1) Spawn all blocks immediately")
+		@Name("1) Pause checks for new tweets.")
+        @Comment
+        ({
+        	"Mod stops checking for new Tweets."
+        })
+		public BinarySetting pauseNewTweetsCheck = BinarySetting.Disable;
+		
+		@Name("2) Spawn all blocks immediately")
         @Comment
         ({
         	"Spawn blocks immediately or queue them to spawn.", 
         	"Caution: Spawning all the blocks at once can cause serius lag."
         })
-		public BinarySetting spawnImmediately = BinarySetting.Enable;
-		@Name("2) Unbreakable city")
+		public BinarySetting spawnImmediately = BinarySetting.Disable;
+		@Name("3) Unbreakable city")
         @Comment
         ({
         	"Breaking blocks that are inside the city will cause them to respawn.", 
         	"If this is disabled broken blocks will not respawn ever."
         })
 		public BinarySetting unbreakableCity = BinarySetting.Disable;
-		@Name("3) Colored blocks")
+		@Name("4) Colored blocks")
         @Comment
         ({
         	"Color the blocks based on the emotion that are expressing"
@@ -39,7 +46,7 @@ public class ConfigurationManager {
 		public BinarySetting coloredBlocks = BinarySetting.Enable;
 		
 		
-        @Name("4) Blocks spawned per tick.")
+        @Name("5) Blocks spawned per tick.")
         @Comment
         ({
         	"How many blocks will be spawned per tick when spawn all blocks immediately is disabled.",
@@ -49,7 +56,7 @@ public class ConfigurationManager {
         @RangeInt(min = 0, max = 100)
         public int blocksPerTick = 10;
         
-        @Name("5) Minutes between database checks")
+        @Name("6) Minutes between database checks")
         @Comment
         ({
         	"How many minutes should pass before checking database for new tweets.",
@@ -58,8 +65,7 @@ public class ConfigurationManager {
         public int minutesBetweenCheckingForNewTweets = 1;
 	}
 	
-	public enum BinarySetting
-    {
+	public enum BinarySetting {
         Enable(true),
         Disable(false);
         

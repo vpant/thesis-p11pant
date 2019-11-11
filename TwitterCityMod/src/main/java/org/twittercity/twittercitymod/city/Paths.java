@@ -263,6 +263,7 @@ public class Paths {
 				}
 			}
 		}
+		city.setCityArea(area);
 	}
 
 	private static boolean multipleNeighbouringPaths(int[][] area, int x, int z) {
