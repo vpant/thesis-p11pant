@@ -1,10 +1,27 @@
-#exclude folders
+# eclipse
+bin
+*.launch
+.settings
 .metadata
-.recommenders
-.sonarlint
-mace
-mcedit2-win64-2.0.0-beta14
-Substrate
-mace-minecraft
-RemoteSystemsTempFiles
-Servers
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build.*
+.gradle
+gradle*
+
+# other
+eclipse
+run
+
+LICENSE*
+build/*
+CREDITS.*
