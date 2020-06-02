@@ -31,6 +31,7 @@ public class TCBlockPlanks extends TCBlock {
 	 * the block gets destroyed. It returns the metadata of the dropped item based
 	 * on the old metadata of the block.
 	 */
+	@Override
 	public int damageDropped(IBlockState state) {
 		return ((TCBlockPlanks.EnumType) state.getValue(VARIANT)).getMetadata();
 	}
@@ -39,6 +40,7 @@ public class TCBlockPlanks extends TCBlock {
 	 * returns a list of blocks with the same ID, but different meta (eg: wood
 	 * returns 4 blocks)
 	 */
+	@Override
 	public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
 		for (TCBlockPlanks.EnumType blockplanks$enumtype : TCBlockPlanks.EnumType.values()) {
 			items.add(new ItemStack(this, 1, blockplanks$enumtype.getMetadata()));
@@ -48,6 +50,8 @@ public class TCBlockPlanks extends TCBlock {
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
+	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(VARIANT, TCBlockPlanks.EnumType.byMetadata(meta));
 	}
@@ -55,6 +59,7 @@ public class TCBlockPlanks extends TCBlock {
 	/**
 	 * Get the MapColor for this Block and the given BlockState
 	 */
+	@Override
 	public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
 		return ((TCBlockPlanks.EnumType) state.getValue(VARIANT)).getMapColor();
 	}
@@ -62,15 +67,17 @@ public class TCBlockPlanks extends TCBlock {
 	/**
 	 * Convert the BlockState into the correct metadata value
 	 */
+	@Override
 	public int getMetaFromState(IBlockState state) {
 		return ((TCBlockPlanks.EnumType) state.getValue(VARIANT)).getMetadata();
 	}
 
+	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] { VARIANT });
 	}
 
-	public static enum EnumType implements IStringSerializable {
+	public enum EnumType implements IStringSerializable {
 		OAK(0, "oak", MapColor.WOOD), SPRUCE(1, "spruce", MapColor.OBSIDIAN), BIRCH(2, "birch", MapColor.SAND),
 		JUNGLE(3, "jungle", MapColor.DIRT), ACACIA(4, "acacia", MapColor.ADOBE),
 		DARK_OAK(5, "dark_oak", "big_oak", MapColor.BROWN);

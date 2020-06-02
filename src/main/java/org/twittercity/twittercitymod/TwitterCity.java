@@ -1,6 +1,7 @@
-	package org.twittercity.twittercitymod;
+package org.twittercity.twittercitymod;
 
-import org.apache.logging.log4j.Logger;
+import java.util.logging.Logger;
+
 import org.twittercity.twittercitymod.proxy.CommonProxy;
 
 import net.minecraftforge.fml.common.Mod;
