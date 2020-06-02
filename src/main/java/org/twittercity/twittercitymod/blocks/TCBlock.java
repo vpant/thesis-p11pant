@@ -45,8 +45,9 @@ public class TCBlock extends Block {
 		return true;
 	}
 
-	// Called when the block is placed or loaded client side to get the tile entity
-	// for the block
+	/** Called when the block is placed or loaded client side to get the tile entity
+	* for the block
+	*/
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileEntityTwitter();	
