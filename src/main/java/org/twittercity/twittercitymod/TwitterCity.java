@@ -31,7 +31,8 @@ public class TwitterCity {
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
 	public static CommonProxy proxy;
 	
-	/** Calls the preInit in our proxy package to execute the code needed when minecraft is loading, in the side (Client or Server) is should to execute. */
+	/** Calls the preInit in our proxy package to execute the code needed when minecraft 
+	 * is loading, in the side (Client or Server) is should to execute. */
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		proxy.preInit(e);	
