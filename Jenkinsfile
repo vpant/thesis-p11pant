@@ -1,5 +1,5 @@
 pipeline{
-    agent master
+    agent any
     tools {
         gradle 'Gradle 2.14'
     }
