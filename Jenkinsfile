@@ -1,6 +1,7 @@
 pipeline{
     agent any
     tools {
+        jdk "JDK 8"
         gradle 'Gradle 5.0'
     }
     stages{
