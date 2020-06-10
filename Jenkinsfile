@@ -1,7 +1,5 @@
 pipeline{
-    agent{
-        label "okeanos"
-    }
+    agent any
     tools {
         gradle 'Gradle'
     }
