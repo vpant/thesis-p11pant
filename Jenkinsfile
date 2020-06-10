@@ -1,14 +1,7 @@
 pipeline{
-    agent{
-        node {
-        label "okeanos"
-        checkout scm 
-        /* .. snip .. */
-        }
-       
-    }
+    agent any
     tools {
-        gradle 'Gradle'
+        gradle 'Gradle 2.14'
     }
     stages{
         stage("Build"){
