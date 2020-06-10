@@ -1,7 +1,7 @@
 pipeline{
     agent any
     tools {
-        gradle 'Gradle 2.14'
+        gradle 'Gradle 5.0'
     }
     stages{
         stage("Build"){
@@ -9,7 +9,7 @@ pipeline{
                 configFileProvider([configFile(fileId: 'hibernate-cfg-twittercitymod', targetLocation: 'src/main/resources/assets/tc/hibernate.cfg.xml')]) {
                     // some block
                 }  
-                sh 'gradle build'
+                sh 'gradle clean build'
                 
             }
         }
