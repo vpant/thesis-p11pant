@@ -1,5 +1,12 @@
 pipeline{
-    agent any
+    agent{
+        node {
+        label "okeanos"
+        checkout scm 
+        /* .. snip .. */
+        }
+       
+    }
     tools {
         gradle 'Gradle'
     }
@@ -9,7 +16,7 @@ pipeline{
                 configFileProvider([configFile(fileId: 'hibernate-cfg-twittercitymod', targetLocation: 'src/main/resources/assets/tc/hibernate.cfg.xml')]) {
                     // some block
                 }  
-                sh './gradlew build'
+                sh 'gradle build'
                 
             }
         }
