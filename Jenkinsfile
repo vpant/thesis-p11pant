@@ -17,17 +17,10 @@ pipeline{
         stage("Deploy"){
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: 'okeanos-server-ssh', keyFileVariable: 'keyfile', passphraseVariable: '', usernameVariable: 'username')]) {
-                    sh "scp -i ${keyfile} build/libs/twittercity-1.0.jar ${username}@twittercity.vasilispantelis.tech:/home/${username}/twittercity-services/minecraft-forge-server/data/mods/twittercity-1.0.jar"
+                    sh "scp -i ${keyfile} -o StrictHostKeyChecking=no build/libs/twittercity-1.0.jar ${username}@twittercity.vasilispantelis.tech:/home/${username}/twittercity-services/minecraft-forge-server/data/mods/twittercity-1.0.jar"
+                    sh "ssh -i ${keyfile} -o StrictHostKeyChecking=no ${username}@twittercity.vasilispantelis.tech docker exec twitter_city_minecraft_server rcon-cli stop"
                 }
             }
-        }
-    }
-    post{
-        success{
-            slackSend message: 'Twitter City Mod build was successful'
-        }
-        failure {
-            slackSend message: 'Twitter City Mod build failed'
         }
     }
 }
