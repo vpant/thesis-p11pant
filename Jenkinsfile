@@ -17,7 +17,7 @@ pipeline{
         stage("Deploy"){
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: 'okeanos-server-ssh', keyFileVariable: 'keyfile', passphraseVariable: '', usernameVariable: 'username')]) {
-                    sh "scp -i ${keyfile} build/libs/twittercity-1.0.jar ${username}@twittercity.vasilispantelis.tech/home/${username}/twittercity-services/minecraft-forge-server/data/mods/twittercity-1.0.jar"
+                    sh "scp -i ${keyfile} build/libs/twittercity-1.0.jar ${username}@twittercity.vasilispantelis.tech:/home/${username}/twittercity-services/minecraft-forge-server/data/mods/twittercity-1.0.jar"
                 }
             }
         }
