@@ -7,9 +7,13 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
+
+plugins {
+  id "org.sonarqube" version "2.7"
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-
 
 version = "1.0"
 group = "org.twittercity.tc" // http://maven.apache.org/guides/mini/guide-naming-conventions.html

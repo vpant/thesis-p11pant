@@ -6,6 +6,13 @@ pipeline{
     }
 
     stages{
+
+        stage('SonarQube analysis') {
+            withSonarQubeEnv() { 
+                sh './gradlew sonarqube'
+            }
+        }
+
         stage("Build"){
             steps{
                 configFileProvider([configFile(fileId: 'hibernate-cfg-twittercitymod', targetLocation: 'src/main/resources/assets/tc/hibernate.cfg.xml')]) {}  
