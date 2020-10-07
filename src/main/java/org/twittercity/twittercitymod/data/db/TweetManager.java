@@ -2,6 +2,7 @@ package org.twittercity.twittercitymod.data.db;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.NoResultException;
 
@@ -48,7 +49,7 @@ public class TweetManager {
 		return tweet;
 	}
 	
-	public ArrayList<Tweet> getAllTweetsAfter(int id) {		
+	public List<Tweet> getAllTweetsAfter(int id) {		
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
 		ArrayList<Tweet> tweets = null;
@@ -57,6 +58,7 @@ public class TweetManager {
 			tx = session.beginTransaction();
 			Query<Tweet> query = session.createQuery(hql, Tweet.class);
 			query.setParameter("id", id);
+			query.setMaxResults(10000);
 			tweets = (ArrayList<Tweet>) query.list();
 			tx.commit();
 			session.close();

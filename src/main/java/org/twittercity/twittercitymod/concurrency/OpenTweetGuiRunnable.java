@@ -19,7 +19,7 @@ public class OpenTweetGuiRunnable implements Runnable {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void run() {
-		Tweet tweet = TweetManager.getInstance().getTweet((entity).getTweetID());
+		Tweet tweet = TweetManager.getInstance().getTweet(entity.getTweetID());
 		Minecraft.getMinecraft().addScheduledTask(TwitterCity.proxy.openTweetGUI(tweet));
 
 	}

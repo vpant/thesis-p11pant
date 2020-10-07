@@ -41,7 +41,6 @@ public class LazyBlockProcessQueueManagement {
 		BuildingQueuesWorldData
 			.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID))
 				.addToList(blockData, true);
-		//LazyBlockSpawnReference.toSpawn.add(blockData);
 	}
 	
 	public static void enqeueBlockListForSpawn(List<BlockData> blockList) {
@@ -51,7 +50,6 @@ public class LazyBlockProcessQueueManagement {
 		BuildingQueuesWorldData
 			.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID))
 				.addAllToList(blockList, true);
-		//LazyBlockSpawnReference.toSpawn.addAll(blockList);
 	}
 	
 	public static void enqeueBlockForDestroy(BlockData blockData) {
@@ -61,7 +59,6 @@ public class LazyBlockProcessQueueManagement {
 		BuildingQueuesWorldData
 			.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID))
 				.addToList(blockData, false);
-		//LazyBlockDestroyReference.toDestroy.add(blockData);
 		BuildingReference.cityPreparationActive = true;
 	}
 	

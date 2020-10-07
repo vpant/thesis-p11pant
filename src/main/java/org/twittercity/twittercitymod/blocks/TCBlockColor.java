@@ -1,27 +1,28 @@
 package org.twittercity.twittercitymod.blocks;
 
 import java.awt.Color;
-import java.util.Random;
 
 import org.twittercity.twittercitymod.config.ConfigurationManager;
-import org.twittercity.twittercitymod.util.RandomHelper;
+import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 public class TCBlockColor implements IBlockColor {
 
-    public static final IBlockColor INSTANCE = new TCBlockColor();
-    public static Random rand = new Random();
-	
+    private static final IBlockColor INSTANCE = new TCBlockColor();
 	
 	@Override
 	public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
 		if (ConfigurationManager.buildingOptions.coloredBlocks.isEnabled()) {
-			return new Color(RandomHelper.nextInt(0, 255),RandomHelper.nextInt(0, 255),RandomHelper.nextInt(0, 255),0).getRGB();	
+			TileEntity ent = worldIn.getTileEntity(pos);;
+			if (ent instanceof TileEntityTwitter) {
+				return new Color(((TileEntityTwitter) ent).getFeeling().getFeelingColor()).getRGB();
+			}	
 		}
 		return -1;
 	}

@@ -19,8 +19,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class TickHanlder {	
 	// 20 ticks per second
-	private final int TICKS_TO_MINUTES = 20 * 60;
-	private int searchDatabaseTimer = 1000;
+	private static final int TICKS_TO_MINUTES = 20 * 60;
+	private int searchDatabaseTimer = 0;
 	private final ITaskBlocker taskBlocker = new ReentrantLockTaskBlocker();
 	
 	@SubscribeEvent
@@ -39,14 +39,15 @@ public class TickHanlder {
 		if(ConfigurationManager.buildingOptions.pauseNewTweetsCheck.isEnabled()) {
 			return;
 		}
-		if(event.side == Side.CLIENT && !BuildingReference.tweetsToBuild.isEmpty()) {
+		
+		if(event.side == Side.CLIENT && !BuildingReference.tweetsToBuild.isEmpty()) {			
 			return;
 		}
 		WorldServer worldServer = (WorldServer)event.world; 
 		searchDatabaseTimer++;
 		if(ConfigurationManager.buildingOptions.minutesBetweenCheckingForNewTweets * TICKS_TO_MINUTES <= searchDatabaseTimer) {
-			int tweetId = ConstructionWorldData.get(worldServer).getLatestTweetID();
-			ExecutorProvider.getExecutorService().execute(new GetTweetsRunnable(taskBlocker, worldServer, tweetId));
+			BuildingReference.latestRetrievedTweetId = BuildingReference.latestRetrievedTweetId == -1 ? ConstructionWorldData.get(worldServer).getLatestTweetID() : BuildingReference.latestRetrievedTweetId;
+			ExecutorProvider.getExecutorService().execute(new GetTweetsRunnable(taskBlocker, worldServer, BuildingReference.latestRetrievedTweetId));
 			searchDatabaseTimer = 0;
 		}
 	}

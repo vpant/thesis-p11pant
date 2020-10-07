@@ -60,35 +60,35 @@ public class BlockHelper {
 				}
 			case 2:
 				switch (facing) {
-				case UP:
-				case DOWN:
-					return facing;
-				case NORTH:
-					return EnumFacing.EAST;
-				case EAST:
-					return EnumFacing.SOUTH;
-				case SOUTH:
-					return EnumFacing.WEST;
-				case WEST:
-					return EnumFacing.NORTH;	
-				default:
-					TwitterCity.logger.error("Invalid facing in switch statement.");
+					case UP:
+					case DOWN:
+						return facing;
+					case NORTH:
+						return EnumFacing.EAST;
+					case EAST:
+						return EnumFacing.SOUTH;
+					case SOUTH:
+						return EnumFacing.WEST;
+					case WEST:
+						return EnumFacing.NORTH;	
+					default:
+						TwitterCity.logger.error("Invalid facing in switch statement.");
 				}
 			case 3:
 				switch (facing) {
-				case UP:
-				case DOWN:
-					return facing;
-				case NORTH:
-					return EnumFacing.SOUTH;
-				case EAST:
-					return EnumFacing.WEST;
-				case SOUTH:
-					return EnumFacing.NORTH;
-				case WEST:
-					return EnumFacing.EAST;	
-				default:
-					TwitterCity.logger.error("Invalid facing in switch statement.");
+					case UP:
+					case DOWN:
+						return facing;
+					case NORTH:
+						return EnumFacing.SOUTH;
+					case EAST:
+						return EnumFacing.WEST;
+					case SOUTH:
+						return EnumFacing.NORTH;
+					case WEST:
+						return EnumFacing.EAST;	
+					default:
+						TwitterCity.logger.error("Invalid facing in switch statement.");
 				}
 			default:
 				return facing;
@@ -132,82 +132,52 @@ public class BlockHelper {
 	}
 	
 	public static boolean needsToBeBuildedLast(Block block) {
-		if(block == Blocks.UNLIT_REDSTONE_TORCH || block == Blocks.REDSTONE_TORCH || block == Blocks.TORCH || block == Blocks.LEVER 
+		return block == Blocks.UNLIT_REDSTONE_TORCH || block == Blocks.REDSTONE_TORCH || block == Blocks.TORCH || block == Blocks.LEVER 
 			|| block == Blocks.WALL_SIGN || block == Blocks.LADDER || block == Blocks.DISPENSER || block == Blocks.CHEST 
-			|| block == Blocks.FURNACE || block == Blocks.LIT_FURNACE || block == Blocks.STONE_BUTTON) {
-			return true;
-		}
-		return false;
+			|| block == Blocks.FURNACE || block == Blocks.LIT_FURNACE || block == Blocks.STONE_BUTTON;
+
 	}
 	
 	public static boolean isStairs(Block block) {
-		if(block == Blocks.STONE_BRICK_STAIRS || block == Blocks.BRICK_STAIRS || block == Blocks.NETHER_BRICK_STAIRS
+		return block == Blocks.STONE_BRICK_STAIRS || block == Blocks.BRICK_STAIRS || block == Blocks.NETHER_BRICK_STAIRS
 				 || block == Blocks.STONE_STAIRS || block == Blocks.BIRCH_STAIRS || block == Blocks.ACACIA_STAIRS 
 				 || block == Blocks.DARK_OAK_STAIRS || block == Blocks.JUNGLE_STAIRS || block == Blocks.OAK_STAIRS
 				 || block == Blocks.PURPUR_STAIRS || block == Blocks.QUARTZ_STAIRS || block == Blocks.RED_SANDSTONE_STAIRS
-				 || block == Blocks.SANDSTONE_STAIRS || block == Blocks.SPRUCE_STAIRS) 
-		{
-			return true;
-		}
-		return false;
+				 || block == Blocks.SANDSTONE_STAIRS || block == Blocks.SPRUCE_STAIRS;
 	}
 	
 	public static boolean isFenceGate(Block block) {
-		if(block == Blocks.ACACIA_FENCE_GATE || block == Blocks.BIRCH_FENCE_GATE || block == Blocks.DARK_OAK_FENCE_GATE
-				|| block == Blocks.JUNGLE_FENCE_GATE || block == Blocks.OAK_FENCE_GATE || block == Blocks.SPRUCE_FENCE_GATE) {
-			return true;
-		}
-		return false;
+		return block == Blocks.ACACIA_FENCE_GATE || block == Blocks.BIRCH_FENCE_GATE || block == Blocks.DARK_OAK_FENCE_GATE
+				|| block == Blocks.JUNGLE_FENCE_GATE || block == Blocks.OAK_FENCE_GATE || block == Blocks.SPRUCE_FENCE_GATE;
 	}
 	
 	public static boolean isPistonPart(Block block) {
-		if(block == Blocks.PISTON_HEAD || block == Blocks.PISTON_EXTENSION) {
-			return true;
-		}
-		return false;
+		return block == Blocks.PISTON_HEAD || block == Blocks.PISTON_EXTENSION;
 	}
 	
 	public static boolean isPistonBasePart(Block block) {
-		if(block == Blocks.PISTON || block == Blocks.STICKY_PISTON) {
-			return true;
-		}
-		return false;
+		return block == Blocks.PISTON || block == Blocks.STICKY_PISTON;
 	}
 	
 	public static boolean isTorch(Block block) {
-		if(block == Blocks.UNLIT_REDSTONE_TORCH || block == Blocks.REDSTONE_TORCH || block == Blocks.TORCH) {
-			return true;
-		}
-		return false;
+		return block == Blocks.UNLIT_REDSTONE_TORCH || block == Blocks.REDSTONE_TORCH || block == Blocks.TORCH;
 	}
 	
 	public static boolean isDoor(Block block) {
-		if(block == Blocks.IRON_DOOR || block == Blocks.DARK_OAK_DOOR || block == Blocks.ACACIA_DOOR || block == Blocks.BIRCH_DOOR 
-				|| block == Blocks.JUNGLE_DOOR || block == Blocks.OAK_DOOR || block == Blocks.SPRUCE_DOOR) {
-			return true;
-		}
-		return false;
+		return block == Blocks.IRON_DOOR || block == Blocks.DARK_OAK_DOOR || block == Blocks.ACACIA_DOOR || block == Blocks.BIRCH_DOOR 
+				|| block == Blocks.JUNGLE_DOOR || block == Blocks.OAK_DOOR || block == Blocks.SPRUCE_DOOR;
 	}
 
 	public static boolean isMushroom(Block block) {
-		if(block == Blocks.BROWN_MUSHROOM || block == Blocks.RED_MUSHROOM) {
-			return true;
-		}
-		return false;
+		return block == Blocks.BROWN_MUSHROOM || block == Blocks.RED_MUSHROOM;
 	}
 	
 	public static boolean isPumpkin(Block block) {
-		if(block == Blocks.PUMPKIN || block == Blocks.LIT_PUMPKIN) {
-			return true;
-		}
-		return false;
+		return block == Blocks.PUMPKIN || block == Blocks.LIT_PUMPKIN;
 	}
 	
 	public static boolean isRepeater(Block block) {
-		if(block == Blocks.POWERED_REPEATER || block == Blocks.UNPOWERED_REPEATER) {
-			return true;
-		}
-		return false;
+		return block == Blocks.POWERED_REPEATER || block == Blocks.UNPOWERED_REPEATER;
 	}
 
 	public static int rotateStandingSign(int value, int rotate) {
@@ -225,11 +195,7 @@ public class BlockHelper {
 	}
 	
 	public static boolean isBlockToIgnoreSpawning(Block block) {
-		boolean ignore = false;
-		if(block == Blocks.VINE || BlockHelper.isRepeater(block) || block == Blocks.RAIL || BlockHelper.isMushroom(block)) {
-			ignore = true;
-		}
-		return ignore;
+		return block == Blocks.VINE || BlockHelper.isRepeater(block) || block == Blocks.RAIL || BlockHelper.isMushroom(block);
 	}
 
 	public static void enqueueRotatedBedForSpawn(World world, BlockPos currentPos, IBlockState blockState, int rotation) {	
@@ -315,7 +281,9 @@ public class BlockHelper {
 	public static void spawnOrEnqueue(BlockData blockData, @Nullable World world) {
 		if(blockData.blockState.getBlock() != Blocks.BED) {
 			if(blockData.blockState.getBlock() instanceof TCBlock) {
-				TwitterCity.logger.info(blockData.pos.toString());
+				
+				//Logic for TCBlock Data 
+				//TwitterCity.logger.info(blockData.pos.toString());
 			}
 			if(ConfigurationManager.buildingOptions.spawnImmediately.isEnabled() && world != null) {
 				world.setBlockState(blockData.pos, blockData.blockState, blockData.flags);

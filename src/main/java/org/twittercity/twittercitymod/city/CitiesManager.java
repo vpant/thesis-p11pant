@@ -2,7 +2,6 @@ package org.twittercity.twittercitymod.city;
 
 import java.util.List;
 
-import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.world.CityWorldData;
 import org.twittercity.twittercitymod.data.world.ConstructionWorldData;
@@ -40,10 +39,7 @@ public class CitiesManager {
 			currentConstructingCity = createNewCity();
 		}
 		
-		if(tweets.isEmpty()) {
-			return false;
-		}
-		if(BuildingReference.cityPreparationActive) {
+		if(tweets.isEmpty() || BuildingReference.cityPreparationActive) {
 			return false;
 		}
 		Buildings.makeInsideCity(twitterWorld, currentConstructingCity, tweets);

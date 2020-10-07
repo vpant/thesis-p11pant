@@ -1,6 +1,7 @@
 package org.twittercity.twittercitymod.data.world;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.city.EnumCityBuildDirection;
@@ -184,7 +185,7 @@ public class ConstructionWorldData extends WorldSavedData {
 		markDirty();
 	}
 	
-	public ArrayList<BlockData> getBuildLast() {
+	public List<BlockData> getBuildLast() {
 		return cInfo.buildLast;
 	}
 	
@@ -221,7 +222,7 @@ public class ConstructionWorldData extends WorldSavedData {
 		private BlockPos constructingBuildingBlockPos = null;
 		private EnumCityBuildDirection buildDirection = null;
 		private BlockPos citiesSquareNorthWestCorner = BlockPos.ORIGIN;
-		public ArrayList<BlockData> buildLast;
+		public List<BlockData> buildLast;
 
 		private ConstructionInfo(NBTTagCompound nbt) {
 			this.readFromNBT(nbt);
@@ -237,7 +238,7 @@ public class ConstructionWorldData extends WorldSavedData {
 			this.currentCityBuildingsCount = 0;
 			this.constructingBuildingBlockPos = null;
 			this.currentCityLength = 0;
-			this.buildLast = new ArrayList<BlockData>();
+			this.buildLast = new ArrayList<>();
 			this.latestTweetID = 0;
 		}
 		

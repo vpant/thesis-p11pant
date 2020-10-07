@@ -22,7 +22,7 @@ import javax.persistence.Transient;
 import org.twittercity.twittercitymod.tileentity.Feeling;
 
 @Entity
-@Table(name = "tweets")
+@Table(name = "tweet")
 public class Tweet implements Comparable<Tweet>{
 
 	@Id
