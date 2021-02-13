@@ -8,6 +8,7 @@ import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.world.ConstructionWorldData;
+import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
 import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.util.RandomHelper;
@@ -42,7 +43,7 @@ public class Buildings {
 	
 	// This a helper list and does not need to be saved hence why it is static
 	//public static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
-	private static List<Tweet> tweetsToSpawn = new ArrayList<Tweet>();
+	private static List<Tweet> tweetsToSpawn = new ArrayList<>();
 	
 	private Buildings() {
 		// Do nothing, this is a class to build the buildings
@@ -51,11 +52,15 @@ public class Buildings {
 	public static void makeInsideCity(World world, City currentCity, List<Tweet> tweets) {
 		// Get city or create one
 
+		if(tweets.size() > 0) {
+			TwitterCity.logger.info("Tweets to spawn: {}", tweets.size());
+		}
+
 		tweetsToSpawn = tweets;
 		int remainingBlocksToSpawn = makeBuildings(world, currentCity, tweetsToSpawn.size());
-		
-		boolean falsy = false;
-		if(falsy) {//ConstructionInfo.isCurrentCityFinished) {
+
+
+		if(currentCity.getIsCityCompleted()) {
 			//Join roads to path should be after everything is spawned. Meaning in case of lazy
 			// block spawn, join paths to road needs to executed after everything is done spawning.
 			cityFinishUp(world, currentCity);
@@ -109,16 +114,22 @@ public class Buildings {
 		if(world.getBlockState(new BlockPos(x1, 0, z1).add(city.getStartingPos())) == city.getGroundBlock().getDefaultState() &&
 				world.getBlockState(new BlockPos(x1, 1, z1).add(city.getStartingPos())) == Blocks.AIR.getDefaultState() &&
 				world.getBlockState(new BlockPos(x1, 2, z1).add(city.getStartingPos())) == Blocks.AIR.getDefaultState()) 
-		{
-			BlockHelper.spawnOrEnqueue(new BlockPos(x1, 1, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState(), world);
-			BlockHelper.spawnOrEnqueue(new BlockPos(x1, 2, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState(), world);
-			BlockHelper.spawnOrEnqueue(new BlockPos(x1, 3, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState(), world);
-			BlockHelper.spawnOrEnqueue(new BlockPos(x1, 4, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState(), world);
-			BlockHelper.spawnOrEnqueue(new BlockPos(x1, 5, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState(), world);
-			BlockHelper.spawnOrEnqueue(new BlockPos(x1, 5, z1 ).add(city.getStartingPos()), Blocks.OAK_FENCE.getDefaultState(), world);
-			BlockHelper.spawnOrEnqueue(new BlockPos(x1, 4, z1 ).add(city.getStartingPos()), Blocks.GLOWSTONE.getDefaultState(), world);
+		{	
+			makeStreetLightPart(world, city, x1, 1, z1, Blocks.OAK_FENCE.getDefaultState());
+			makeStreetLightPart(world, city, x1, 2, z1, Blocks.OAK_FENCE.getDefaultState());
+			makeStreetLightPart(world, city, x1, 3, z1, Blocks.OAK_FENCE.getDefaultState());
+			makeStreetLightPart(world, city, x1, 4, z1, Blocks.OAK_FENCE.getDefaultState());
+			makeStreetLightPart(world, city, x1, 5, z1, Blocks.OAK_FENCE.getDefaultState());
+			makeStreetLightPart(world, city, x1, 5, z1, Blocks.OAK_FENCE.getDefaultState());
+			makeStreetLightPart(world, city, x1, 4, z1, Blocks.GLOWSTONE.getDefaultState());
 		}
 		
+	}
+	
+	private static void makeStreetLightPart(World world, City city, int x1, int y, int z1, IBlockState state) {
+		BlockPos pos = new BlockPos(x1, y, z1 ).add(city.getStartingPos());
+		BlockData bd = new BlockData(pos, state, ConstructionPriority.BUILD_LAST, city.getId());
+		BlockHelper.spawnOrEnqueue(bd, world);
 	}
 
 	private static void joinPathsToRoad(World world, City city) {
@@ -130,8 +141,10 @@ public class Buildings {
 					|| world.getBlockState(new BlockPos(city.getEdgeLength() + a, 0, city.getEdgeLength() + halfPlotBlocksLength + b).add(city.getStartingPos())) == city.getPathBlock().getDefaultState())
 					&& world.getBlockState(new BlockPos(city.getEdgeLength() + a, 1, city.getEdgeLength() + halfPlotBlocksLength + b).add(city.getStartingPos())) == Blocks.AIR.getDefaultState())
 				{
-					BlockHelper.spawnOrEnqueue(new BlockPos(city.getEdgeLength() + a, 0, city.getEdgeLength() + halfPlotBlocksLength + b).add(city.getStartingPos()), city.getPathBlock().getDefaultState(), world);
-					BlockHelper.spawnOrEnqueue(new BlockPos(city.getEdgeLength() + a, 1, city.getEdgeLength() + halfPlotBlocksLength + b - Integer.signum(b)).add(city.getStartingPos()), Blocks.AIR.getDefaultState(), world);					
+					BlockPos pos = new BlockPos(city.getEdgeLength() + a, 0, city.getEdgeLength() + halfPlotBlocksLength + b).add(city.getStartingPos());
+					BlockHelper.spawnOrEnqueue(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_LAST, city.getId()), world);
+					pos = new BlockPos(city.getEdgeLength() + a, 1, city.getEdgeLength() + halfPlotBlocksLength + b - Integer.signum(b)).add(city.getStartingPos());
+					BlockHelper.spawnOrEnqueue(new BlockData(pos, Blocks.AIR.getDefaultState(), ConstructionPriority.BUILD_LAST, city.getId()), world);					
 				}
 				if(world.getBlockState(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b + Integer.signum(b), 0, city.getEdgeLength() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState()
 						&& world.getBlockState(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + (b - Integer.signum(b)), 0, city.getEdgeLength() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState()
@@ -139,8 +152,10 @@ public class Buildings {
 						|| world.getBlockState(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b, 0, city.getEdgeLength() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState())
 						&& world.getBlockState(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b, 1, city.getEdgeLength() + a).add(city.getStartingPos())) == Blocks.AIR.getDefaultState()) 
 				{
-					BlockHelper.spawnOrEnqueue(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b, 0,city.getEdgeLength() + a).add(city.getStartingPos()), city.getPathBlock().getDefaultState(), world);
-					BlockHelper.spawnOrEnqueue(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b - Integer.signum(b), 1,city.getEdgeLength() + a).add(city.getStartingPos()), Blocks.AIR.getDefaultState(), world);
+					BlockPos pos = new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b, 0, city.getEdgeLength() + a).add(city.getStartingPos());
+					BlockHelper.spawnOrEnqueue(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_LAST, city.getId()), world);
+					pos = new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b - Integer.signum(b), 1,city.getEdgeLength() + a).add(city.getStartingPos());
+					BlockHelper.spawnOrEnqueue(new BlockData(pos, Blocks.AIR.getDefaultState(), ConstructionPriority.BUILD_LAST, city.getId()), world);
 				}
 			}
 		}
@@ -152,7 +167,8 @@ public class Buildings {
 		for(int x = 0; x < area.length; x++) {
 			for(int z = 0; z < area[1].length; z++) {
 				if(area[x][z] == 1) {
-					BlockHelper.spawnOrEnqueue(new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z).add(city.getStartingPos()), city.getGroundBlock().getDefaultState(), world);
+					BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z).add(city.getStartingPos());
+					BlockHelper.spawnOrEnqueue(new BlockData(pos, city.getGroundBlock().getDefaultState(), ConstructionPriority.BUILD_LAST, city.getId()), world);
 				}
 			}
 		}
@@ -182,7 +198,6 @@ public class Buildings {
 							constructionData.setCurrentBuildingRotation(-1).increaseCurrentCityBuildingsCount();
 					
 						} else {
-							//TwitterCity.logger.info("Updating info: cityID: {}, X: {}, Z: {}, buildingID: {}", city.getId(), x, z, buildingID);
 							constructionData.updateInfo(city.getId(), x, z, buildingID, false);
 							return tcBlocksToSpawn;
 						}	
@@ -275,8 +290,8 @@ public class Buildings {
 		if(tcBlocksToSpawn > 0) {
 			bp = initialBlockPos;
 			rotate = -1;
-			BlockHelper.spawnOrEnqueue(constrData.getBuildLast(), world);
-			constrData.clearBuildLast();
+			//BlockHelper.spawnOrEnqueue(constrData.getBuildLast(), world);
+			//constrData.clearBuildLast();
 		}
 		
 		constrData.setCurrentBuildingRotation(rotate).setCurrentConstructingBlockPos(bp);
@@ -303,7 +318,7 @@ public class Buildings {
 			
 			// Beds consists of 2 parts so they are treated differently from other blocks. Return here to avoid respawning
 			if(block == Blocks.BED) {
-				BlockHelper.spawnOrEnqueueRotatedBed(world, currentPos, blockState, rotate);
+				BlockHelper.spawnOrEnqueueRotatedBed(world, currentPos, blockState, rotate, city.getId());
 				return tcBlocksToSpawn;
 			} else if(block == Blocks.STANDING_SIGN) {
 				blockState = rotate > 0 ? blockState.withProperty(BlockStandingSign.ROTATION, BlockHelper.rotateStandingSign(blockState.getValue(BlockStandingSign.ROTATION).intValue(), rotate)) : blockState;
@@ -351,20 +366,21 @@ public class Buildings {
 			} else { // default
 				blockState = BlockHelper.replaceWithTCBlockState(blockState);
 			}
+			BlockData bd;
 			if(!BlockHelper.needsToBeBuildedLast(block)) {
-				BlockData bd;
 				if (blockState.getBlock() instanceof TCBlock) {
 					Tweet tweetForThisBlock = tweetsToSpawn.get(tcBlocksToSpawn - 1);
-					bd = new BlockData(currentPos, blockState, tweetForThisBlock);
+					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getId(), tweetForThisBlock);
 					setLatestTweetID(world, tweetForThisBlock.getID());
 					tcBlocksToSpawn--;
 				} else {
-					bd = new BlockData(currentPos, blockState);
+					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getId());
 				}
-				BlockHelper.spawnOrEnqueue(bd, world);
+				
 			} else {
-				ConstructionWorldData.get(world).addToBuildLastList(new BlockData(currentPos, blockState));
-			}		
+				bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_LAST, city.getId());
+			}	
+			BlockHelper.spawnOrEnqueue(bd, world);
 		}
 		return tcBlocksToSpawn;
 	}

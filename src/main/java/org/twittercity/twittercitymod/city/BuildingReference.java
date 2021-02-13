@@ -13,6 +13,4 @@ public class BuildingReference {
 	public static final List<Tweet> tweetsToBuild = new ArrayList<>(); // Maybe a list to manipulate it easier
 	
 	public static int tweetsPerTick = 100;
-	public static boolean cityPreparationActive = false;
-	public static int latestRetrievedTweetId = -1;
 }

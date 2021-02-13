@@ -60,8 +60,6 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 	
 	compile "org.hibernate:hibernate-core:5.4.3.Final"
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.1.7.Final'
-	compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.2.Final'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
 }
 
@@ -83,3 +81,4 @@ processResources {
         exclude 'mcmod.info'
     }
 }
+sourceSets { main { output.resourcesDir = output.classesDir } }

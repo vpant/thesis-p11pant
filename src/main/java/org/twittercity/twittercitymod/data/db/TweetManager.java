@@ -49,7 +49,7 @@ public class TweetManager {
 		return tweet;
 	}
 	
-	public List<Tweet> getAllTweetsAfter(int id) {		
+	public List<Tweet> getTweetsAfter(int id, int maxResults) {		
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
 		ArrayList<Tweet> tweets = null;
@@ -58,7 +58,7 @@ public class TweetManager {
 			tx = session.beginTransaction();
 			Query<Tweet> query = session.createQuery(hql, Tweet.class);
 			query.setParameter("id", id);
-			query.setMaxResults(10000);
+			query.setMaxResults(maxResults);
 			tweets = (ArrayList<Tweet>) query.list();
 			tx.commit();
 			session.close();

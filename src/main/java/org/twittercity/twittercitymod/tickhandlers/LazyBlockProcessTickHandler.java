@@ -1,9 +1,12 @@
 package org.twittercity.twittercitymod.tickhandlers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.twittercity.twittercitymod.blocks.TCBlock;
-import org.twittercity.twittercitymod.city.BuildingReference;
 import org.twittercity.twittercitymod.config.ConfigurationManager;
 import org.twittercity.twittercitymod.data.world.BuildingQueuesWorldData;
+import org.twittercity.twittercitymod.data.world.CityWorldData;
 import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
@@ -16,22 +19,41 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class LazyBlockProcessTickHandler {
 
 	private int blocksToProcess = 0;
-
+	
 	@SubscribeEvent
 	public void onServerTickProcessBlock(TickEvent.ServerTickEvent event) {
 		World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
 		BuildingQueuesWorldData data = BuildingQueuesWorldData.get(twitterWorld);
-		if(!data.isListEmpty(true) && !BuildingReference.cityPreparationActive) {
+		// Priority to blocks than needs to be destroyed
+		if(!data.isListEmpty(false)) {
+			processBlocks(twitterWorld, data, false);
+		} 
+		else if(!data.isListEmpty(true)) {
 			processBlocks(twitterWorld, data, true);
 		} 
-		else if(!data.isListEmpty(false)) {
-			processBlocks(twitterWorld, data, false);
-		}
 		else {
-			BuildingReference.cityPreparationActive = false;
+			CityWorldData citiesData = CityWorldData.get(twitterWorld);
+			processBuildLast(twitterWorld, data, citiesData);
 		}
 	}
 	
+	private void processBuildLast(World world, BuildingQueuesWorldData worldData, CityWorldData citiesData) {
+		blocksToProcess += ConfigurationManager.buildingOptions.blocksPerTick;
+		while(blocksToProcess > 1) {
+			blocksToProcess--;
+			List<Integer> citiesId = getFinishedCitiesIds(citiesData);
+			BlockData bd = worldData.pollFromBuildLastForCityId(citiesId);
+			if(bd == null) break;
+			spawnBlock(world, bd);
+		}
+	}
+
+	private List<Integer> getFinishedCitiesIds(CityWorldData citiesData) {
+		return citiesData.getCities().entrySet().stream()
+				.filter(entry -> entry.getValue().getIsCityCompleted()).map(entry -> entry.getValue().getId())
+				.collect(Collectors.toList());
+	}
+
 	private void processBlocks(World world, BuildingQueuesWorldData worldData, boolean toSpawn) {
 		blocksToProcess += ConfigurationManager.buildingOptions.blocksPerTick;
 		while(blocksToProcess > 1) {
@@ -39,7 +61,7 @@ public class LazyBlockProcessTickHandler {
 			
 			BlockData bd = worldData.pollFromList(toSpawn);
 			if(bd != null) {
-				if(toSpawn) {
+				if(toSpawn) {					
 					spawnBlock(world, bd);
 				}
 				else {
@@ -47,10 +69,13 @@ public class LazyBlockProcessTickHandler {
 				}
 			}
 		}
+		
 	}
+
 
 	private void destroyBlock(World world, BlockData bd) {
 		if(bd != null) {
+			System.out.println("MESA STO DESTROYBLOCK");
 			world.destroyBlock(bd.pos, false);
 		}
 	}
@@ -62,7 +87,6 @@ public class LazyBlockProcessTickHandler {
 		}
 		if(bd.blockState.getBlock() instanceof TCBlock) {
 			BlockHelper.setBlockTileData(bd, world);
-			//tcBlocksSpawned++;
 		}
 	}
 }

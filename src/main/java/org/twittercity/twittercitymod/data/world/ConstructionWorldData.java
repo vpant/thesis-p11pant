@@ -1,11 +1,7 @@
 package org.twittercity.twittercitymod.data.world;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.city.EnumCityBuildDirection;
-import org.twittercity.twittercitymod.util.BlockData;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -25,10 +21,6 @@ public class ConstructionWorldData extends WorldSavedData {
 	
 	public ConstructionWorldData() {
 		super(DATA_NAME);
-	}
-	
-	public ConstructionWorldData(String name) {
-		super(name);
 	}
 	
 	public static ConstructionWorldData get(World world) {
@@ -125,6 +117,7 @@ public class ConstructionWorldData extends WorldSavedData {
 	
 	public void setLatestTweetID(int id) {
 		cInfo.latestTweetID = id;
+		markDirty();
 	}
 
 	public int getLatestTweetID() {
@@ -175,20 +168,6 @@ public class ConstructionWorldData extends WorldSavedData {
 		return cInfo.citiesSquareNorthWestCorner;
 	}
 	
-	public void addToBuildLastList(BlockData blockData) {
-		cInfo.addToBuildLast(blockData);
-		markDirty();
-	}
-	
-	public void clearBuildLast() {
-		cInfo.buildLast.clear();
-		markDirty();
-	}
-	
-	public List<BlockData> getBuildLast() {
-		return cInfo.buildLast;
-	}
-	
 	public void updateInfo(int cityId, int x, int z, int currentBuildingId, boolean isCurrentCityFinished) {
 		//Mark dirty after this function call
 		cInfo.currentConstructingCityId = cityId;
@@ -222,7 +201,7 @@ public class ConstructionWorldData extends WorldSavedData {
 		private BlockPos constructingBuildingBlockPos = null;
 		private EnumCityBuildDirection buildDirection = null;
 		private BlockPos citiesSquareNorthWestCorner = BlockPos.ORIGIN;
-		public List<BlockData> buildLast;
+		//public List<BlockData> buildLast;
 
 		private ConstructionInfo(NBTTagCompound nbt) {
 			this.readFromNBT(nbt);
@@ -238,7 +217,7 @@ public class ConstructionWorldData extends WorldSavedData {
 			this.currentCityBuildingsCount = 0;
 			this.constructingBuildingBlockPos = null;
 			this.currentCityLength = 0;
-			this.buildLast = new ArrayList<>();
+			//this.buildLast = new ArrayList<>();
 			this.latestTweetID = 0;
 		}
 		
@@ -264,9 +243,9 @@ public class ConstructionWorldData extends WorldSavedData {
 			}
 			
 			NBTTagList buildLastTag = new NBTTagList();
-			for(BlockData blockData : buildLast) {
+			/*for(BlockData blockData : buildLast) {
 				buildLastTag.appendTag((new BuildLastBlock(blockData.blockState, blockData.pos)).writeToNBT());
-			}
+			}*/
 			
 			nbt.setTag("buildLastBlocks", buildLastTag);
 			return nbt;
@@ -289,15 +268,11 @@ public class ConstructionWorldData extends WorldSavedData {
 					EnumCityBuildDirection.getCityDirectionByIndex(nbt.getInteger("buildDirectionIndex")) : null;
 			
 			NBTTagList buildLastBlocks = (NBTTagList) nbt.getTag("buildLastBlocks");
-			buildLast = buildLast == null ? new ArrayList<BlockData>() : buildLast;
+			//buildLast = buildLast == null ? new ArrayList<BlockData>() : buildLast;
 			for(int i = 0; i < buildLastBlocks.tagCount(); i++) {
 				BuildLastBlock buildLastBlock = new BuildLastBlock((NBTTagCompound) buildLastBlocks.get(i));
-				this.buildLast.add(new BlockData(buildLastBlock.pos, buildLastBlock.state));
+				//this.buildLast.add(new BlockData(buildLastBlock.pos, buildLastBlock.state));
 			}
-		}
-		
-		private void addToBuildLast(BlockData blockData) {
-			buildLast.add(blockData);
 		}
 		
 		// Wrapper-helper class for information about blocks that needed to be build last

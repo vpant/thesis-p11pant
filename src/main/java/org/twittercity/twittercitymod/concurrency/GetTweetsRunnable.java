@@ -28,15 +28,11 @@ public class GetTweetsRunnable implements Runnable {
 			if(!BuildingReference.tweetsToBuild.isEmpty()) {
 				return;
 			}
-			ArrayList<Tweet> tweets = (ArrayList<Tweet>)TweetManager.getInstance().getAllTweetsAfter(id);
+			ArrayList<Tweet> tweets = (ArrayList<Tweet>)TweetManager.getInstance().getTweetsAfter(id, 10000);
 			TwitterCity.logger.info("Taking tweets after id: {}, the Tweets list size is: {}", id, tweets.size());
 			Collections.sort(tweets);
-			server.addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
-					BuildingReference.latestRetrievedTweetId = tweets.get(tweets.size() - 1).getID();
-					BuildingReference.tweetsToBuild.addAll(tweets);
-				}
+			server.addScheduledTask(() -> {
+				BuildingReference.tweetsToBuild.addAll(tweets);
 			});
 		}
 		finally {

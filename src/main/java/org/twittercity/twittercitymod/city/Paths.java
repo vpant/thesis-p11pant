@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
 import org.twittercity.twittercitymod.util.ArrayUtils;
+import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.util.RandomHelper;
 
@@ -13,7 +15,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class Paths {
-	//private static int street = 0;
 	
 	public static class District{
 		public int x1;
@@ -38,7 +39,7 @@ public class Paths {
 		lstStreetsUsed.clear();
 		lstAllBuildings.clear();
 		
-		int plotBlocks = (1 + citySettings.getMapLength());// - (city.getEdgeLength() * 2);
+		int plotBlocks = (1 + citySettings.getMapLength());
 		int[][] area = new int[plotBlocks][plotBlocks];
 		
 		if (citySettings.hasMainStreets()) {
@@ -241,12 +242,12 @@ public class Paths {
                             Math.abs(z - (area[1].length / 2)) == (city.getPathExtends() + 1)) {
 						if(city.hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
 							BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos());
-							BlockHelper.spawnOrEnqueue(pos, city.getPathBlock().getDefaultState());
+							BlockHelper.spawnOrEnqueue(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getId()));
 						}
 					}
 					else {
 						BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos());
-						BlockHelper.spawnOrEnqueue(pos, city.getPathBlock().getDefaultState());
+						BlockHelper.spawnOrEnqueue(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getId()));
 					}	
 				}
 			}

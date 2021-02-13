@@ -14,9 +14,9 @@ import org.twittercity.twittercitymod.blocks.TCBlockSandStone;
 import org.twittercity.twittercitymod.blocks.TCBlockStone;
 import org.twittercity.twittercitymod.blocks.TCBlockStoneBrick;
 import org.twittercity.twittercitymod.blocks.TCBlocks;
-import org.twittercity.twittercitymod.city.BuildingReference;
 import org.twittercity.twittercitymod.city.lazyblockspawn.LazyBlockProcessQueueManagement;
 import org.twittercity.twittercitymod.config.ConfigurationManager;
+import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
 import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 
 import net.minecraft.block.Block;
@@ -198,7 +198,7 @@ public class BlockHelper {
 		return block == Blocks.VINE || BlockHelper.isRepeater(block) || block == Blocks.RAIL || BlockHelper.isMushroom(block);
 	}
 
-	public static void enqueueRotatedBedForSpawn(World world, BlockPos currentPos, IBlockState blockState, int rotation) {	
+	public static void enqueueRotatedBedForSpawn(World world, BlockPos currentPos, IBlockState blockState, int rotation, int cityId) {	
 		if(blockState.getValue(BlockBed.PART).equals(BlockBed.EnumPartType.HEAD)) {
 			return;
 		}
@@ -207,8 +207,9 @@ public class BlockHelper {
 		IBlockState iBlockState2 = Blocks.BED.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.valueOf(false)).withProperty(BlockBed.FACING, enumFacing).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
 		BlockPos blockPos = currentPos.offset(enumFacing);
 		
-		LazyBlockProcessQueueManagement.enqueueBlockForSpawn(new BlockData(currentPos, iBlockState2, 10, true));
-		LazyBlockProcessQueueManagement.enqueueBlockForSpawn(new BlockData(blockPos, iBlockState2.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD), 10, true));
+		LazyBlockProcessQueueManagement.enqueueBlockForSpawn(new BlockData(currentPos, iBlockState2, 10, true, ConstructionPriority.BUILD_NORMAL, cityId));
+		LazyBlockProcessQueueManagement.enqueueBlockForSpawn(
+				new BlockData(blockPos, iBlockState2.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD), 10, true, ConstructionPriority.BUILD_NORMAL, cityId));
 	}
 	
 
@@ -281,7 +282,6 @@ public class BlockHelper {
 	public static void spawnOrEnqueue(BlockData blockData, @Nullable World world) {
 		if(blockData.blockState.getBlock() != Blocks.BED) {
 			if(blockData.blockState.getBlock() instanceof TCBlock) {
-				
 				//Logic for TCBlock Data 
 				//TwitterCity.logger.info(blockData.pos.toString());
 			}
@@ -294,12 +294,11 @@ public class BlockHelper {
 		}
 	}
 	
-	public static void destroyOrEnqueue(BlockPos pos, @Nullable World world) {
+	public static void destroyOrEnqueue(BlockData blockData, @Nullable World world) {
 		if(ConfigurationManager.buildingOptions.spawnImmediately.isEnabled() && world != null) {
-			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+			world.setBlockState(blockData.pos, Blocks.AIR.getDefaultState(), 3);
 		} else {
-			BuildingReference.cityPreparationActive = true;
-			LazyBlockProcessQueueManagement.enqeueBlockForDestroy(pos);
+			LazyBlockProcessQueueManagement.enqueueBlockForDestroy(blockData);
 		}
 		
 	}
@@ -317,23 +316,7 @@ public class BlockHelper {
 	public static void spawnOrEnqueue(BlockData blockData) {
 		spawnOrEnqueue(blockData, null);
 	}
-	
-	public static void spawnOrEnqueue(BlockPos pos, IBlockState state, int flags) {
-		spawnOrEnqueue(new BlockData(pos, state, flags));
-	}
-	
-	public static void spawnOrEnqueue(BlockPos pos, IBlockState state, int flags, World world) {
-		spawnOrEnqueue(new BlockData(pos, state, flags), world);
-	}
-	
-	public static void spawnOrEnqueue(BlockPos pos, IBlockState state) {
-		spawnOrEnqueue(new BlockData(pos, state, 3));
-	}
-	
-	public static void spawnOrEnqueue(BlockPos pos, IBlockState state, World world) {
-		spawnOrEnqueue(new BlockData(pos, state, 3), world);
-	}
-	
+
 	/**
 	 * Spawns or enqueues a list of BlockData for spawning
 	 */
@@ -346,15 +329,15 @@ public class BlockHelper {
 				spawnOrEnqueue(blockData, world);
 			}
 		} else {
-			LazyBlockProcessQueueManagement.enqeueBlockListForSpawn(blockList);
+			LazyBlockProcessQueueManagement.enqueueBlockListForSpawn(blockList);
 		}
 	}
 	
-	public static void spawnOrEnqueueRotatedBed(World world, BlockPos currentPos, IBlockState blockState, int rotation) {
+	public static void spawnOrEnqueueRotatedBed(World world, BlockPos currentPos, IBlockState blockState, int rotation, int cityId) {
 		if(ConfigurationManager.buildingOptions.spawnImmediately.isEnabled() && world != null) {
 			spawnRotatedBed(world, currentPos, blockState, rotation);
 		} else {
-			enqueueRotatedBedForSpawn(world, currentPos, blockState, rotation);
+			enqueueRotatedBedForSpawn(world, currentPos, blockState, rotation, cityId);
 		}
 	}
 }

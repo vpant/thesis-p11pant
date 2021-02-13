@@ -17,7 +17,7 @@ public class CityWorldData extends WorldSavedData {
 	private static final String DATA_NAME = Reference.MOD_ID + "_CityData";
 	private static CityWorldData instance;
 	
-	private Map<Integer,City> cities = new HashMap<Integer,City>();
+	private Map<Integer,City> cities = new HashMap<>();
 	
 	
 	public CityWorldData() {
