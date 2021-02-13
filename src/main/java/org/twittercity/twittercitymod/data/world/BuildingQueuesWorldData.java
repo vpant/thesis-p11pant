@@ -60,10 +60,10 @@ public class BuildingQueuesWorldData extends WorldSavedData {
 			toSpawnBlocks.add(bd);
 		}
 		
-		this.toDestroy = mapByConstructionPriority(toDestroyBlocks);
-		this.toSpawn = mapByConstructionPriority(toSpawnBlocks);
-		LinkedList<BlockData> lastToBeBuilt = this.toSpawn.remove(ConstructionPriority.BUILD_LAST);
-		this.toBuildLast = lastToBeBuilt != null ? 
+		toDestroy = mapByConstructionPriority(toDestroyBlocks);
+		toSpawn = mapByConstructionPriority(toSpawnBlocks);
+		LinkedList<BlockData> lastToBeBuilt = toSpawn.remove(ConstructionPriority.BUILD_LAST);
+		toBuildLast = lastToBeBuilt != null ?
 				lastToBeBuilt.stream()
 				.collect(Collectors.groupingBy(blockData -> blockData.cityId, Collectors.toCollection(LinkedList::new))) 
 				: null;
@@ -96,38 +96,38 @@ public class BuildingQueuesWorldData extends WorldSavedData {
 	}
 	
 	private void addBuildLastToSpawnBlocks() {
-		this.toBuildLast.entrySet().forEach(entry -> {
-			if(this.toSpawn.containsKey(ConstructionPriority.BUILD_LAST)) {
-				this.toSpawn.get(ConstructionPriority.BUILD_LAST).addAll(entry.getValue());
+		this.toBuildLast.forEach((key, value) -> {
+			if (this.toSpawn.containsKey(ConstructionPriority.BUILD_LAST)) {
+				this.toSpawn.get(ConstructionPriority.BUILD_LAST).addAll(value);
 			} else {
-				this.toSpawn.put(ConstructionPriority.BUILD_LAST, entry.getValue());
+				this.toSpawn.put(ConstructionPriority.BUILD_LAST, value);
 			}
 		});
 	}
 
 	private LinkedList<BlockData> mapToList(Map<ConstructionPriority, LinkedList<BlockData>> blockDataByCityIdMap) {
 		LinkedList<BlockData> blockDataList = new LinkedList<>();
-		blockDataByCityIdMap.entrySet().stream().forEach(entry -> blockDataList.addAll(entry.getValue()));
+		blockDataByCityIdMap.forEach((key, value) -> blockDataList.addAll(value));
 		return blockDataList;
 	}
 
 	public void addToSpawnList(BlockData element) {
-		if(this.toSpawn.containsKey(element.constructionPriority)) {
-			this.toSpawn.get(element.constructionPriority).add(element);
+		if(toSpawn.containsKey(element.constructionPriority)) {
+			toSpawn.get(element.constructionPriority).add(element);
 		} else {
 			LinkedList<BlockData> blockDataList = new LinkedList<>();
 			blockDataList.add(element);
-			this.toSpawn.put(element.constructionPriority, blockDataList);
+			toSpawn.put(element.constructionPriority, blockDataList);
 		}
 	}
 	
 	public void addToDestroyList(BlockData element) {
-		if(this.toDestroy.containsKey(element.constructionPriority)) {
-			this.toDestroy.get(element.constructionPriority).add(element);
+		if(toDestroy.containsKey(element.constructionPriority)) {
+			toDestroy.get(element.constructionPriority).add(element);
 		} else {
 			LinkedList<BlockData> blockDataList = new LinkedList<>();
 			blockDataList.add(element);
-			this.toDestroy.put(element.constructionPriority, blockDataList);
+			toDestroy.put(element.constructionPriority, blockDataList);
 		}
 	}
 
@@ -139,18 +139,18 @@ public class BuildingQueuesWorldData extends WorldSavedData {
 	
 	private BlockData getFromMapByPriority(boolean fromSpawnList) {
 		if(fromSpawnList) {
-			if(this.toSpawn.containsKey(ConstructionPriority.BUILD_FIRST) && !this.toSpawn.get(ConstructionPriority.BUILD_FIRST).isEmpty()) {
-				return this.toSpawn.get(ConstructionPriority.BUILD_FIRST).poll();
+			if(toSpawn.containsKey(ConstructionPriority.BUILD_FIRST) && !toSpawn.get(ConstructionPriority.BUILD_FIRST).isEmpty()) {
+				return toSpawn.get(ConstructionPriority.BUILD_FIRST).poll();
 			}
-			else if(this.toSpawn.containsKey(ConstructionPriority.BUILD_NORMAL)) {
-				return this.toSpawn.get(ConstructionPriority.BUILD_NORMAL).poll();
+			else if(toSpawn.containsKey(ConstructionPriority.BUILD_NORMAL)) {
+				return toSpawn.get(ConstructionPriority.BUILD_NORMAL).poll();
 			}
 		} else {
-			if(this.toDestroy.containsKey(ConstructionPriority.BUILD_FIRST) && this.toDestroy.get(ConstructionPriority.BUILD_FIRST).isEmpty()) {
-				return this.toDestroy.get(ConstructionPriority.BUILD_FIRST).poll();
+			if(toDestroy.containsKey(ConstructionPriority.BUILD_FIRST) && !toDestroy.get(ConstructionPriority.BUILD_FIRST).isEmpty()) {
+				return toDestroy.get(ConstructionPriority.BUILD_FIRST).poll();
 			}
-			else if(this.toDestroy.containsKey(ConstructionPriority.BUILD_NORMAL)) {
-				return this.toDestroy.get(ConstructionPriority.BUILD_NORMAL).poll();
+			else if(toDestroy.containsKey(ConstructionPriority.BUILD_NORMAL)) {
+				return toDestroy.get(ConstructionPriority.BUILD_NORMAL).poll();
 			}
 		}
 		return null;
@@ -158,29 +158,24 @@ public class BuildingQueuesWorldData extends WorldSavedData {
 
 	public BlockData pollFromBuildLastForCityId(List<Integer> citiesIds) {
 		Integer cityId = firstAvailableCityId(citiesIds);
+		BlockData bd = cityId != null ? toBuildLast.get(cityId).poll() : null;
 		this.markDirty();
-		return cityId != null ? this.toBuildLast.get(cityId).poll() : null;
+		return bd;
 	}
  	
 	/** 
 	 * From a list of finished cities get the first found id that is available in the buildLast list
 	 */
 	private Integer firstAvailableCityId(List<Integer> citiesIds) {
-		for (Integer cityId : citiesIds) {
-			LinkedList<BlockData> result = this.toBuildLast.get(cityId);
-		     if (result != null) {
-		         return cityId;
-		     }
-		}
-		return null;
+		return citiesIds.stream().filter(cityId -> toBuildLast.get(cityId) != null).findFirst().orElse(null);
 	}
 
 	public boolean isListEmpty(boolean spawnList) {
 		if(spawnList) {
-			return this.toSpawn.isEmpty();
+			return toSpawn.isEmpty();
 		}
 		else {
-			return this.toDestroy.isEmpty();
+			return toDestroy.isEmpty();
 		}
 	}
 }

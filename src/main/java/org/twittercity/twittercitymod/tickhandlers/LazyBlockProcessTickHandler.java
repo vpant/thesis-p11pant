@@ -3,6 +3,7 @@ package org.twittercity.twittercitymod.tickhandlers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.config.ConfigurationManager;
 import org.twittercity.twittercitymod.data.world.BuildingQueuesWorldData;
@@ -26,12 +27,15 @@ public class LazyBlockProcessTickHandler {
 		BuildingQueuesWorldData data = BuildingQueuesWorldData.get(twitterWorld);
 		// Priority to blocks than needs to be destroyed
 		if(!data.isListEmpty(false)) {
+			TwitterCity.logger.info("MESA STO !IS LIST EMPTY gia destroy blocks!");
 			processBlocks(twitterWorld, data, false);
 		} 
 		else if(!data.isListEmpty(true)) {
+			TwitterCity.logger.info("MESA STO !IS LIST EMPTY gia spawn blocks!");
 			processBlocks(twitterWorld, data, true);
 		} 
 		else {
+			TwitterCity.logger.info("MESA STO ELSE");
 			CityWorldData citiesData = CityWorldData.get(twitterWorld);
 			processBuildLast(twitterWorld, data, citiesData);
 		}
@@ -61,7 +65,7 @@ public class LazyBlockProcessTickHandler {
 			
 			BlockData bd = worldData.pollFromList(toSpawn);
 			if(bd != null) {
-				if(toSpawn) {					
+				if(toSpawn) {
 					spawnBlock(world, bd);
 				}
 				else {
@@ -81,6 +85,7 @@ public class LazyBlockProcessTickHandler {
 	}
 
 	private void spawnBlock(World world, BlockData bd) {
+		System.out.println("MESA STO SPAWNBLOCK");
 		world.setBlockState(bd.pos, bd.blockState, bd.flags);
 		if(bd.shouldNotifyNeighbors) {
 			world.notifyNeighborsRespectDebug(bd.pos, bd.blockState.getBlock(), false);

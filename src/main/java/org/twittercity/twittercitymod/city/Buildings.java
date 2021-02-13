@@ -51,11 +51,6 @@ public class Buildings {
 	
 	public static void makeInsideCity(World world, City currentCity, List<Tweet> tweets) {
 		// Get city or create one
-
-		if(tweets.size() > 0) {
-			TwitterCity.logger.info("Tweets to spawn: {}", tweets.size());
-		}
-
 		tweetsToSpawn = tweets;
 		int remainingBlocksToSpawn = makeBuildings(world, currentCity, tweetsToSpawn.size());
 

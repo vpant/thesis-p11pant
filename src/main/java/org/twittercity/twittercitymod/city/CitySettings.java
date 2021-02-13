@@ -159,7 +159,7 @@ public final class CitySettings {
 	/**
 	 * Calculates the citySize using this formula <b>citySize = (cityLength - (preferedEdgeLegth * 4)) / 16;</b>
 	 * @param cityLength Length of the desired city
-	 * @param preferedEdgeLength edgeLength of the city
+	 * @param edgeLength of the city
 	 * @return City's size
 	 */
 	public static int getCitySizeFromCityLength(int cityLength, int edgeLength) {

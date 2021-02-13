@@ -11,7 +11,7 @@ import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.registrationhandlers.TCBlocksRegistrationHandler;
 import org.twittercity.twittercitymod.registrationhandlers.TCItemsRegistrationHandler;
 import org.twittercity.twittercitymod.tickhandlers.LazyBlockProcessTickHandler;
-import org.twittercity.twittercitymod.tickhandlers.TickHanlder;
+import org.twittercity.twittercitymod.tickhandlers.TickHandler;
 import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 import org.twittercity.twittercitymod.worldgen.TwitterCityBiomes;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
@@ -42,7 +42,7 @@ public class CommonProxy {
 		// Tick Handlers
 		MinecraftForge.EVENT_BUS.register(new PreGenTickHandler());
 		MinecraftForge.EVENT_BUS.register(new LazyBlockProcessTickHandler());
-		MinecraftForge.EVENT_BUS.register(new TickHanlder());
+		MinecraftForge.EVENT_BUS.register(new TickHandler());
     }
 
     public void init(FMLInitializationEvent e) {

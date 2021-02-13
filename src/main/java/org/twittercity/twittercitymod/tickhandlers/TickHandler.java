@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
-public class TickHanlder {	
+public class TickHandler {
 	// 20 ticks per second
 	private static final int TICKS_TO_MINUTES = 20 * 60;
 	private int searchDatabaseTimer = 0;
