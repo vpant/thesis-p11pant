@@ -27,10 +27,10 @@ public class TickHanlder {
 	public void buildFromTweetsQueue(TickEvent.ServerTickEvent event) {
 		if(!BuildingReference.cityPreparationActive && !BuildingReference.tweetsToBuild.isEmpty()) {
 			int endIndex = BuildingReference.tweetsToBuild.size();
-			int fromIndex = endIndex - BuildingReference.tweetsPerTick > 0 ? endIndex - BuildingReference.tweetsPerTick : 0 ;
-			List<Tweet> sublistTobuild = BuildingReference.tweetsToBuild.subList(fromIndex, endIndex);
-			boolean success = CitiesManager.getInstance().startBuilding(sublistTobuild);
-			if(success) { sublistTobuild.clear(); }
+			int fromIndex = Math.max(endIndex - BuildingReference.tweetsPerTick, 0);
+			List<Tweet> sublistToBuild = BuildingReference.tweetsToBuild.subList(fromIndex, endIndex);
+			boolean success = CitiesManager.getInstance().startBuilding(sublistToBuild);
+			if(success) { sublistToBuild.clear(); }
 		} 	
 	}
 	
@@ -46,8 +46,8 @@ public class TickHanlder {
 		WorldServer worldServer = (WorldServer)event.world; 
 		searchDatabaseTimer++;
 		if(ConfigurationManager.buildingOptions.minutesBetweenCheckingForNewTweets * TICKS_TO_MINUTES <= searchDatabaseTimer) {
-			BuildingReference.latestRetrievedTweetId = BuildingReference.latestRetrievedTweetId == -1 ? ConstructionWorldData.get(worldServer).getLatestTweetID() : BuildingReference.latestRetrievedTweetId;
-			ExecutorProvider.getExecutorService().execute(new GetTweetsRunnable(taskBlocker, worldServer, BuildingReference.latestRetrievedTweetId));
+			int latestTweetId = ConstructionWorldData.get(worldServer).getLatestTweetID();
+			ExecutorProvider.getExecutorService().execute(new GetTweetsRunnable(taskBlocker, worldServer, latestTweetId));
 			searchDatabaseTimer = 0;
 		}
 	}

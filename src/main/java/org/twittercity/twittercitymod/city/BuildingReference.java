@@ -14,5 +14,4 @@ public class BuildingReference {
 	
 	public static int tweetsPerTick = 100;
 	public static boolean cityPreparationActive = false;
-	public static int latestRetrievedTweetId = -1;
 }
