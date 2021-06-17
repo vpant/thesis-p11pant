@@ -2,12 +2,16 @@ package org.twittercity.twittercitymod.tickhandlers;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.city.BuildingReference;
+import org.twittercity.twittercitymod.city.Buildings;
 import org.twittercity.twittercitymod.city.CitiesManager;
+import org.twittercity.twittercitymod.city.City;
 import org.twittercity.twittercitymod.concurrency.ExecutorProvider;
 import org.twittercity.twittercitymod.concurrency.GetTweetsRunnable;
 import org.twittercity.twittercitymod.concurrency.ITaskBlocker;
@@ -42,9 +46,9 @@ public class TickHandler {
 				ConstructionWorldData.get(twitterWorld).setLatestTweetID(latestTweetId);
 				sublistToBuild.clear();
 			}
-		} 	
+		}
 	}
-	
+
 	@SubscribeEvent
 	public void checkForNewTweets(TickEvent.WorldTickEvent event) {
 		if(ConfigurationManager.buildingOptions.pauseNewTweetsCheck.isEnabled()) {

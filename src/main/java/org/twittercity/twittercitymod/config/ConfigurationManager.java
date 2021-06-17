@@ -12,7 +12,7 @@ import net.minecraftforge.common.config.Config.RequiresMcRestart;
 public class ConfigurationManager {
     
 	@Name("Twitter cities")
-    @Comment("Options regarding the cities that are builded by the mod")
+    @Comment("Options regarding the cities that are built by the mod")
     public static final BuildingOptions buildingOptions = new BuildingOptions();
 		
 	public static class BuildingOptions {
@@ -22,22 +22,15 @@ public class ConfigurationManager {
         	"Mod stops checking for new Tweets."
         })
 		public BinarySetting pauseNewTweetsCheck = BinarySetting.Disable;
-		
-		@Name("2) Spawn all blocks immediately")
-        @Comment
-        ({
-        	"Spawn blocks immediately or queue them to spawn.", 
-        	"Caution: Spawning all the blocks at once can cause serius lag."
-        })
-		public BinarySetting spawnImmediately = BinarySetting.Disable;
-		@Name("3) Unbreakable city")
+
+		@Name("2) Unbreakable city")
         @Comment
         ({
         	"Breaking blocks that are inside the city will cause them to respawn.", 
         	"If this is disabled broken blocks will not respawn ever."
         })
 		public BinarySetting unbreakableCity = BinarySetting.Disable;
-		@Name("4) Colored blocks")
+		@Name("3) Colored blocks")
         @Comment
         ({
         	"Color the blocks based on the emotion that are expressing"
@@ -46,17 +39,17 @@ public class ConfigurationManager {
 		public BinarySetting coloredBlocks = BinarySetting.Enable;
 		
 		
-        @Name("5) Blocks spawned per tick.")
+        @Name("4) Blocks spawned per tick.")
         @Comment
         ({
         	"How many blocks will be spawned per tick when spawn all blocks immediately is disabled.",
-        	"The bigger the number the faster the city will be builded.",
+        	"The bigger the number the faster the city will be built.",
         	"Reduce this setting if you experience lag caused by the building process."
         })
         @RangeInt(min = 0, max = 100)
         public int blocksPerTick = 10;
         
-        @Name("6) Minutes between database checks")
+        @Name("5) Minutes between database checks")
         @Comment
         ({
         	"How many minutes should pass before checking database for new tweets.",

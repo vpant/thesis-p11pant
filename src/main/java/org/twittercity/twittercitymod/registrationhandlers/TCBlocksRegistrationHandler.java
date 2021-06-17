@@ -1,5 +1,6 @@
 package org.twittercity.twittercitymod.registrationhandlers;
 
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.blocks.TCBlockColored;
@@ -28,6 +29,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class TCBlocksRegistrationHandler {

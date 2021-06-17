@@ -175,15 +175,21 @@ public final class CitySettings {
 		TwitterCity.logger.info("New cities starting pos is: {}", pos.toString());
 		return pos;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "CitySettings{"
-				+ "id: " + this.id + ", "
-				+ "cityLength: " + this.cityLength + ", "
-				+ "mapLength: " + this.mapLength + ", "
-				+ "citySize: " + this.chunkLength
-				+ "}";
+		return "CitySettings{" +
+				"id=" + id +
+				", startingPos=" + startingPos +
+				", chunkLength=" + chunkLength +
+				", edgeLength=" + edgeLength +
+				", mapLength=" + mapLength +
+				", pathExtends=" + pathExtends +
+				", cityLength=" + cityLength +
+				", groundBlock=" + groundBlock +
+				", pathBlock=" + pathBlock +
+				", hasMainStreets=" + hasMainStreets +
+				", hasPaths=" + hasPaths +
+				'}';
 	}
-
 }

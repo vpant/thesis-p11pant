@@ -4,6 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Arrays;
+
 /* Data object represents a city. Cities are always square. */
 public final class City {	
 	private final CitySettings settings;
@@ -17,6 +19,7 @@ public final class City {
 	// we need to do the last things (make street lights, connect paths to roads) etc
 	private boolean areChunksPregenerated = false;
 	private boolean isCityCompleted = false;
+	private boolean areBuildingsFinished = false;
 
 	public City(CitySettings settings, int[][] area) {
 		this.settings = settings;
@@ -28,7 +31,8 @@ public final class City {
 	public City(NBTTagCompound nbt) {			
 		this.settings = new CitySettings(nbt);
 		this.isCityCompleted = nbt.getBoolean("isCityConstructionCompleted");	
-		
+		this.areBuildingsFinished = nbt.getBoolean("areBuildingsFinished");
+
 		this.firstDimSize = nbt.hasKey("firstDimSize") ? nbt.getInteger("firstDimSize") : -1;
 		this.secondDimSize = nbt.hasKey("secondDimSize") ? nbt.getInteger("secondDimSize") : -1;
 		
@@ -92,7 +96,7 @@ public final class City {
 		this.isCityCompleted = itIs;
 	}
 
-	public boolean getIsCityCompleted() {
+	public boolean isCityCompleted() {
 		return this.isCityCompleted;
 	}
 	
@@ -107,12 +111,16 @@ public final class City {
 	public boolean getAreChunksPregenerated() {
 		return this.areChunksPregenerated;
 	}
+
+	public boolean areBuildingsFinished() { return this.areBuildingsFinished; }
+	public void setAreBuildingsFinished(boolean theyAre) { this.areBuildingsFinished = theyAre; }
 	
 	public NBTTagCompound writeToNBT() {		
 		NBTTagCompound nbt = settings.writeToNBT();
 	
 		nbt.setBoolean("isCityConstructionCompleted", this.isCityCompleted);
-		
+		nbt.setBoolean("areBuildingsFinished", this.isCityCompleted);
+
 		if(cityArea != null ) {
 			nbt.setInteger("firstDimSize", cityArea.length);
 			nbt.setInteger("secondDimSize", cityArea[1].length);
@@ -132,6 +140,13 @@ public final class City {
 
 	@Override
 	public String toString() {
-		return "";//"City id: " + settings.id;
+		return "City{" +
+				"settings=" + settings.toString() +
+				", firstDimSize=" + firstDimSize +
+				", secondDimSize=" + secondDimSize +
+				", areChunksPregenerated=" + areChunksPregenerated +
+				", isCityCompleted=" + isCityCompleted +
+				", areBuildingsFinished=" + areBuildingsFinished +
+				'}';
 	}
 }

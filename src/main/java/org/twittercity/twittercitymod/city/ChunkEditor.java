@@ -17,18 +17,18 @@ public class ChunkEditor {
 	}
 	
 	private static void makeAreaFlat(World world, Block baseBlock, int sourceX, int sourceY, int sourceZ, int endX, int endZ, int cityId) {
-		TwitterCity.logger.info("MAKING FLAT CITY AT {}, {}, {}, {}, {}", sourceX, sourceY, sourceZ, endX, endZ);
+
 		for(int x = sourceX; x <= sourceX + endX; x++) {
 			for(int z = sourceZ; z <= sourceZ + endZ; z++) {
 				for(int y = sourceY; y <= sourceY; y++) {
 					BlockData bd = new BlockData(new BlockPos(x, y, z), baseBlock.getDefaultState(), ConstructionPriority.BUILD_FIRST, cityId);
-					BlockHelper.spawnOrEnqueue(bd, world);
+					BlockHelper.spawn(bd, world);
 				}
 
 				for(int y = sourceY + 1; y <= 128; y++) {
 					if(world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.AIR) {
 						BlockData bd = new BlockData(new BlockPos(x, y, z), baseBlock.getDefaultState(), ConstructionPriority.BUILD_FIRST, cityId);
-						BlockHelper.destroyOrEnqueue(bd, world);
+						BlockHelper.destroy(bd, world);
 					}
 				}
 			}

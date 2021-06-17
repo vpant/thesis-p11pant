@@ -242,12 +242,12 @@ public class Paths {
                             Math.abs(z - (area[1].length / 2)) == (city.getPathExtends() + 1)) {
 						if(city.hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
 							BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos());
-							BlockHelper.spawnOrEnqueue(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getId()));
+							BlockHelper.spawn(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getId()), world);
 						}
 					}
 					else {
 						BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos());
-						BlockHelper.spawnOrEnqueue(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getId()));
+						BlockHelper.spawn(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getId()), world);
 					}	
 				}
 			}

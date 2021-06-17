@@ -18,8 +18,8 @@ public class TCBlockColor implements IBlockColor {
 	
 	@Override
 	public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
-		if (ConfigurationManager.buildingOptions.coloredBlocks.isEnabled()) {
-			TileEntity ent = worldIn.getTileEntity(pos);;
+		if (ConfigurationManager.buildingOptions.coloredBlocks.isEnabled() && state.getBlock() instanceof TCBlock) {
+			TileEntity ent = worldIn.getTileEntity(pos);
 			if (ent instanceof TileEntityTwitter) {
 				return new Color(((TileEntityTwitter) ent).getFeeling().getFeelingColor()).getRGB();
 			}	

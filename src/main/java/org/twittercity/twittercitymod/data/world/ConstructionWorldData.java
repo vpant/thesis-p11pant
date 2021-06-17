@@ -22,6 +22,10 @@ public class ConstructionWorldData extends WorldSavedData {
 	public ConstructionWorldData() {
 		super(DATA_NAME);
 	}
+
+	public ConstructionWorldData(String name) {
+		super(name);
+	}
 	
 	public static ConstructionWorldData get(World world) {
         MapStorage storage = world.getMapStorage();
