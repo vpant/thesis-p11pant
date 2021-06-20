@@ -28,7 +28,7 @@ public class DebugItem extends ItemBase{
 			for(int i = 0; i < 10000; i++) {
 				tweets.add(new Tweet());
 			}
-			TwitterCity.logger.info(CitiesManager.getInstance().startBuilding(tweets));
+			//TwitterCity.logger.info(CitiesManager.getInstance().startBuilding(tweets));
 		}		
 		return new ActionResult<>(EnumActionResult.PASS, itemstack);
 	}

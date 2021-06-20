@@ -1,44 +1,37 @@
 package org.twittercity.twittercitymod.city;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 import org.twittercity.twittercitymod.data.db.USState;
-import org.twittercity.twittercitymod.data.world.ConstructionInfo;
-
-import java.util.Arrays;
 
 /* Data object represents a city. Cities are always square. */
 @Data
-public final class City {	
+public final class CityBACKUP {
 	private final CitySettings settings;
 
 	// Representation of the city in a 2D array
 	private int[][] cityArea;
 	private final int firstDimSize;
 	private final int secondDimSize;
-	
+
 	// When buildings construction is finished but not city construction
 	// we need to do the last things (make street lights, connect paths to roads) etc
-	@Accessors(fluent = true)
 	private boolean areChunksPregenerated = false;
-	@Accessors(fluent = true)
 	private boolean isCityCompleted = false;
-	@Accessors(fluent = true)
 	private boolean areBuildingsFinished = false;
 
-	public City(CitySettings settings, int[][] area) {
+	private USState state;
+
+	public CityBACKUP(CitySettings settings, int[][] area) {
 		this.settings = settings;
 		this.cityArea = area;
 		this.firstDimSize = area.length;
 		this.secondDimSize = area[1].length;
 	}
 
-	public City(NBTTagCompound nbt) {			
+	public CityBACKUP(NBTTagCompound nbt) {
 		this.settings = new CitySettings(nbt);
-
+		this.state = new USState(nbt);
 		this.isCityCompleted = nbt.getBoolean("isCityConstructionCompleted");	
 		this.areBuildingsFinished = nbt.getBoolean("areBuildingsFinished");
 
@@ -124,11 +117,12 @@ public final class City {
 //	public boolean areBuildingsFinished() { return this.areBuildingsFinished; }
 //	public void setAreBuildingsFinished(boolean theyAre) { this.areBuildingsFinished = theyAre; }
 
-	//public USState getState() { return state; }
+	public USState getState() { return state; }
 	
 	public NBTTagCompound writeToNBT() {		
 		NBTTagCompound nbt = settings.writeToNBT();
 
+		state.writeToNBT(nbt);
 
 		nbt.setBoolean("isCityConstructionCompleted", this.isCityCompleted);
 		nbt.setBoolean("areBuildingsFinished", this.isCityCompleted);
@@ -146,8 +140,8 @@ public final class City {
 		return nbt;
 	}
 
-	public static City readFromNbt(NBTTagCompound nbt) {
-		return new City(nbt);
+	public static CityBACKUP readFromNbt(NBTTagCompound nbt) {
+		return new CityBACKUP(nbt);
 	}
 
 	@Override

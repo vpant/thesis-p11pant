@@ -1,14 +1,12 @@
 package org.twittercity.twittercitymod.city;
 
-import org.twittercity.twittercitymod.TwitterCity;
-import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
-import org.twittercity.twittercitymod.util.BlockData;
-import org.twittercity.twittercitymod.util.BlockHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
+import org.twittercity.twittercitymod.util.BlockData;
+import org.twittercity.twittercitymod.util.BlockHelper;
 
 // This class will manipulate the chunks our cities will built on (flatten the world etc)
 public class ChunkEditor {
@@ -45,7 +43,7 @@ public class ChunkEditor {
 	 * @param city
 	 */
 	public static void makeFlatAreaForCity(World world, City city) {
-		makeAreaFlat(world, city.getGroundBlock(), city.getStartingPos(), city.getCityLength(), city.getId());
+		makeAreaFlat(world, city.getSettings().getGroundBlock(), city.getSettings().getStartingPos(), city.getSettings().getCityLength(), city.getSettings().getId());
 	}
 	
 	

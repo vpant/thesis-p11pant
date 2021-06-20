@@ -1,19 +1,16 @@
 package org.twittercity.twittercitymod.data.world;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.twittercity.twittercitymod.Reference;
-import org.twittercity.twittercitymod.city.City;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
+import org.twittercity.twittercitymod.Reference;
+import org.twittercity.twittercitymod.city.City;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CityWorldData extends WorldSavedData {
 
@@ -66,18 +63,18 @@ public class CityWorldData extends WorldSavedData {
 		return compound;
 	}
 
-	public void setCity(City city) {
+	public void addCity(City city) {
 		cities.add(city);
 		markDirty();
 	}
 	
-	public void setCity(List<City> cities) {
-		this.cities = cities;
-		markDirty();
-	}
+//	public void setCity(List<City> cities) {
+//		this.cities = cities;
+//		markDirty();
+//	}
 
 	public City getCity(Integer id) {
-		return cities.stream().filter(city -> id.equals(city.getId())).findFirst().orElse(null);
+		return cities.stream().filter(city -> id.equals(city.getSettings().getId())).findFirst().orElse(null);
 	}
 	
 	public List<City> getCities() {

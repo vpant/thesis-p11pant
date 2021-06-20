@@ -1,13 +1,25 @@
 package org.twittercity.twittercitymod.city;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.data.db.USState;
+import org.twittercity.twittercitymod.data.world.ConstructionInfo;
 import org.twittercity.twittercitymod.util.RandomHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
+@Data
+@AllArgsConstructor
+@Builder
 public final class CitySettings {
+	private final ConstructionInfo constructionInfo;
+	private final USState state;
+
 	private final int id;
 	// BlockPos object to the very first block of this city
 	private final BlockPos startingPos;
@@ -28,31 +40,32 @@ public final class CitySettings {
 	
 	private final Block groundBlock;
 	private final Block pathBlock;
-
+	@Accessors(fluent = true)
 	private final boolean hasMainStreets;
+	@Accessors(fluent = true)
 	private final boolean hasPaths;
 	
-	public CitySettings(int id, BlockPos startingPos, int citySize, int edgeLength, int pathExtends, Block groundBlock, Block pathBlock, boolean hasMainStreets, boolean hasPaths) {
-		this.id = id;
-		
-		this.startingPos = startingPos;
-		
-		this.chunkLength = citySize;
-		
-		this.edgeLength = edgeLength;
-		this.mapLength = (citySize * 16) + (edgeLength * 2);
+//	public CitySettings(int id, BlockPos startingPos, int citySize, int edgeLength, int pathExtends, Block groundBlock, Block pathBlock, boolean hasMainStreets, boolean hasPaths) {
+//		this.id = id;
+//
+//		this.startingPos = startingPos;
+//
+//		this.chunkLength = citySize;
+//
+//		this.edgeLength = edgeLength;
+//		this.mapLength = (citySize * 16) + (edgeLength * 2);
+//
+//		this.cityLength = mapLength + edgeLength * 2;
+//
+//		this.pathExtends = pathExtends;
+//
+//		this.hasMainStreets = hasMainStreets;
+//		this.hasPaths = hasPaths;
+//
+//		this.groundBlock = groundBlock;
+//		this.pathBlock = pathBlock;
+//	}
 
-		this.cityLength = mapLength + edgeLength * 2;
-		
-		this.pathExtends = pathExtends;
-		
-		this.hasMainStreets = hasMainStreets;
-		this.hasPaths = hasPaths;
-
-		this.groundBlock = groundBlock;
-		this.pathBlock = pathBlock;
-	}
-	
 	public CitySettings(NBTTagCompound nbt) {
 		this.id = nbt.getInteger("id");
 		this.startingPos = BlockPos.fromLong(nbt.getLong("startingPosLong"));
@@ -62,19 +75,23 @@ public final class CitySettings {
 		this.pathExtends = nbt.getInteger("pathExtends");
 		this.groundBlock = Block.getBlockById(nbt.getInteger("groundBlockID"));
 		this.pathBlock = Block.getBlockById(nbt.getInteger("pathBlockID"));
-		
+
 		this.cityLength = nbt.getInteger("cityLength");
-		
+
 		this.hasMainStreets = nbt.getBoolean("hasMainStreets");
 		this.hasPaths = nbt.getBoolean("hasPaths");
-		
+
 		this.chunkLength = nbt.getInteger("chunkLength");
+
+		this.constructionInfo = new ConstructionInfo(nbt);
+		this.state = new USState(nbt);
 	}
 
 	public NBTTagCompound writeToNBT() {
 
 		NBTTagCompound nbt = new NBTTagCompound();
-		
+		constructionInfo.writeToNBT(nbt);
+		state.writeToNBT(nbt);
 		nbt.setInteger("id", this.id);
 		nbt.setLong("startingPosLong", this.startingPos.toLong());
 		nbt.setInteger("chunkLength", this.chunkLength);
@@ -87,52 +104,8 @@ public final class CitySettings {
 		nbt.setBoolean("hasMainStreets", this.hasMainStreets);
 		nbt.setBoolean("hasPaths", this.hasPaths);
 		nbt.setInteger("cityLength", this.cityLength);
-		
+
 		return nbt;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public BlockPos getStartingPos() {
-		return startingPos;
-	}
-
-	public int getChunkLength() {
-		return chunkLength;
-	}
-
-	public int getEdgeLength() {
-		return edgeLength;
-	}
-
-	public int getMapLength() {
-		return mapLength;
-	}
-
-	public int getCityLength() {
-		return this.cityLength;
-	}
-	
-	public int getPathExtends() {
-		return pathExtends;
-	}
-
-	public Block getGroundBlock() {
-		return groundBlock;
-	}
-
-	public Block getPathBlock() {
-		return pathBlock;
-	}
-
-	public boolean hasMainStreets() {
-		return hasMainStreets;
-	}
-
-	public boolean hasPaths() {
-		return hasPaths;
 	}
 
 	public static int getValidEdgeLengthFromCityLength(int cityLength) {
@@ -174,22 +147,5 @@ public final class CitySettings {
 		BlockPos pos = new BlockPos(x, y, z);
 		TwitterCity.logger.info("New cities starting pos is: {}", pos.toString());
 		return pos;
-	}
-
-	@Override
-	public String toString() {
-		return "CitySettings{" +
-				"id=" + id +
-				", startingPos=" + startingPos +
-				", chunkLength=" + chunkLength +
-				", edgeLength=" + edgeLength +
-				", mapLength=" + mapLength +
-				", pathExtends=" + pathExtends +
-				", cityLength=" + cityLength +
-				", groundBlock=" + groundBlock +
-				", pathBlock=" + pathBlock +
-				", hasMainStreets=" + hasMainStreets +
-				", hasPaths=" + hasPaths +
-				'}';
 	}
 }

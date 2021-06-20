@@ -72,6 +72,31 @@ public class TweetManager {
 	    }
 		return tweets;
 	}
+
+	public List<Tweet> getTweetsAfterIdAndUsState(int id, int usStateId, int maxResults) {
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+		ArrayList<Tweet> tweets = null;
+		try {
+			String hql = "FROM Tweet WHERE id > :id AND state.id = :stateId";
+			tx = session.beginTransaction();
+			Query<Tweet> query = session.createQuery(hql, Tweet.class);
+			query.setParameter("id", id);
+			query.setParameter("stateId", usStateId);
+			query.setMaxResults(maxResults);
+			tweets = (ArrayList<Tweet>) query.list();
+			tx.commit();
+			session.close();
+		} catch (HibernateException e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return tweets;
+	}
 	
 	public static TweetManager getInstance() {
 		return instance == null ? new TweetManager() : instance;
