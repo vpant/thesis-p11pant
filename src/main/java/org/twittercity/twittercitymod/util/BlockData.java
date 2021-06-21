@@ -1,6 +1,7 @@
 package org.twittercity.twittercitymod.util;
 
 import org.twittercity.twittercitymod.data.db.Tweet;
+import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
 import org.twittercity.twittercitymod.tileentity.Feeling;
 
 import net.minecraft.block.Block;
@@ -21,14 +22,27 @@ public class BlockData {
 	public int flags;
 	/** Some blocks(Beds etc.) need to notify neighbors upon spawning */
 	public boolean shouldNotifyNeighbors;
+	/** ConstructionPriority of this block */
+	public ConstructionPriority constructionPriority;
+	/** City ID the block belongs to */
+	public Integer cityId;
 	/** The tweet that holds this block */
 	public final Tweet tweet;
 
-	public BlockData(BlockPos posIn, IBlockState stateIn, int flags, boolean shouldNotifyNeighbors, Tweet tweet) {
+	public BlockData(BlockPos posIn,
+			IBlockState stateIn,
+			int flags,
+			boolean shouldNotifyNeighbors,
+			ConstructionPriority constructionPriority,
+			int cityId,
+			Tweet tweet) {
+
 		this.pos = posIn;
 		this.blockState = stateIn;
 		this.flags = flags;
 		this.shouldNotifyNeighbors = shouldNotifyNeighbors;
+		this.constructionPriority = constructionPriority;
+		this.cityId = cityId;
 		this.tweet = tweet;
 	}
 	
@@ -38,30 +52,33 @@ public class BlockData {
 		this.flags = nbt.hasKey("flags") ? nbt.getInteger("flags") : 3;
 		this.shouldNotifyNeighbors = nbt.hasKey("notifyNeighbors") ? nbt.getBoolean("notifyNeighbors") : false;
 		
+		this.constructionPriority = ConstructionPriority.forID(nbt.getInteger("constructionPriority"));
+		this.cityId = nbt.hasKey("cityId") ? nbt.getInteger("cityId") : 0;
+
 		int id = nbt.hasKey("tweetID") ? nbt.getInteger("tweetID") : -1;
 		Feeling feeling = nbt.hasKey("tweetFeeling") ? Feeling.forFeelingID(nbt.getInteger("tweetFeeling")) : Feeling.NO_FEELING;
 		
 		this.tweet = id >= 0 ? new Tweet(id, feeling) : null;	
 	}
 	
-	public BlockData(BlockPos posIn, IBlockState stateIn, Tweet tweet) {
-		this(posIn, stateIn, 3, false, tweet);
+	public BlockData(BlockPos posIn, IBlockState stateIn, ConstructionPriority constructionPriority, int cityId, Tweet tweet) {
+		this(posIn, stateIn, 3, false, constructionPriority, cityId, tweet);
 	}
 	
-	public BlockData(BlockPos posIn, IBlockState stateIn) {
-		this(posIn, stateIn, false);
+	public BlockData(BlockPos posIn, IBlockState stateIn, ConstructionPriority constructionPriority, int cityId) {
+		this(posIn, stateIn, false, constructionPriority, cityId);
 	}
 	
-	public BlockData(BlockPos posIn, IBlockState stateIn, boolean shouldNotifyNeighbors) {
-		this(posIn, stateIn, 3, shouldNotifyNeighbors, null);
+	public BlockData(BlockPos posIn, IBlockState stateIn, boolean shouldNotifyNeighbors, ConstructionPriority constructionPriority, int cityId) {
+		this(posIn, stateIn, 3, shouldNotifyNeighbors,constructionPriority, cityId, null);
 	}
 	
-	public BlockData(BlockPos posIn, IBlockState stateIn, int flags) {
-		this(posIn, stateIn, flags, false, null);
+	public BlockData(BlockPos posIn, IBlockState stateIn, int flags, ConstructionPriority constructionPriority, int cityId) {
+		this(posIn, stateIn, flags, false, constructionPriority, cityId, null);
 	}
 	
-	public BlockData(BlockPos posIn, IBlockState stateIn, int flags, boolean shouldNotifyNeighbors) {
-		this(posIn, stateIn, flags, shouldNotifyNeighbors, null);
+	public BlockData(BlockPos posIn, IBlockState stateIn, int flags, boolean shouldNotifyNeighbors, ConstructionPriority constructionPriority, int cityId) {
+		this(posIn, stateIn, flags, shouldNotifyNeighbors, constructionPriority, cityId, null);
 	}
 	
 	public NBTTagCompound writeToNBT() {
@@ -75,8 +92,14 @@ public class BlockData {
 			nbt.setInteger("tweetID", this.tweet.getID());
 			nbt.setInteger("tweetFeeling", this.tweet.getFeeling().getFeelingID());
 		}
-		
+		nbt.setInteger("constructionPriority", this.constructionPriority.getID());
+		nbt.setInteger("cityId", this.cityId);
+
 		return nbt;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "BlockData[pos: "+ pos.toString()+", blockState: ]" + blockState.toString();
+	}
 }

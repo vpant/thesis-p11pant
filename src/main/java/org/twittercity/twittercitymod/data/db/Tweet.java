@@ -10,14 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import javax.imageio.ImageIO;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.twittercity.twittercitymod.tileentity.Feeling;
 
@@ -45,6 +38,9 @@ public class Tweet implements Comparable<Tweet>{
 	@Column(name = "feeling")
 	@Convert(converter = FeelingEnumConverter.class)
 	private Feeling feeling = Feeling.NO_FEELING;
+	@ManyToOne
+	@JoinColumn(name = "state", referencedColumnName = "id")
+	public USState state;
 	@Transient
 	private BufferedImage image = null;
 	@Transient
@@ -96,17 +92,12 @@ public class Tweet implements Comparable<Tweet>{
 		return author;
 	}
 
-	public String getgetProfilePicUrl() {
-		loadEverything();
-		return author;
-	}
-
 	public String getAuthorAccountId() {
 		loadEverything();
 		return authorAccountId;
 	}
 
-	public String gettwitterAccountID() {
+	public String getTwitterAccountID() {
 		loadEverything();
 		return tweetID;
 	}
@@ -121,14 +112,24 @@ public class Tweet implements Comparable<Tweet>{
 		return profilePicUrl;
 	}
 
+	public USState getState() {
+		loadEverything();
+		return state;
+	}
+
 	public void setAuthor(String author) {
 		loadEverything();
 		this.author = author;
 	}
 
+	public void setState(USState state) {
+		loadEverything();
+		this.state = state;
+	}
+
 	public BufferedImage getProfilePicture() {
-		if(this.image != null) {
-			return this.image;
+		if(image != null) {
+			return image;
 		}
 		try {
 			//Download profile pic
@@ -155,9 +156,9 @@ public class Tweet implements Comparable<Tweet>{
 		    g.drawImage(scaledImage, 0, 0, null);
 		    g.dispose();
 		} catch (Exception e) {
-			this.image = null;
+			image = null;
 		}		
-		return this.image;
+		return image;
 	}
 	
 	public void loadEverything() {
@@ -189,15 +190,16 @@ public class Tweet implements Comparable<Tweet>{
 	}
 
 	private void copyToThis(Tweet tweet) {
-		this.id = tweet.id;
-		this.text = tweet.text;
-		this.author = tweet.author;
-		this.authorAccountId = tweet.authorAccountId;
-		this.tweetID = tweet.tweetID;
-		this.date = tweet.date;
-		this.profilePicUrl = tweet.profilePicUrl;
-		this.feeling = tweet.feeling;
-		this.everythingLoaded = tweet.everythingLoaded;
+		id = tweet.id;
+		text = tweet.text;
+		author = tweet.author;
+		authorAccountId = tweet.authorAccountId;
+		tweetID = tweet.tweetID;
+		date = tweet.date;
+		profilePicUrl = tweet.profilePicUrl;
+		feeling = tweet.feeling;
+		everythingLoaded = tweet.everythingLoaded;
+		state = tweet.state;
 	}
 	
 	@Override

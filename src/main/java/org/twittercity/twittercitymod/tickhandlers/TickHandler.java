@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class TickHanlder {	
+public class TickHandler {
 	// 20 ticks per second
 	private static final int TICKS_TO_MINUTES = 20 * 60;
 	private int searchDatabaseTimer = 0;
@@ -25,7 +25,7 @@ public class TickHanlder {
 	
 	@SubscribeEvent
 	public void buildFromTweetsQueue(TickEvent.ServerTickEvent event) {
-		if(!BuildingReference.cityPreparationActive && !BuildingReference.tweetsToBuild.isEmpty()) {
+		if(!BuildingReference.tweetsToBuild.isEmpty()) {
 			int endIndex = BuildingReference.tweetsToBuild.size();
 			int fromIndex = Math.max(endIndex - BuildingReference.tweetsPerTick, 0);
 			List<Tweet> sublistToBuild = BuildingReference.tweetsToBuild.subList(fromIndex, endIndex);

@@ -49,7 +49,7 @@ public class TweetManager {
 		return tweet;
 	}
 	
-	public List<Tweet> getAllTweetsAfter(int id) {		
+	public List<Tweet> getTweetsAfter(int id, int maxResults) {
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
 		ArrayList<Tweet> tweets = null;
@@ -58,7 +58,7 @@ public class TweetManager {
 			tx = session.beginTransaction();
 			Query<Tweet> query = session.createQuery(hql, Tweet.class);
 			query.setParameter("id", id);
-			query.setMaxResults(10000);
+			query.setMaxResults(maxResults);
 			tweets = (ArrayList<Tweet>) query.list();
 			tx.commit();
 			session.close();
@@ -66,10 +66,35 @@ public class TweetManager {
 			if (tx != null) {
 				tx.rollback();
 			}
-	        e.printStackTrace(); 
+	        e.printStackTrace();
 	    } finally {
-	    	session.close(); 
+	    	session.close();
 	    }
+		return tweets;
+	}
+
+	public List<Tweet> getTweetsAfterIdAndUsState(int id, int usStateId, int maxResults) {
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+		ArrayList<Tweet> tweets = null;
+		try {
+			String hql = "FROM Tweet WHERE id > :id AND state.id = :stateId";
+			tx = session.beginTransaction();
+			Query<Tweet> query = session.createQuery(hql, Tweet.class);
+			query.setParameter("id", id);
+			query.setParameter("stateId", usStateId);
+			query.setMaxResults(maxResults);
+			tweets = (ArrayList<Tweet>) query.list();
+			tx.commit();
+			session.close();
+		} catch (HibernateException e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
 		return tweets;
 	}
 	

@@ -20,11 +20,6 @@ pipeline{
                 configFileProvider([configFile(fileId: 'hibernate-cfg-twittercitymod', targetLocation: 'src/main/resources/assets/tc/hibernate.cfg.xml')]) {}  
                 sh 'gradle clean build'
             }
-            post {
-                success {
-                    archiveArtifacts 'build/libs/twittercity-*.jar'
-                }
-            }
         }
     
 

@@ -1,23 +1,23 @@
 package org.twittercity.twittercitymod.data.world;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.twittercity.twittercitymod.Reference;
-import org.twittercity.twittercitymod.city.City;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
+import org.twittercity.twittercitymod.Reference;
+import org.twittercity.twittercitymod.city.City;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CityWorldData extends WorldSavedData {
 
 	private static final String DATA_NAME = Reference.MOD_ID + "_CityData";
 	private static CityWorldData instance;
 	
-	private Map<Integer,City> cities = new HashMap<Integer,City>();
+	private List<City> cities = new LinkedList<>();
 	
 	
 	public CityWorldData() {
@@ -45,7 +45,7 @@ public class CityWorldData extends WorldSavedData {
 		
 		for(int i = 0; i < citiesTag.tagCount(); i++) {
 			City city = new City((NBTTagCompound) citiesTag.get(i));
-			cities.put(Integer.valueOf(city.getId()), city);
+			cities.add(city);
 		}
 	}
 
@@ -54,8 +54,8 @@ public class CityWorldData extends WorldSavedData {
 		
 		NBTTagList citiesTag = new NBTTagList();
 		
-		for(Map.Entry<Integer,City> citySet : cities.entrySet()) {
-			citiesTag.appendTag(citySet.getValue().writeToNBT());
+		for(City city : cities) {
+			citiesTag.appendTag(city.writeToNBT());
 		}
 		
 		compound.setTag("Cities", citiesTag);
@@ -63,29 +63,27 @@ public class CityWorldData extends WorldSavedData {
 		return compound;
 	}
 
-	public void setCity(City city) {
-		cities.put(Integer.valueOf(city.getId()), city);
+	public void addCity(City city) {
+		cities.add(city);
 		markDirty();
 	}
 	
-	public void setCity(HashMap<Integer,City> cities) {
-		this.cities = cities;
-		markDirty();
-	}
-	
-	public City getCity(int id) {
-		return getCity(Integer.valueOf(id));
-	}
-	
+//	public void setCity(List<City> cities) {
+//		this.cities = cities;
+//		markDirty();
+//	}
+
 	public City getCity(Integer id) {
-		return cities.get(id);
+		return cities.stream().filter(city -> id.equals(city.getId())).findFirst().orElse(null);
 	}
 	
-	public HashMap<Integer,City> getCities() {
-		return (HashMap<Integer, City>) this.cities;
+	public List<City> getCities() {
+		return this.cities;
 	}
 
-	public City getFirstCity() {
-		return getCity(0);
+	public List<City> getUnfinishedCities() {
+		return cities.stream()
+				.filter(city -> !city.getIsCityCompleted())// && city.areBuildingsFinished())
+				.collect(Collectors.toList());
 	}
 }

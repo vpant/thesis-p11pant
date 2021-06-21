@@ -1,33 +1,19 @@
 package org.twittercity.twittercitymod.registrationhandlers;
 
-import org.twittercity.twittercitymod.Reference;
-import org.twittercity.twittercitymod.blocks.TCBlock;
-import org.twittercity.twittercitymod.blocks.TCBlockColored;
-import org.twittercity.twittercitymod.blocks.TCBlockNewLog;
-import org.twittercity.twittercitymod.blocks.TCBlockOldLog;
-import org.twittercity.twittercitymod.blocks.TCBlockPlanks;
-import org.twittercity.twittercitymod.blocks.TCBlockSandStone;
-import org.twittercity.twittercitymod.blocks.TCBlockStone;
-import org.twittercity.twittercitymod.blocks.TCBlockStoneBrick;
-import org.twittercity.twittercitymod.blocks.TCBlocks;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemCloth;
-import net.minecraft.item.ItemMultiTexture;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.twittercity.twittercitymod.Reference;
+import org.twittercity.twittercitymod.blocks.*;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class TCBlocksRegistrationHandler {

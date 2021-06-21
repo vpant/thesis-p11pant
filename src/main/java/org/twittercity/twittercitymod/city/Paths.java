@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.twittercity.twittercitymod.TwitterCity;
+import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
 import org.twittercity.twittercitymod.util.ArrayUtils;
+import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.util.RandomHelper;
 
@@ -241,12 +243,12 @@ public class Paths {
                             Math.abs(z - (area[1].length / 2)) == (city.getPathExtends() + 1)) {
 						if(city.hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
 							BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos());
-							BlockHelper.spawnOrEnqueue(pos, city.getPathBlock().getDefaultState());
+							BlockHelper.spawn(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getId()), world);
 						}
 					}
 					else {
 						BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos());
-						BlockHelper.spawnOrEnqueue(pos, city.getPathBlock().getDefaultState());
+						BlockHelper.spawn(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getId()), world);
 					}	
 				}
 			}

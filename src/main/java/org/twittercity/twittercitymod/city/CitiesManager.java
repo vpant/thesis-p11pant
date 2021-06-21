@@ -38,10 +38,7 @@ public class CitiesManager {
 		if(currentConstructingCity == null) {
 			currentConstructingCity = createNewCity();
 		}
-		
-		if(tweets.isEmpty() || BuildingReference.cityPreparationActive) {
-			return false;
-		}
+
 		Buildings.makeInsideCity(twitterWorld, currentConstructingCity, tweets);
 		return true;
 	}
@@ -52,7 +49,7 @@ public class CitiesManager {
 	
 		prepareCity(newCity);
 		//Save city
-		cityWData.setCity(newCity);
+		cityWData.addCity(newCity);
 		
 		return newCity;
 	}

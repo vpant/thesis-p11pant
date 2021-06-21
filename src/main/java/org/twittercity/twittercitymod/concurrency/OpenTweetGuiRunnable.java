@@ -20,6 +20,7 @@ public class OpenTweetGuiRunnable implements Runnable {
 	@Override
 	public void run() {
 		Tweet tweet = TweetManager.getInstance().getTweet(entity.getTweetID());
+		TwitterCity.logger.info("Feeling: {}", tweet.getFeeling());
 		Minecraft.getMinecraft().addScheduledTask(TwitterCity.proxy.openTweetGUI(tweet));
 
 	}

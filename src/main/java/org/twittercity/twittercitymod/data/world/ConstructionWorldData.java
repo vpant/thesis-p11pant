@@ -263,12 +263,12 @@ public class ConstructionWorldData extends WorldSavedData {
 				nbt.setInteger("buildDirectionIndex", this.buildDirection.getIndex());
 			}
 			
-			NBTTagList buildLastTag = new NBTTagList();
-			for(BlockData blockData : buildLast) {
-				buildLastTag.appendTag((new BuildLastBlock(blockData.blockState, blockData.pos)).writeToNBT());
-			}
-			
-			nbt.setTag("buildLastBlocks", buildLastTag);
+//			NBTTagList buildLastTag = new NBTTagList();
+//			for(BlockData blockData : buildLast) {
+//				buildLastTag.appendTag((new BuildLastBlock(blockData.blockState, blockData.pos)).writeToNBT());
+//			}
+//
+//			nbt.setTag("buildLastBlocks", buildLastTag);
 			return nbt;
 		}
 		
@@ -290,10 +290,10 @@ public class ConstructionWorldData extends WorldSavedData {
 			
 			NBTTagList buildLastBlocks = (NBTTagList) nbt.getTag("buildLastBlocks");
 			buildLast = buildLast == null ? new ArrayList<BlockData>() : buildLast;
-			for(int i = 0; i < buildLastBlocks.tagCount(); i++) {
-				BuildLastBlock buildLastBlock = new BuildLastBlock((NBTTagCompound) buildLastBlocks.get(i));
-				this.buildLast.add(new BlockData(buildLastBlock.pos, buildLastBlock.state));
-			}
+//			for(int i = 0; i < buildLastBlocks.tagCount(); i++) {
+//				BuildLastBlock buildLastBlock = new BuildLastBlock((NBTTagCompound) buildLastBlocks.get(i));
+//				this.buildLast.add(new BlockData(buildLastBlock.pos, buildLastBlock.state));
+//			}
 		}
 		
 		private void addToBuildLast(BlockData blockData) {
