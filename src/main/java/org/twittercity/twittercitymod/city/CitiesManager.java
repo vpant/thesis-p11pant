@@ -1,8 +1,11 @@
 package org.twittercity.twittercitymod.city;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.twittercity.twittercitymod.data.db.Tweet;
+import org.twittercity.twittercitymod.data.db.USState;
+import org.twittercity.twittercitymod.data.db.USStateDAO;
 import org.twittercity.twittercitymod.data.world.CityWorldData;
 import org.twittercity.twittercitymod.data.world.ConstructionWorldData;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
@@ -57,7 +60,7 @@ public class CitiesManager {
 	
 	private CitySettings getNewCitySettings() {
 		// Initial values for first city
-		int id = constrWorldData.getCurrentConstructingCityId(), citySize, edgeLength, pathExtends = 2;
+		int id = constrWorldData.getCurrentConstructingCityId(), cityStateId, citySize, edgeLength, pathExtends = 2;
 		int nextCityLength = 0;
 		BlockPos startingPos;
 		Block groundBlock = Blocks.OBSIDIAN, pathBlock = Blocks.DIAMOND_BLOCK;
@@ -73,6 +76,9 @@ public class CitiesManager {
 				constrWorldData.setCitiesSquareNorthWestCorner(squareCornerPos);
 			}
 
+			// TODO find this cityStateId from somewhere. Probably latest tweet
+			//cityStateId = getNextStateId(.getState().getId());
+
 			//Calculate new city's starting position
 			startingPos = CitySettings.getNewCityPosition(squareCornerPos.add(newCityBuildDirection.getDirectionVector()), newCityBuildDirection, nextCityLength);
 			edgeLength = CitySettings.getValidEdgeLengthFromCityLength(nextCityLength);
@@ -82,35 +88,67 @@ public class CitiesManager {
 			citySize = 6;
 			edgeLength = 3;
 			startingPos = new BlockPos(0, 63, 0);
+			cityStateId = 1;
 			constrWorldData.setCitiesSquareNorthWestCorner(startingPos);
 		}
 
-		CitySettings citySettings = new CitySettings(++id, startingPos, citySize,
-				edgeLength, pathExtends, groundBlock, pathBlock, true, true);
-		constrWorldData.setCityLength(citySettings.getCityLength());
-		constrWorldData.setCurrentConstructingCityId(id);
+//		CitySettings citySettings = new CitySettings(++cityId, startingPos, citySize,
+//				edgeLength, pathExtends, groundBlock, pathBlock, true, true);
 
-		return citySettings;
-	}
+		cityStateId = 1;
+        final USState cityState = USStateDAO.getInstance().getState(cityStateId);
+
+        CitySettings citySettings = CitySettings.builder()
+                .id(++id)
+                .startingPos(startingPos)
+                .chunkLength(citySize)
+                .edgeLength(edgeLength)
+                .pathExtends(pathExtends)
+                .groundBlock(groundBlock)
+                .pathBlock(pathBlock)
+                .hasMainStreets(true)
+                .hasPaths(true)
+                //.constructionInfo(newCityConstructionInfo)
+                .state(cityState)
+                .mapLength((citySize * 16) + (edgeLength * 2))
+                .cityLength(((citySize * 16) + (edgeLength * 2)) + edgeLength * 2)
+                .build();
+
+        constrWorldData.setCityLength(citySettings.getCityLength());
+        constrWorldData.setCurrentConstructingCityId(id);
+
+        return citySettings;
+    }
+
+    private int getNextStateId(int currentStateId) {
+        final int lastStateId = USStateDAO.getInstance().getLastStateId();
+        final int nextStateId = currentStateId + 1;
+        return lastStateId >= nextStateId ? nextStateId : 1;
+    }
+
+    private City findLastBuiltCity() {
+        return cityWData.getCities().stream()
+                .min(Comparator.comparing(cityElement -> cityElement.getSettings().getId())).orElse(null);
+    }
 
 
-	public void prepareCity(City city) {
-		ChunkEditor.makeFlatAreaForCity(twitterWorld, city);
-		Paths.makePaths(twitterWorld, city);
-	}
-	
-	
-	public City getCity(int id) {
-		return cityWData.getCity(id);
-	}
-	
-	public static CitiesManager getInstance() {
-		if(instance == null) {
-			instance = new CitiesManager();
-		} else {
-			instance.updateFields();
-		}
-		return instance;
-	}
+    public void prepareCity(City city) {
+        ChunkEditor.makeFlatAreaForCity(twitterWorld, city);
+        Paths.makePaths(twitterWorld, city);
+    }
+
+
+    public City getCity(int id) {
+        return cityWData.getCity(id);
+    }
+
+    public static CitiesManager getInstance() {
+        if (instance == null) {
+            instance = new CitiesManager();
+        } else {
+            instance.updateFields();
+        }
+        return instance;
+    }
 
 }

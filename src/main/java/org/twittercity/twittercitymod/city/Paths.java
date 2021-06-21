@@ -235,31 +235,31 @@ public class Paths {
 		for (int x = 0; x < area.length; x++) {
 			for (int z = 0; z < area[1].length; z++) {
 				if (area[x][z] == 1) {
-					if (Math.abs(x - (area.length / 2)) == city.getPathExtends() + 1 &&
-						Math.abs(z - (area[1].length /2)) == city.getPathExtends() + 1) {
+					if (Math.abs(x - (area.length / 2)) == city.getSettings().getPathExtends() + 1 &&
+						Math.abs(z - (area[1].length /2)) == city.getSettings().getPathExtends() + 1) {
 						//do nothing for now
 					}
-					else if(Math.abs(x - (area.length / 2)) == (city.getPathExtends() + 1) ||
-                            Math.abs(z - (area[1].length / 2)) == (city.getPathExtends() + 1)) {
-						if(city.hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
-							BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos());
-							BlockHelper.spawn(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getId()), world);
+					else if(Math.abs(x - (area.length / 2)) == (city.getSettings().getPathExtends() + 1) ||
+                            Math.abs(z - (area[1].length / 2)) == (city.getSettings().getPathExtends() + 1)) {
+						if(city.getSettings().hasMainStreets() && multipleNeighbouringPaths(area, x, z)) {
+							BlockPos pos = new BlockPos(city.getSettings().getEdgeLength() + x, 0, city.getSettings().getEdgeLength() + z ).add(city.getSettings().getStartingPos());
+							BlockHelper.spawn(new BlockData(pos, city.getSettings().getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getSettings().getId()), world);
 						}
 					}
 					else {
-						BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z ).add(city.getStartingPos());
-						BlockHelper.spawn(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getId()), world);
+						BlockPos pos = new BlockPos(city.getSettings().getEdgeLength() + x, 0, city.getSettings().getEdgeLength() + z ).add(city.getSettings().getStartingPos());
+						BlockHelper.spawn(new BlockData(pos, city.getSettings().getPathBlock().getDefaultState(), ConstructionPriority.BUILD_FIRST, city.getSettings().getId()), world);
 					}	
 				}
 			}
 		}
 		
-		if (city.hasMainStreets()) {
+		if (city.getSettings().hasMainStreets()) {
 			for (int a = 0; a < area.length; a++) {
 				if (a % 8 == 0) {
 					//npcs?
 				}
-				for (int c = -city.getPathExtends(); c <= city.getPathExtends(); c++) {
+				for (int c = -city.getSettings().getPathExtends(); c <= city.getSettings().getPathExtends(); c++) {
 					area[a][((area.length - 1) / 2) + c] = 1;
 					area[((area.length - 1) / 2) + c][a] = 1;
 				}

@@ -41,7 +41,7 @@ public class PreGenTickHandler {
 							TextComponentTranslation chatTranslation = new TextComponentTranslation("chunkgen.success");
 							server.sendMessage(chatTranslation);
 							CityWorldData.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID))
-									.getCity(cp.getCityID()).setAreChunksPregenerated(true);
+									.getCity(cp.getCityID()).areChunksPregenerated(true);
 							server.saveAllWorlds(true);
 							ChunkPreGenReference.chunkGenerationInProgress = false;
 						}

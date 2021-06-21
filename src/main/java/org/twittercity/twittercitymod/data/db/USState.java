@@ -17,8 +17,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "usa_state")
 @Data
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor
+@NoArgsConstructor
 public class USState {
     @Id
     @Column(name = "id")

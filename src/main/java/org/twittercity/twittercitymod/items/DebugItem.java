@@ -24,13 +24,13 @@ public class DebugItem extends ItemBase{
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		if (!worldIn.isRemote) {
-			ArrayList<Tweet> tweets = new ArrayList<Tweet>();
-			for(int i = 0; i < 1; i++) {
+			ArrayList<Tweet> tweets = new ArrayList<>();
+			for(int i = 0; i < 10000; i++) {
 				tweets.add(new Tweet());
 			}
-			TwitterCity.logger.info(CitiesManager.getInstance().startBuilding(tweets));
+			//TwitterCity.logger.info(CitiesManager.getInstance().startBuilding(tweets));
 		}		
-		return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+		return new ActionResult<>(EnumActionResult.PASS, itemstack);
 	}
 	
 }

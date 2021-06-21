@@ -61,7 +61,7 @@ public class TwitterCityCmdTeleport extends AbstractTwitterCityCommand {
 	private void teleportPlayerToCity(EntityPlayer player, City city, boolean forceStayToTwitterCityDimmension) {
 		int currentId = player.getEntityWorld().provider.getDimension();
 		int twitterCityDim = TwitterCityWorldGenReference.DIM_ID;
-		BlockPos cityStartingPos = city.getStartingPos();
+		BlockPos cityStartingPos = city.getSettings().getStartingPos();
 		if (currentId != twitterCityDim || forceStayToTwitterCityDimmension) {
 			// Maybe teleport to first town coordinates
 			TeleportationTools.teleportToDimension(player, twitterCityDim, cityStartingPos.add(2, 2, 2), EnumFacing.EAST); 

@@ -74,7 +74,7 @@ public class CityWorldData extends WorldSavedData {
 //	}
 
 	public City getCity(Integer id) {
-		return cities.stream().filter(city -> id.equals(city.getId())).findFirst().orElse(null);
+		return cities.stream().filter(city -> id.equals(city.getSettings().getId())).findFirst().orElse(null);
 	}
 	
 	public List<City> getCities() {
@@ -83,7 +83,7 @@ public class CityWorldData extends WorldSavedData {
 
 	public List<City> getUnfinishedCities() {
 		return cities.stream()
-				.filter(city -> !city.getIsCityCompleted())// && city.areBuildingsFinished())
+				.filter(city -> !city.isCityCompleted())// && city.areBuildingsFinished())
 				.collect(Collectors.toList());
 	}
 }

@@ -43,7 +43,7 @@ public class ChunkEditor {
 	 * @param city
 	 */
 	public static void makeFlatAreaForCity(World world, City city) {
-		makeAreaFlat(world, city.getGroundBlock(), city.getStartingPos(), city.getCityLength(), city.getId());
+		makeAreaFlat(world, city.getSettings().getGroundBlock(), city.getSettings().getStartingPos(), city.getSettings().getCityLength(), city.getSettings().getId());
 	}
 	
 	

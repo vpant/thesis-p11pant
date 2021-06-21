@@ -72,44 +72,44 @@ public class Buildings {
 	/**
 	 * Finish up city by building city lights, connect paths to roads etc
 	 */
-	private static void cityFinishUp(World world, City city) {
-		if(city.hasPaths()) {
+	public static void cityFinishUp(World world, City city) {
+		if(city.getSettings().hasPaths()) {
 			joinPathsToRoad(world, city);
 		}
 		else {
 			removePaths(world, city.getCityArea(), city);
 		}
-		if(city.hasMainStreets()) {
+		if(city.getSettings().hasMainStreets()) {
 			makeStreetLights(world, city);
 		}
 	}
 	
 	private static void makeStreetLights(World world, City city) {
-		for (int a = city.getPathExtends() + 1; a <= (city.getMapLength() / 2) - (city.getEdgeLength() + 16); a += 8) {
-			makeStreetLight(world, city, (city.getMapLength() / 2) - a, (city.getMapLength() / 2) - (city.getPathExtends() + 1),
-                                         (city.getMapLength() / 2) - a, (city.getMapLength() / 2) - city.getPathExtends());
-			makeStreetLight(world, city, (city.getMapLength() / 2) - a, (city.getMapLength() / 2) + (city.getPathExtends() + 1),
-                                         (city.getMapLength() / 2) - a, (city.getMapLength() / 2) + city.getPathExtends());
-			makeStreetLight(world, city, (city.getMapLength() / 2) + a, (city.getMapLength() / 2) - (city.getPathExtends() + 1),
-                                         (city.getMapLength() / 2) + a, (city.getMapLength() / 2) - city.getPathExtends());
-			makeStreetLight(world, city, (city.getMapLength() / 2) + a, (city.getMapLength() / 2) + (city.getPathExtends() + 1),
-                                         (city.getMapLength() / 2) + a, (city.getMapLength() / 2) + city.getPathExtends());
+		for (int a = city.getSettings().getPathExtends() + 1; a <= (city.getSettings().getMapLength() / 2) - (city.getSettings().getEdgeLength() + 16); a += 8) {
+			makeStreetLight(world, city, (city.getSettings().getMapLength() / 2) - a + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) - (city.getSettings().getPathExtends() + 1 ) + city.getSettings().getEdgeLength(),
+                                         (city.getSettings().getMapLength() / 2) - a + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) - city.getSettings().getPathExtends() + city.getSettings().getEdgeLength());
+			makeStreetLight(world, city, (city.getSettings().getMapLength() / 2 ) - a + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) + (city.getSettings().getPathExtends() + 1) + city.getSettings().getEdgeLength(),
+                                         (city.getSettings().getMapLength() / 2) - a + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) + city.getSettings().getPathExtends()+ city.getSettings().getEdgeLength());
+			makeStreetLight(world, city, (city.getSettings().getMapLength() / 2) + a + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) - (city.getSettings().getPathExtends() + 1) + city.getSettings().getEdgeLength(),
+                                         (city.getSettings().getMapLength() / 2) + a + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) - city.getSettings().getPathExtends()+ city.getSettings().getEdgeLength());
+			makeStreetLight(world, city, (city.getSettings().getMapLength() / 2) + a + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) + (city.getSettings().getPathExtends() + 1) + city.getSettings().getEdgeLength(),
+                                         (city.getSettings().getMapLength() / 2) + a + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) + city.getSettings().getPathExtends() + city.getSettings().getEdgeLength());
 
-			makeStreetLight(world, city, (city.getMapLength() / 2) - (city.getPathExtends() + 1), (city.getMapLength() / 2) - a,
-                                         (city.getMapLength() / 2) - city.getPathExtends(), (city.getMapLength() / 2) - a);
-			makeStreetLight(world, city, (city.getMapLength() / 2) + (city.getPathExtends() + 1), (city.getMapLength() / 2) - a,
-                                         (city.getMapLength() / 2) + city.getPathExtends(), (city.getMapLength() / 2) - a);
-			makeStreetLight(world, city, (city.getMapLength() / 2) - (city.getPathExtends() + 1), (city.getMapLength() / 2) + a,
-                                         (city.getMapLength() / 2) - city.getPathExtends(), (city.getMapLength() / 2) + a);
-			makeStreetLight(world, city, (city.getMapLength() / 2) + (city.getPathExtends() + 1), (city.getMapLength() / 2) + a,
-                                         (city.getMapLength() / 2) + city.getPathExtends(), (city.getMapLength() / 2) + a);
+			makeStreetLight(world, city, (city.getSettings().getMapLength() / 2) - (city.getSettings().getPathExtends() + 1) + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) - a + city.getSettings().getEdgeLength(),
+                                         (city.getSettings().getMapLength() / 2) - city.getSettings().getPathExtends() + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) - a + city.getSettings().getEdgeLength());
+			makeStreetLight(world, city, (city.getSettings().getMapLength() / 2) + (city.getSettings().getPathExtends() + 1) + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) - a + city.getSettings().getEdgeLength(),
+                                         (city.getSettings().getMapLength() / 2) + city.getSettings().getPathExtends() + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) - a + city.getSettings().getEdgeLength());
+			makeStreetLight(world, city, (city.getSettings().getMapLength() / 2) - (city.getSettings().getPathExtends() + 1) + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) + a + city.getSettings().getEdgeLength(),
+                                         (city.getSettings().getMapLength() / 2) - city.getSettings().getPathExtends() + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) + a + city.getSettings().getEdgeLength());
+			makeStreetLight(world, city, (city.getSettings().getMapLength() / 2) + (city.getSettings().getPathExtends() + 1) + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) + a + city.getSettings().getEdgeLength(),
+                                         (city.getSettings().getMapLength() / 2) + city.getSettings().getPathExtends() + city.getSettings().getEdgeLength(), (city.getSettings().getMapLength() / 2) + a + city.getSettings().getEdgeLength());
          }
 	}
 
 	private static void makeStreetLight(World world, City city, int x1, int z1, int x2, int z2) {
-		if(world.getBlockState(new BlockPos(x1, 0, z1).add(city.getStartingPos())) == city.getGroundBlock().getDefaultState() &&
-				world.getBlockState(new BlockPos(x1, 1, z1).add(city.getStartingPos())) == Blocks.AIR.getDefaultState() &&
-				world.getBlockState(new BlockPos(x1, 2, z1).add(city.getStartingPos())) == Blocks.AIR.getDefaultState()) 
+		if(world.getBlockState(new BlockPos(x1, 0, z1).add(city.getSettings().getStartingPos())) == city.getSettings().getGroundBlock().getDefaultState() &&
+				world.getBlockState(new BlockPos(x1, 1, z1).add(city.getSettings().getStartingPos())) == Blocks.AIR.getDefaultState() &&
+				world.getBlockState(new BlockPos(x1, 2, z1).add(city.getSettings().getStartingPos())) == Blocks.AIR.getDefaultState())
 		{
 			makeStreetLightPart(world, city, x1, 1, z1, Blocks.OAK_FENCE.getDefaultState());
 			makeStreetLightPart(world, city, x1, 2, z1, Blocks.OAK_FENCE.getDefaultState());
@@ -123,35 +123,35 @@ public class Buildings {
 	}
 
 	private static void makeStreetLightPart(World world, City city, int x1, int y, int z1, IBlockState state) {
-		BlockPos pos = new BlockPos(x1, y, z1 ).add(city.getStartingPos());
-		BlockData bd = new BlockData(pos, state, ConstructionPriority.BUILD_LAST, city.getId());
+		BlockPos pos = new BlockPos(x1, y, z1 ).add(city.getSettings().getStartingPos());
+		BlockData bd = new BlockData(pos, state, ConstructionPriority.BUILD_LAST, city.getSettings().getId());
 		BlockHelper.spawn(bd, world);
 	}
 
 	private static void joinPathsToRoad(World world, City city) {
-		int halfPlotBlocksLength = (((city.getPathExtends() / 2) + city.getMapLength()) - (2 * city.getEdgeLength())) / 2;
+		int halfPlotBlocksLength = (((city.getSettings().getPathExtends() / 2) + city.getSettings().getMapLength()) - (2 * city.getSettings().getEdgeLength())) / 2;
 		for(int a = 0; a <= 2 * halfPlotBlocksLength; a++) {
-			for(int b = -(city.getPathExtends() + 1); b <= city.getPathExtends() + 1; b += (city.getPathExtends() + 1) * 2) {
-				if(world.getBlockState(new BlockPos(city.getEdgeLength() + a, 0, city.getEdgeLength() + halfPlotBlocksLength + b + Integer.signum(b)).add(city.getStartingPos())) == city.getPathBlock().getDefaultState()
-					&& (world.getBlockState(new BlockPos(city.getEdgeLength() + a, 0, city.getEdgeLength() + halfPlotBlocksLength + b).add(city.getStartingPos())) == city.getGroundBlock().getDefaultState()
-					|| world.getBlockState(new BlockPos(city.getEdgeLength() + a, 0, city.getEdgeLength() + halfPlotBlocksLength + b).add(city.getStartingPos())) == city.getPathBlock().getDefaultState())
-					&& world.getBlockState(new BlockPos(city.getEdgeLength() + a, 1, city.getEdgeLength() + halfPlotBlocksLength + b).add(city.getStartingPos())) == Blocks.AIR.getDefaultState())
+			for(int b = -(city.getSettings().getPathExtends() + 1); b <= city.getSettings().getPathExtends() + 1; b += (city.getSettings().getPathExtends() + 1) * 2) {
+				if(world.getBlockState(new BlockPos(city.getSettings().getEdgeLength() + a, 0, city.getSettings().getEdgeLength() + halfPlotBlocksLength + b + Integer.signum(b)).add(city.getSettings().getStartingPos())) == city.getSettings().getPathBlock().getDefaultState()
+					&& (world.getBlockState(new BlockPos(city.getSettings().getEdgeLength() + a, 0, city.getSettings().getEdgeLength() + halfPlotBlocksLength + b).add(city.getSettings().getStartingPos())) == city.getSettings().getGroundBlock().getDefaultState()
+					|| world.getBlockState(new BlockPos(city.getSettings().getEdgeLength() + a, 0, city.getSettings().getEdgeLength() + halfPlotBlocksLength + b).add(city.getSettings().getStartingPos())) == city.getSettings().getPathBlock().getDefaultState())
+					&& world.getBlockState(new BlockPos(city.getSettings().getEdgeLength() + a, 1, city.getSettings().getEdgeLength() + halfPlotBlocksLength + b).add(city.getSettings().getStartingPos())) == Blocks.AIR.getDefaultState())
 				{
-					BlockPos pos = new BlockPos(city.getEdgeLength() + a, 0, city.getEdgeLength() + halfPlotBlocksLength + b).add(city.getStartingPos());
-					BlockHelper.spawn(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_LAST, city.getId()), world);
-					pos = new BlockPos(city.getEdgeLength() + a, 1, city.getEdgeLength() + halfPlotBlocksLength + b - Integer.signum(b)).add(city.getStartingPos());
-					BlockHelper.spawn(new BlockData(pos, Blocks.AIR.getDefaultState(), ConstructionPriority.BUILD_LAST, city.getId()), world);
+					BlockPos pos = new BlockPos(city.getSettings().getEdgeLength() + a, 0, city.getSettings().getEdgeLength() + halfPlotBlocksLength + b).add(city.getSettings().getStartingPos());
+					BlockHelper.spawn(new BlockData(pos, city.getSettings().getPathBlock().getDefaultState(), ConstructionPriority.BUILD_LAST, city.getSettings().getId()), world);
+					pos = new BlockPos(city.getSettings().getEdgeLength() + a, 1, city.getSettings().getEdgeLength() + halfPlotBlocksLength + b - Integer.signum(b)).add(city.getSettings().getStartingPos());
+					BlockHelper.spawn(new BlockData(pos, Blocks.AIR.getDefaultState(), ConstructionPriority.BUILD_LAST, city.getSettings().getId()), world);
 				}
-				if(world.getBlockState(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b + Integer.signum(b), 0, city.getEdgeLength() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState()
-						&& world.getBlockState(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + (b - Integer.signum(b)), 0, city.getEdgeLength() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState()
-						&& (world.getBlockState(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b, 0, city.getEdgeLength() + a).add(city.getStartingPos())) == city.getGroundBlock().getDefaultState()
-						|| world.getBlockState(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b, 0, city.getEdgeLength() + a).add(city.getStartingPos())) == city.getPathBlock().getDefaultState())
-						&& world.getBlockState(new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b, 1, city.getEdgeLength() + a).add(city.getStartingPos())) == Blocks.AIR.getDefaultState()) 
+				if(world.getBlockState(new BlockPos(city.getSettings().getEdgeLength() + halfPlotBlocksLength + b + Integer.signum(b), 0, city.getSettings().getEdgeLength() + a).add(city.getSettings().getStartingPos())) == city.getSettings().getPathBlock().getDefaultState()
+						&& world.getBlockState(new BlockPos(city.getSettings().getEdgeLength() + halfPlotBlocksLength + (b - Integer.signum(b)), 0, city.getSettings().getEdgeLength() + a).add(city.getSettings().getStartingPos())) == city.getSettings().getPathBlock().getDefaultState()
+						&& (world.getBlockState(new BlockPos(city.getSettings().getEdgeLength() + halfPlotBlocksLength + b, 0, city.getSettings().getEdgeLength() + a).add(city.getSettings().getStartingPos())) == city.getSettings().getGroundBlock().getDefaultState()
+						|| world.getBlockState(new BlockPos(city.getSettings().getEdgeLength() + halfPlotBlocksLength + b, 0, city.getSettings().getEdgeLength() + a).add(city.getSettings().getStartingPos())) == city.getSettings().getPathBlock().getDefaultState())
+						&& world.getBlockState(new BlockPos(city.getSettings().getEdgeLength() + halfPlotBlocksLength + b, 1, city.getSettings().getEdgeLength() + a).add(city.getSettings().getStartingPos())) == Blocks.AIR.getDefaultState())
 				{
-					BlockPos pos = new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b, 0, city.getEdgeLength() + a).add(city.getStartingPos());
-					BlockHelper.spawn(new BlockData(pos, city.getPathBlock().getDefaultState(), ConstructionPriority.BUILD_LAST, city.getId()), world);
-					pos = new BlockPos(city.getEdgeLength() + halfPlotBlocksLength + b - Integer.signum(b), 1,city.getEdgeLength() + a).add(city.getStartingPos());
-					BlockHelper.spawn(new BlockData(pos, Blocks.AIR.getDefaultState(), ConstructionPriority.BUILD_LAST, city.getId()), world);
+					BlockPos pos = new BlockPos(city.getSettings().getEdgeLength() + halfPlotBlocksLength + b, 0, city.getSettings().getEdgeLength() + a).add(city.getSettings().getStartingPos());
+					BlockHelper.spawn(new BlockData(pos, city.getSettings().getPathBlock().getDefaultState(), ConstructionPriority.BUILD_LAST, city.getSettings().getId()), world);
+					pos = new BlockPos(city.getSettings().getEdgeLength() + halfPlotBlocksLength + b - Integer.signum(b), 1,city.getSettings().getEdgeLength() + a).add(city.getSettings().getStartingPos());
+					BlockHelper.spawn(new BlockData(pos, Blocks.AIR.getDefaultState(), ConstructionPriority.BUILD_LAST, city.getSettings().getId()), world);
 				}
 			}
 		}
@@ -163,8 +163,8 @@ public class Buildings {
 		for(int x = 0; x < area.length; x++) {
 			for(int z = 0; z < area[1].length; z++) {
 				if(area[x][z] == 1) {
-					BlockPos pos = new BlockPos(city.getEdgeLength() + x, 0, city.getEdgeLength() + z).add(city.getStartingPos());
-					BlockHelper.spawn(new BlockData(pos, city.getGroundBlock().getDefaultState(), ConstructionPriority.BUILD_LAST, city.getId()), world);
+					BlockPos pos = new BlockPos(city.getSettings().getEdgeLength() + x, 0, city.getSettings().getEdgeLength() + z).add(city.getSettings().getStartingPos());
+					BlockHelper.spawn(new BlockData(pos, city.getSettings().getGroundBlock().getDefaultState(), ConstructionPriority.BUILD_LAST, city.getSettings().getId()), world);
 				}
 			}
 		}
@@ -195,7 +195,7 @@ public class Buildings {
 					
 						} else {
 							//TwitterCity.logger.info("Updating info: cityID: {}, X: {}, Z: {}, buildingID: {}", city.getId(), x, z, buildingID);
-							constructionData.updateInfo(city.getId(), x, z, buildingID, false);
+							constructionData.updateInfo(city.getSettings().getId(), x, z, buildingID, false);
 							return tcBlocksToSpawn;
 						}	
 					}
@@ -205,7 +205,7 @@ public class Buildings {
 			x++;
 			z = 0;
 		}
-		constructionData.updateInfo(city.getId(), 0, 0, buildingID, true);
+		constructionData.updateInfo(city.getSettings().getId(), 0, 0, buildingID, true);
 		return tcBlocksToSpawn;
 	}
 	
@@ -267,7 +267,7 @@ public class Buildings {
 			
 			
 				while(ySource <= sourceEndY && tcBlocksToSpawn > 0) {
-					BlockPos currentPos = new BlockPos(city.getEdgeLength() + x + x1dest, ySource, city.getEdgeLength() + z + z1dest);
+					BlockPos currentPos = new BlockPos(city.getSettings().getEdgeLength() + x + x1dest, ySource, city.getSettings().getEdgeLength() + z + z1dest);
 					tcBlocksToSpawn = insertBuildingBlock(world, city, building, currentPos, sourceX, sourceZ, rotate, tcBlocksToSpawn);
 					ySource++;
 				}
@@ -303,8 +303,8 @@ public class Buildings {
 	private static int insertBuildingBlock(World world, City city, Building building, BlockPos currentPos, int sourceX, int sourceZ, int rotate, int tcBlocksToSpawn) {
 		TemplateStructure templateStructure = building.getTemplateStructure(world);
 		int structureY = currentPos.getY() + 64;
-		currentPos = currentPos.add(city.getStartingPos().getX(), city.getStartingPos().getY() + 1, city.getStartingPos().getZ());
-		if ((currentPos.getY() != city.getStartingPos().getY() + 1 || world.getBlockState(currentPos).getBlock() == Blocks.AIR)
+		currentPos = currentPos.add(city.getSettings().getStartingPos().getX(), city.getSettings().getStartingPos().getY() + 1, city.getSettings().getStartingPos().getZ());
+		if ((currentPos.getY() != city.getSettings().getStartingPos().getY() + 1 || world.getBlockState(currentPos).getBlock() == Blocks.AIR)
 				&& world.getBlockState(currentPos).getBlock() != Blocks.PLANKS) { 
 			IBlockState blockState = templateStructure.getBlockStateFromBlockPos(new BlockPos(sourceX + building.getSourceX(), structureY, sourceZ + building.getSourceZ()));
 			
@@ -336,12 +336,12 @@ public class Buildings {
 				blockState = rotate > 0 ? blockState.withProperty(BlockPistonExtension.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockPistonExtension.FACING), rotate)) : blockState;
 			} else if(BlockHelper.isStairs(block)) {
 				blockState = rotate > 0 ? blockState.withProperty(BlockStairs.FACING, BlockHelper.cardinalRotation(blockState.getValue(BlockStairs.FACING), rotate)) : blockState;
-			} else if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && currentPos.getY() == city.getStartingPos().getY()) {
-				blockState = city.getGroundBlock().getDefaultState();
+			} else if((block == Blocks.LIT_REDSTONE_ORE || block == Blocks.REDSTONE_ORE) && currentPos.getY() == city.getSettings().getStartingPos().getY()) {
+				blockState = city.getSettings().getGroundBlock().getDefaultState();
 			} else if(block == Blocks.LAPIS_ORE){
 				blockState = BlockHelper.replaceWithTCBlockState(Blocks.WOOL.getDefaultState());
-			} else if(block == Blocks.GOLD_ORE && currentPos.getY() == city.getStartingPos().getY()) {
-				blockState = city.getPathBlock().getDefaultState();
+			} else if(block == Blocks.GOLD_ORE && currentPos.getY() == city.getSettings().getStartingPos().getY()) {
+				blockState = city.getSettings().getPathBlock().getDefaultState();
 			} else if(block == Blocks.CHEST) {
 				TileEntity entity = world.getTileEntity(currentPos);
 				TileEntityChest chest = (entity instanceof TileEntityChest) ? (TileEntityChest)entity : null; // This wont work if chest is enqueued for spawning
@@ -367,15 +367,15 @@ public class Buildings {
 			if(!BlockHelper.needsToBeBuildedLast(block)) {
 				if (blockState.getBlock() instanceof TCBlock) {
 					Tweet tweetForThisBlock = tweetsToSpawn.get(tcBlocksToSpawn - 1);
-					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getId(), tweetForThisBlock);
+					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getSettings().getId(), tweetForThisBlock);
 					setLatestTweetID(world, tweetForThisBlock.getID());
 					tcBlocksToSpawn--;
 				} else {
-					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getId());
+					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getSettings().getId());
 				}
 
 			} else {
-				bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_LAST, city.getId());
+				bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_LAST, city.getSettings().getId());
 			}
 			BlockHelper.spawn(bd, world);
 		}
