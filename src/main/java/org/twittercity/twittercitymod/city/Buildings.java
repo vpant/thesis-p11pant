@@ -3,6 +3,7 @@ package org.twittercity.twittercitymod.city;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.*;
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
@@ -13,19 +14,6 @@ import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
 import org.twittercity.twittercitymod.util.RandomHelper;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockButton;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockFenceGate;
-import net.minecraft.block.BlockLever;
-import net.minecraft.block.BlockPistonBase;
-import net.minecraft.block.BlockPistonExtension;
-import net.minecraft.block.BlockPumpkin;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockStandingSign;
-import net.minecraft.block.BlockTorch;
-import net.minecraft.block.BlockTrapDoor;
-import net.minecraft.block.BlockWallSign;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -44,7 +32,9 @@ public class Buildings {
 	// This a helper list and does not need to be saved hence why it is static
 	//public static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
 	private static List<Tweet> tweetsToSpawn = new ArrayList<>();
-	
+
+	private static List<BlockData> blocksToBuildLastForBuildings = new ArrayList<>();
+
 	private Buildings() {
 		// Do nothing, this is a class to build the buildings
 	}
@@ -155,7 +145,6 @@ public class Buildings {
 				}
 			}
 		}
-		
 	}
 
 	//Remove paths if they are not activated in the current city
@@ -192,7 +181,7 @@ public class Buildings {
 						if(tcBlocksToSpawn > 0) {
 							area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
 							constructionData.setCurrentBuildingRotation(-1).increaseCurrentCityBuildingsCount();
-					
+							BlockHelper.spawn(blocksToBuildLastForBuildings, world);
 						} else {
 							//TwitterCity.logger.info("Updating info: cityID: {}, X: {}, Z: {}, buildingID: {}", city.getId(), x, z, buildingID);
 							constructionData.updateInfo(city.getSettings().getId(), x, z, buildingID, false);
@@ -363,8 +352,9 @@ public class Buildings {
 			} else { // default
 				blockState = BlockHelper.replaceWithTCBlockState(blockState);
 			}
-			BlockData bd;
+
 			if(!BlockHelper.needsToBeBuildedLast(block)) {
+				BlockData bd;
 				if (blockState.getBlock() instanceof TCBlock) {
 					Tweet tweetForThisBlock = tweetsToSpawn.get(tcBlocksToSpawn - 1);
 					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getSettings().getId(), tweetForThisBlock);
@@ -374,11 +364,10 @@ public class Buildings {
 				} else {
 					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getSettings().getId());
 				}
-
+				BlockHelper.spawn(bd, world);
 			} else {
-				bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_LAST, city.getSettings().getId());
+				blocksToBuildLastForBuildings.add(new BlockData(currentPos, blockState, ConstructionPriority.BUILD_LAST, city.getSettings().getId()));
 			}
-			BlockHelper.spawn(bd, world);
 		}
 		return tcBlocksToSpawn;
 	}

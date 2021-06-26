@@ -13,6 +13,8 @@ import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.*;
 import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 
+import java.util.List;
+
 public class BlockHelper {
 
     public static EnumFacing cardinalRotation(EnumFacing facing, int rotation) {
@@ -277,5 +279,9 @@ public class BlockHelper {
         if (ent instanceof TileEntityTwitter && blockData.tweet.getID() > 0) {
             ((TileEntityTwitter) ent).setTileData(blockData.tweet.getID(), blockData.tweet.getFeeling());
         }
+    }
+
+    public static void spawn(List<BlockData> blocksToBuildLastForBuildings, World world) {
+        blocksToBuildLastForBuildings.forEach(blockData -> spawn(blockData, world));
     }
 }
