@@ -1,10 +1,13 @@
 package org.twittercity.twittercitymod.data.world;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.city.EnumCityBuildDirection;
+import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
 import org.twittercity.twittercitymod.util.BlockData;
 
 import net.minecraft.block.Block;
@@ -123,12 +126,22 @@ public class ConstructionWorldData extends WorldSavedData {
 		this.markDirty();
 	}
 	
-	public void setLatestTweetID(int id) {
-		cInfo.latestTweetID = id;
+//	public void setLatestTweetID(int id) {
+//		cInfo.latestTweetID = id;
+//		this.markDirty();
+//	}
+
+	public void setLatestTweetID(int stateId, int id) {
+		cInfo.latestTweetByState.put(stateId, id);
+		this.markDirty();
 	}
 
-	public int getLatestTweetID() {
-		return cInfo.latestTweetID;
+//	public int getLatestTweetID() {
+//		return cInfo.latestTweetID;
+//	}
+
+	public int getLatestTweetID(int stateId) {
+		return cInfo.latestTweetByState.getOrDefault(stateId, 0);
 	}
 	
 	public BlockPos getConstructingBuildingBlockPos() {
@@ -209,7 +222,16 @@ public class ConstructionWorldData extends WorldSavedData {
 				+ " areaArraySecondLoopCounter: " + cInfo.areaArraySecondLoopCounter
 				+ " constructingBuildingBlockPos: " + cInfo.constructingBuildingBlockPos.toString();
 	}
-	
+
+	public void setStateID(int id) {
+		cInfo.stateId = id;
+		this.markDirty();
+	}
+
+	public int getLatestStateID() {
+		return cInfo.stateId;
+	}
+
 	private static class ConstructionInfo {
 	
 		private int latestTweetID = 0;
@@ -223,6 +245,9 @@ public class ConstructionWorldData extends WorldSavedData {
 		private EnumCityBuildDirection buildDirection = null;
 		private BlockPos citiesSquareNorthWestCorner = BlockPos.ORIGIN;
 		public List<BlockData> buildLast;
+		public int stateId;
+
+		private Map<Integer, Integer> latestTweetByState = new HashMap<>();
 
 		private ConstructionInfo(NBTTagCompound nbt) {
 			this.readFromNBT(nbt);
@@ -240,12 +265,13 @@ public class ConstructionWorldData extends WorldSavedData {
 			this.currentCityLength = 0;
 			this.buildLast = new ArrayList<>();
 			this.latestTweetID = 0;
+			this.stateId = 1;
 		}
 		
 		private NBTTagCompound writeToNBT() {
 
 			NBTTagCompound nbt = new NBTTagCompound();
-			
+
 			nbt.setInteger("currentCityID", this.currentConstructingCityId);
 			nbt.setBoolean("isCityFinished", this.isCurrentCityFinished);
 			nbt.setInteger("currentBuildingID", this.currentBuildingId);
@@ -255,6 +281,7 @@ public class ConstructionWorldData extends WorldSavedData {
 			nbt.setInteger("currentCityBuildingsCount", this.currentCityBuildingsCount);
 			nbt.setInteger("currentCityLength", this.currentCityLength);
 			nbt.setInteger("latestTweetID", this.latestTweetID);
+			nbt.setInteger("stateId", this.stateId);
 			nbt.setLong("constructingBuildingBlockPos", constructingBuildingBlockPos == null ? 
 					0 : this.constructingBuildingBlockPos.toLong());
 			nbt.setLong("citiesSquareNorthWestCorner", citiesSquareNorthWestCorner == null ? 
@@ -263,12 +290,16 @@ public class ConstructionWorldData extends WorldSavedData {
 				nbt.setInteger("buildDirectionIndex", this.buildDirection.getIndex());
 			}
 			
-//			NBTTagList buildLastTag = new NBTTagList();
-//			for(BlockData blockData : buildLast) {
-//				buildLastTag.appendTag((new BuildLastBlock(blockData.blockState, blockData.pos)).writeToNBT());
-//			}
-//
-//			nbt.setTag("buildLastBlocks", buildLastTag);
+			NBTTagList buildLastTag = new NBTTagList();
+			for(BlockData blockData : buildLast) {
+				buildLastTag.appendTag((new BuildLastBlock(blockData.blockState, blockData.pos)).writeToNBT());
+			}
+			nbt.setTag("buildLastBlocks", buildLastTag);
+
+			latestTweetByState.forEach((stateId, latestTweetID) -> {
+				nbt.setInteger("state_" + stateId, latestTweetID);
+			});
+
 			return nbt;
 		}
 		
@@ -285,17 +316,31 @@ public class ConstructionWorldData extends WorldSavedData {
 			this.citiesSquareNorthWestCorner = BlockPos.fromLong(nbt.getLong("citiesSquareNorthWestCorner"));
 			this.currentCityLength = nbt.getInteger("currentCityLength");
 			this.latestTweetID = nbt.getInteger("latestTweetID");
+			this.stateId = nbt.getInteger("stateId");
 			this.buildDirection = nbt.hasKey("buildDirectionIndex") ? 
 					EnumCityBuildDirection.getCityDirectionByIndex(nbt.getInteger("buildDirectionIndex")) : null;
 			
 			NBTTagList buildLastBlocks = (NBTTagList) nbt.getTag("buildLastBlocks");
-			buildLast = buildLast == null ? new ArrayList<BlockData>() : buildLast;
-//			for(int i = 0; i < buildLastBlocks.tagCount(); i++) {
-//				BuildLastBlock buildLastBlock = new BuildLastBlock((NBTTagCompound) buildLastBlocks.get(i));
-//				this.buildLast.add(new BlockData(buildLastBlock.pos, buildLastBlock.state));
-//			}
+			buildLast = buildLast == null ? new ArrayList<>() : buildLast;
+			for(int i = 0; i < buildLastBlocks.tagCount(); i++) {
+				BuildLastBlock buildLastBlock = new BuildLastBlock((NBTTagCompound) buildLastBlocks.get(i));
+				this.buildLast.add(new BlockData(buildLastBlock.pos, buildLastBlock.state, ConstructionPriority.BUILD_LAST, this.currentConstructingCityId));
+			}
+
+			latestTweetByState = readLatestTweetByState(nbt);
+
 		}
-		
+
+		private Map<Integer, Integer> readLatestTweetByState(NBTTagCompound nbt) {
+			final Map<Integer, Integer> result = new HashMap<>();
+			for(int i = 0; i <= 60; i++) {
+				if(nbt.hasKey("state_" + i)) {
+					latestTweetByState.put(i, nbt.getInteger("state_" + i));
+				}
+			}
+			return result;
+		}
+
 		private void addToBuildLast(BlockData blockData) {
 			buildLast.add(blockData);
 		}

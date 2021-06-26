@@ -49,24 +49,24 @@ public class Buildings {
 		// Do nothing, this is a class to build the buildings
 	}
 	
-	public static void makeInsideCity(World world, City currentCity, List<Tweet> tweets) {
+	public static int makeInsideCity(World world, City currentCity, List<Tweet> tweets) {
 		// Get city or create one
 
 		tweetsToSpawn = tweets;
 		int remainingBlocksToSpawn = makeBuildings(world, currentCity, tweetsToSpawn.size());
-		
-		boolean falsy = false;
-		if(false){//ConstructionInfo.isCurrentCityFinished) {
+
+		if(ConstructionWorldData.get(world).isCurrentCityFinished()) {
 			//Join roads to path should be after everything is spawned. Meaning in case of lazy
 			// block spawn, join paths to road needs to executed after everything is done spawning.
 			cityFinishUp(world, currentCity);
 		}
-		
-		while(remainingBlocksToSpawn > 0) {
-			City newCity = CitiesManager.getInstance().createNewCity();
-			remainingBlocksToSpawn = makeBuildings(world, newCity, remainingBlocksToSpawn);
+
+		if(remainingBlocksToSpawn > 0) {
+			CitiesManager.getInstance().createNewCity();
+			//remainingBlocksToSpawn = makeBuildings(world, newCity, remainingBlocksToSpawn);
 		}
-		
+
+		return remainingBlocksToSpawn;
 	}
 	
 	/**
@@ -287,8 +287,8 @@ public class Buildings {
 		if(tcBlocksToSpawn > 0) {
 			bp = initialBlockPos;
 			rotate = -1;
-			//BlockHelper.spawn(constrData.getBuildLast(), world);
-			//constrData.clearBuildLast();
+			constrData.getBuildLast().forEach(blockPos -> BlockHelper.spawn(blockPos, world));
+			constrData.clearBuildLast();
 		}
 		
 		constrData.setCurrentBuildingRotation(rotate).setCurrentConstructingBlockPos(bp);
@@ -368,7 +368,8 @@ public class Buildings {
 				if (blockState.getBlock() instanceof TCBlock) {
 					Tweet tweetForThisBlock = tweetsToSpawn.get(tcBlocksToSpawn - 1);
 					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getSettings().getId(), tweetForThisBlock);
-					setLatestTweetID(world, tweetForThisBlock.getID());
+
+					setLatestTweetID(world, tweetForThisBlock.getID(), city.getSettings().getState().getId());
 					tcBlocksToSpawn--;
 				} else {
 					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getSettings().getId());
@@ -382,11 +383,12 @@ public class Buildings {
 		return tcBlocksToSpawn;
 	}
 
-	private static void setLatestTweetID(World world, int id) {
+	private static void setLatestTweetID(World world, int tweetId, int stateId) {
 		ConstructionWorldData wd = ConstructionWorldData.get(world);
-		if(wd.getLatestTweetID() < id) {
-			wd.setLatestTweetID(id);
-		}
+		//if(wd.getLatestTweetID(stateId) < tweetId) {
+			wd.setLatestTweetID(stateId, tweetId);
+			wd.setStateID(stateId);
+		//}
 	}
 
 	/*

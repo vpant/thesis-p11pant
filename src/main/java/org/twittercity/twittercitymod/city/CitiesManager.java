@@ -3,6 +3,7 @@ package org.twittercity.twittercitymod.city;
 import java.util.Comparator;
 import java.util.List;
 
+import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.db.USState;
 import org.twittercity.twittercitymod.data.db.USStateDAO;
@@ -42,8 +43,8 @@ public class CitiesManager {
 			currentConstructingCity = createNewCity();
 		}
 
-		Buildings.makeInsideCity(twitterWorld, currentConstructingCity, tweets);
-		return true;
+		int remainingBlocks = Buildings.makeInsideCity(twitterWorld, currentConstructingCity, tweets);
+		return remainingBlocks > 0;
 	}
 	
 	public City createNewCity() {
@@ -76,8 +77,7 @@ public class CitiesManager {
 				constrWorldData.setCitiesSquareNorthWestCorner(squareCornerPos);
 			}
 
-			// TODO find this cityStateId from somewhere. Probably latest tweet
-			//cityStateId = getNextStateId(.getState().getId());
+			cityStateId = getNextStateId(constrWorldData.getLatestStateID());
 
 			//Calculate new city's starting position
 			startingPos = CitySettings.getNewCityPosition(squareCornerPos.add(newCityBuildDirection.getDirectionVector()), newCityBuildDirection, nextCityLength);
@@ -95,8 +95,7 @@ public class CitiesManager {
 //		CitySettings citySettings = new CitySettings(++cityId, startingPos, citySize,
 //				edgeLength, pathExtends, groundBlock, pathBlock, true, true);
 
-		cityStateId = 1;
-        final USState cityState = USStateDAO.getInstance().getState(cityStateId);
+		final USState cityState = USStateDAO.getInstance().getState(cityStateId);
 
         CitySettings citySettings = CitySettings.builder()
                 .id(++id)
@@ -120,11 +119,11 @@ public class CitiesManager {
         return citySettings;
     }
 
-    private int getNextStateId(int currentStateId) {
-        final int lastStateId = USStateDAO.getInstance().getLastStateId();
-        final int nextStateId = currentStateId + 1;
-        return lastStateId >= nextStateId ? nextStateId : 1;
-    }
+	private int getNextStateId(int currentStateId) {
+		final int lastStateId = USStateDAO.getInstance().getLastStateId();
+		final int nextStateId = currentStateId + 1;
+		return lastStateId >= nextStateId ? nextStateId : 1;
+	}
 
     private City findLastBuiltCity() {
         return cityWData.getCities().stream()

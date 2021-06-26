@@ -72,16 +72,8 @@ public class BlockData {
 	public BlockData(BlockPos posIn, IBlockState stateIn, boolean shouldNotifyNeighbors, ConstructionPriority constructionPriority, int cityId) {
 		this(posIn, stateIn, 3, shouldNotifyNeighbors,constructionPriority, cityId, null);
 	}
-	
-	public BlockData(BlockPos posIn, IBlockState stateIn, int flags, ConstructionPriority constructionPriority, int cityId) {
-		this(posIn, stateIn, flags, false, constructionPriority, cityId, null);
-	}
-	
-	public BlockData(BlockPos posIn, IBlockState stateIn, int flags, boolean shouldNotifyNeighbors, ConstructionPriority constructionPriority, int cityId) {
-		this(posIn, stateIn, flags, shouldNotifyNeighbors, constructionPriority, cityId, null);
-	}
-	
-	public NBTTagCompound writeToNBT() {
+
+    public NBTTagCompound writeToNBT() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		
 		nbt.setLong("blockPosLong", this.pos.toLong());

@@ -2,12 +2,7 @@ package org.twittercity.twittercitymod.city;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import org.twittercity.twittercitymod.data.db.USState;
-
-import java.util.Arrays;
 
 /* Data object represents a city. Cities are always square. */
 @Data
@@ -51,80 +46,7 @@ public final class City {
 			}
 		}
 	}
-//
-//	public int getId() {
-//		return settings.getId();
-//	}
-//
-//	public BlockPos getStartingPos() {
-//		return settings.getStartingPos();
-//	}
-//
-//	public int getChunkLength() {
-//		return settings.getChunkLength();
-//	}
-//
-//	public int getEdgeLength() {
-//		return settings.getEdgeLength();
-//	}
-//
-//	public int getMapLength() {
-//		return settings.getMapLength();
-//	}
-//
-//	public Block getGroundBlock() {
-//		return settings.getGroundBlock();
-//	}
-//
-//	public Block getPathBlock() {
-//		return settings.getPathBlock();
-//	}
-//
-//	public boolean hasMainStreets() {
-//		return settings.hasMainStreets();
-//	}
-//
-//	public boolean hasPaths() {
-//		return settings.hasPaths();
-//	}
-//
-//	public int getPathExtends() {
-//		return settings.getPathExtends();
-//	}
-//
-//	public int getCityLength() {
-//		return settings.getCityLength();
-//	}
-//
-//	public int[][] getCityArea() {
-//		return this.cityArea;
-//	}
-//
-//	public void setIsCityCompleted(boolean itIs) {
-//		this.isCityCompleted = itIs;
-//	}
-//
-//	public boolean isCityCompleted() {
-//		return this.isCityCompleted;
-//	}
-//
-//	public void setAreChunksPregenerated(boolean itIs) {
-//		this.areChunksPregenerated = itIs;
-//	}
-//
-//	public void setCityArea(int[][] cityArea) {
-//		this.cityArea = cityArea;
-//	}
-//
-//	public boolean getAreChunksPregenerated() {
-//		return this.areChunksPregenerated;
-//	}
-//
-//	public boolean areBuildingsFinished() { return this.areBuildingsFinished; }
-//	public void setAreBuildingsFinished(boolean theyAre) { this.areBuildingsFinished = theyAre; }
 
-	//public USState getState() { return state; }
-	
 	public NBTTagCompound writeToNBT() {		
 		NBTTagCompound nbt = settings.writeToNBT();
 

@@ -6,15 +6,18 @@ import org.twittercity.twittercitymod.city.BuildingReference;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.db.TweetManager;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GetTweetsRunnable implements Runnable {
 	private int id;
+	private int stateId;
 	private WorldServer server;
 	private ITaskBlocker taskBlocker;
 	
-	public GetTweetsRunnable(ITaskBlocker taskBlocker, WorldServer worldServer, int id) {
+	public GetTweetsRunnable(ITaskBlocker taskBlocker, WorldServer worldServer, int id, int stateId) {
 		this.id = id;
+		this.stateId = stateId;
 		this.server = worldServer;
 		this.taskBlocker = taskBlocker;
 	}
@@ -26,13 +29,13 @@ public class GetTweetsRunnable implements Runnable {
 			if(!BuildingReference.tweetsToBuild.isEmpty()) {
 				return;
 			}
-			ArrayList<Tweet> tweets = (ArrayList<Tweet>)TweetManager.getInstance().getTweetsAfter(id, 10000);
-			TwitterCity.logger.info("Taking tweets after id: {}, the Tweets list size is: {}", id, tweets.size());
-			server.addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
-					BuildingReference.tweetsToBuild.addAll(tweets);
-				}
+			//List<Tweet> tweets = (ArrayList<Tweet>)TweetManager.getInstance().getTweetsAfter(id, 10000);
+			List<Tweet> tweets = TweetManager.getInstance().getTweetsAfterIdAndUsState(id, stateId, 10000);
+			TwitterCity.logger.info("Taking tweets after id: {}, the Tweets list size is: {} and stateId is: {}", id, tweets.size(), stateId);
+			Collections.sort(tweets);
+			server.addScheduledTask(() -> {
+				BuildingReference.emptyResultList = true;
+				BuildingReference.tweetsToBuild.addAll(tweets);
 			});
 		}
 		finally {
