@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.data.db.USState;
+import org.twittercity.twittercitymod.data.world.ConstructionInfo;
 import org.twittercity.twittercitymod.util.RandomHelper;
 
 import net.minecraft.block.Block;
@@ -16,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 @AllArgsConstructor
 @Builder
 public final class CitySettings {
-	//private final ConstructionInfo constructionInfo;
+	private final ConstructionInfo constructionInfo;
 	private final USState state;
 
 	private final int id;
@@ -43,27 +44,6 @@ public final class CitySettings {
 	private final boolean hasMainStreets;
 	@Accessors(fluent = true)
 	private final boolean hasPaths;
-	
-//	public CitySettings(int id, BlockPos startingPos, int citySize, int edgeLength, int pathExtends, Block groundBlock, Block pathBlock, boolean hasMainStreets, boolean hasPaths) {
-//		this.id = id;
-//
-//		this.startingPos = startingPos;
-//
-//		this.chunkLength = citySize;
-//
-//		this.edgeLength = edgeLength;
-//		this.mapLength = (citySize * 16) + (edgeLength * 2);
-//
-//		this.cityLength = mapLength + edgeLength * 2;
-//
-//		this.pathExtends = pathExtends;
-//
-//		this.hasMainStreets = hasMainStreets;
-//		this.hasPaths = hasPaths;
-//
-//		this.groundBlock = groundBlock;
-//		this.pathBlock = pathBlock;
-//	}
 
 	public CitySettings(NBTTagCompound nbt) {
 		this.id = nbt.getInteger("id");
@@ -82,14 +62,14 @@ public final class CitySettings {
 
 		this.chunkLength = nbt.getInteger("chunkLength");
 
-		//this.constructionInfo = new ConstructionInfo(nbt);
+		this.constructionInfo = new ConstructionInfo(nbt);
 		this.state = new USState(nbt);
 	}
 
 	public NBTTagCompound writeToNBT() {
 
 		NBTTagCompound nbt = new NBTTagCompound();
-		//constructionInfo.writeToNBT(nbt);
+		constructionInfo.writeToNBT(nbt);
 		state.writeToNBT(nbt);
 		nbt.setInteger("id", this.id);
 		nbt.setLong("startingPosLong", this.startingPos.toLong());

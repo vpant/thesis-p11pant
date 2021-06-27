@@ -16,7 +16,7 @@ public enum EnumCityBuildDirection {
 	private final int id;
 	private final Vec3i directionVector;
 	
-	private EnumCityBuildDirection(int index, Vec3i directionVec) {
+	EnumCityBuildDirection(int index, Vec3i directionVec) {
 		id = index;
 		directionVector = directionVec;
 	}

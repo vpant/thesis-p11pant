@@ -8,7 +8,7 @@ import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.data.db.Tweet;
-import org.twittercity.twittercitymod.data.world.ConstructionWorldData;
+import org.twittercity.twittercitymod.data.world.CityWorldData;
 import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
 import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
@@ -33,8 +33,6 @@ public class Buildings {
 	//public static ArrayList<BlockData> buildLast = new ArrayList<BlockData>();
 	private static List<Tweet> tweetsToSpawn = new ArrayList<>();
 
-	private static List<BlockData> blocksToBuildLastForBuildings = new ArrayList<>();
-
 	private Buildings() {
 		// Do nothing, this is a class to build the buildings
 	}
@@ -45,7 +43,7 @@ public class Buildings {
 		tweetsToSpawn = tweets;
 		int remainingBlocksToSpawn = makeBuildings(world, currentCity, tweetsToSpawn.size());
 
-		if(ConstructionWorldData.get(world).isCurrentCityFinished()) {
+		if(currentCity.getSettings().getConstructionInfo().isCurrentCityFinished()) {
 			//Join roads to path should be after everything is spawned. Meaning in case of lazy
 			// block spawn, join paths to road needs to executed after everything is done spawning.
 			cityFinishUp(world, currentCity);
@@ -55,7 +53,7 @@ public class Buildings {
 			CitiesManager.getInstance().createNewCity();
 			//remainingBlocksToSpawn = makeBuildings(world, newCity, remainingBlocksToSpawn);
 		}
-
+		//CityWorldData.get(world).markDirty(); propably not needed
 		return remainingBlocksToSpawn;
 	}
 	
@@ -163,12 +161,14 @@ public class Buildings {
 	 * Inserts all the buildings that are defined by id in the area array
 	 */
 	public static int makeBuildings(World world, City city, int tcBlocksToSpawn) {
-		ConstructionWorldData constructionData = ConstructionWorldData.get(world);
+		//ConstructionWorldData constructionData = ConstructionWorldData.get(world);
 		Building[] buildings = Buildings.getAllBuildings();
 		int[][] area = city.getCityArea();
 		
-		int x = constructionData.getAreaArrayFirstLoopCounter(); 
-		int z = constructionData.getAreaArraySecondLoopCounter();
+//		int x = constructionData.getAreaArrayFirstLoopCounter();
+//		int z = constructionData.getAreaArraySecondLoopCounter();
+		int x = city.getSettings().getConstructionInfo().getAreaArrayFirstLoopCounter();
+		int z = city.getSettings().getConstructionInfo().getAreaArraySecondLoopCounter();
 		int buildingID = -1;
 		
 		while(x < area.length) {
@@ -177,14 +177,17 @@ public class Buildings {
 					buildingID = area[x][z] - 100;
 					if(buildingID >= 0 && buildingID < buildings.length) {
 						Building currentBuilding =  buildings[buildingID];
-						tcBlocksToSpawn = insertBuilding(world, city, area, x, z, currentBuilding, constructionData.getCurrentBuildingRotation(), tcBlocksToSpawn);
+						tcBlocksToSpawn = insertBuilding(world, city, area, x, z, currentBuilding, city.getSettings().getConstructionInfo().getCurrentBuildingRotation(), tcBlocksToSpawn);
 						if(tcBlocksToSpawn > 0) {
 							area[x + currentBuilding.getSizeX() - 2][z + currentBuilding.getSizeZ() - 2] = 0;
-							constructionData.setCurrentBuildingRotation(-1).increaseCurrentCityBuildingsCount();
-							BlockHelper.spawn(blocksToBuildLastForBuildings, world);
+							city.getSettings().getConstructionInfo().setCurrentBuildingRotation(-1);
+							city.getSettings().getConstructionInfo().increaseCurrentCityBuildingsCount();
 						} else {
-							//TwitterCity.logger.info("Updating info: cityID: {}, X: {}, Z: {}, buildingID: {}", city.getId(), x, z, buildingID);
-							constructionData.updateInfo(city.getSettings().getId(), x, z, buildingID, false);
+							city.getSettings().getConstructionInfo().setAreaArrayFirstLoopCounter(x);
+							city.getSettings().getConstructionInfo().setAreaArraySecondLoopCounter(z);
+							city.getSettings().getConstructionInfo().setCurrentBuildingId(buildingID);
+							city.getSettings().getConstructionInfo().setCurrentCityFinished(false);
+							CityWorldData.get(world).markDirty();
 							return tcBlocksToSpawn;
 						}	
 					}
@@ -194,7 +197,12 @@ public class Buildings {
 			x++;
 			z = 0;
 		}
-		constructionData.updateInfo(city.getSettings().getId(), 0, 0, buildingID, true);
+		city.getSettings().getConstructionInfo().setAreaArrayFirstLoopCounter(0);
+		city.getSettings().getConstructionInfo().setAreaArraySecondLoopCounter(0);
+		city.getSettings().getConstructionInfo().setCurrentBuildingId(buildingID);
+		city.getSettings().getConstructionInfo().setCurrentCityFinished(true);
+		city.isCityCompleted(true);
+		CityWorldData.get(world).markDirty();
 		return tcBlocksToSpawn;
 	}
 	
@@ -213,10 +221,10 @@ public class Buildings {
 	private static int insertBuilding(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed, int tcBlocksToSpawn) {		
 		int sourceX = 0, sourceZ = 0;
 		TemplateStructure templateStructure = building.getTemplateStructure(world);
-		ConstructionWorldData constrData = ConstructionWorldData.get(world);
+		//ConstructionWorldData constrData = ConstructionWorldData.get(world);
 		int rotate = getBuildingRotation(building, area, x1dest, z1dest, rotationFixed);
 		BlockPos initialBlockPos = new BlockPos(0, building.getSourceStartY() - 64, 0);
-		BlockPos currentConstructingBlockPos = constrData.getConstructingBuildingBlockPos();
+		BlockPos currentConstructingBlockPos = city.getSettings().getConstructionInfo().getConstructingBuildingBlockPos(); //constrData.getConstructingBuildingBlockPos();
 		currentConstructingBlockPos = currentConstructingBlockPos == null ? initialBlockPos : currentConstructingBlockPos;
 		int x = currentConstructingBlockPos.getX();
 		int ySource = currentConstructingBlockPos.getY();
@@ -276,11 +284,15 @@ public class Buildings {
 		if(tcBlocksToSpawn > 0) {
 			bp = initialBlockPos;
 			rotate = -1;
-			constrData.getBuildLast().forEach(blockPos -> BlockHelper.spawn(blockPos, world));
-			constrData.clearBuildLast();
+			BlockHelper.spawn(city.getSettings().getConstructionInfo().getBuildLast(), world);
+			city.getSettings().getConstructionInfo().clearBuildLast();
+			CityWorldData.get(world).markDirty();
 		}
 		
-		constrData.setCurrentBuildingRotation(rotate).setCurrentConstructingBlockPos(bp);
+		//constrData.setCurrentBuildingRotation(rotate).setCurrentConstructingBlockPos(bp);
+		city.getSettings().getConstructionInfo().setCurrentBuildingRotation(rotate);
+		city.getSettings().getConstructionInfo().setConstructingBuildingBlockPos(bp);
+		CityWorldData.get(world).markDirty();
 		return tcBlocksToSpawn;
 	}
 
@@ -358,26 +370,23 @@ public class Buildings {
 				if (blockState.getBlock() instanceof TCBlock) {
 					Tweet tweetForThisBlock = tweetsToSpawn.get(tcBlocksToSpawn - 1);
 					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getSettings().getId(), tweetForThisBlock);
-
-					setLatestTweetID(world, tweetForThisBlock.getID(), city.getSettings().getState().getId());
+					setLatestTweetID(city, tweetForThisBlock.getID());
 					tcBlocksToSpawn--;
 				} else {
 					bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getSettings().getId());
 				}
 				BlockHelper.spawn(bd, world);
 			} else {
-				blocksToBuildLastForBuildings.add(new BlockData(currentPos, blockState, ConstructionPriority.BUILD_LAST, city.getSettings().getId()));
+				city.getSettings().getConstructionInfo().getBuildLast()
+						.add(new BlockData(currentPos, blockState, ConstructionPriority.BUILD_LAST, city.getSettings().getId()));
+				CityWorldData.get(world).markDirty();
 			}
 		}
 		return tcBlocksToSpawn;
 	}
 
-	private static void setLatestTweetID(World world, int tweetId, int stateId) {
-		ConstructionWorldData wd = ConstructionWorldData.get(world);
-		//if(wd.getLatestTweetID(stateId) < tweetId) {
-			wd.setLatestTweetID(stateId, tweetId);
-			wd.setStateID(stateId);
-		//}
+	private static void setLatestTweetID(City city, int tweetId) {
+		city.getSettings().getConstructionInfo().setLatestTweetID(tweetId);
 	}
 
 	/*

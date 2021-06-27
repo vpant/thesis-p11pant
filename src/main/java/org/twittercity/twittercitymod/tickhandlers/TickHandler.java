@@ -17,7 +17,6 @@ import org.twittercity.twittercitymod.config.ConfigurationManager;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.db.USStateDAO;
 import org.twittercity.twittercitymod.data.world.CityWorldData;
-import org.twittercity.twittercitymod.data.world.ConstructionWorldData;
 
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -37,7 +36,8 @@ public class TickHandler {
 			int endIndex = BuildingReference.tweetsToBuild.size();
 			int fromIndex = Math.max(endIndex - BuildingReference.tweetsPerTick, 0);
 			List<Tweet> sublistToBuild = BuildingReference.tweetsToBuild.subList(fromIndex, endIndex);
-			boolean withRemainingBlocks = CitiesManager.getInstance().startBuilding(sublistToBuild);
+			City city = findLastBuiltCity();
+			boolean withRemainingBlocks = CitiesManager.getInstance().startBuilding(sublistToBuild, city);
 			if(withRemainingBlocks) { // means that city is finished before run out of tweets
 				TwitterCity.logger.info("Emptying tweetsToBuild");
 				BuildingReference.tweetsToBuild.clear();
@@ -57,27 +57,28 @@ public class TickHandler {
 			return;
 		}
 		
-		if(event.side == Side.CLIENT && !BuildingReference.tweetsToBuild.isEmpty()) {			
+		if(event.side == Side.CLIENT && !BuildingReference.tweetsToBuild.isEmpty()) {
 			return;
 		}
 		WorldServer worldServer = (WorldServer)event.world; 
 		searchDatabaseTimer++;
 		if(ConfigurationManager.buildingOptions.minutesBetweenCheckingForNewTweets * TICKS_TO_MINUTES <= searchDatabaseTimer) {
 
-			//City city = findLastBuiltCity(worldServer);
+			City city = findLastBuiltCity();
 
-			int latestCityStateId = ConstructionWorldData.get(worldServer).getLatestStateID();
-			int latestRetrievedTweetId = ConstructionWorldData.get(worldServer).getLatestTweetID(latestCityStateId);
+			int latestRetrievedTweetId = city != null ? city.getSettings().getConstructionInfo().getLatestTweetID() : 0;
+			int latestCityStateId = city != null ? city.getSettings().getState().getId() : 1;
 
 			ExecutorProvider.getExecutorService().execute(new GetTweetsRunnable(taskBlocker, worldServer, latestRetrievedTweetId, latestCityStateId));
 			searchDatabaseTimer = 0;
 		}
 	}
 
-	private City findLastBuiltCity(World world) {
-		City city = CityWorldData.get(world).getUnfinishedCities().stream().findFirst().orElse(null);
+	private City findLastBuiltCity() {
+		World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
+		City city = CityWorldData.get(twitterWorld).getUnfinishedCities().stream().findFirst().orElse(null);
 		if(city == null) {
-			city = CityWorldData.get(world).getCities().stream().min(Comparator.comparing(cityElement -> cityElement.getSettings().getId())).orElse(null);
+			city = CityWorldData.get(twitterWorld).getCities().stream().min(Comparator.comparing(cityElement -> cityElement.getSettings().getId())).orElse(null);
 		}
 
 		return city;

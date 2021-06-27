@@ -259,25 +259,25 @@ public class BlockHelper {
      * Spawns or enqueue a block for spawning
      */
     public static void spawn(BlockData blockData, World world) {
-        if (blockData.blockState.getBlock() != Blocks.BED) {
-            world.setBlockState(blockData.pos, blockData.blockState, blockData.flags);
-            if (blockData.blockState.getBlock() instanceof TCBlock) {
+        if (blockData.getBlockState().getBlock() != Blocks.BED) {
+            world.setBlockState(blockData.getPos(), blockData.getBlockState(), blockData.getFlags());
+            if (blockData.getBlockState().getBlock() instanceof TCBlock) {
                 setBlockTileData(blockData, world);
             }
         }
     }
 
     public static void destroy(BlockData blockData, World world) {
-        world.setBlockState(blockData.pos, Blocks.AIR.getDefaultState(), 3);
+        world.setBlockState(blockData.getPos(), Blocks.AIR.getDefaultState(), 3);
     }
 
     public static void setBlockTileData(BlockData blockData, World world) {
-        if (blockData.tweet == null) {
+        if (blockData.getTweet() == null) {
             return;
         }
-        TileEntity ent = world.getTileEntity(blockData.pos);
-        if (ent instanceof TileEntityTwitter && blockData.tweet.getID() > 0) {
-            ((TileEntityTwitter) ent).setTileData(blockData.tweet.getID(), blockData.tweet.getFeeling());
+        TileEntity ent = world.getTileEntity(blockData.getPos());
+        if (ent instanceof TileEntityTwitter && blockData.getTweet().getID() > 0) {
+            ((TileEntityTwitter) ent).setTileData(blockData.getTweet().getID(), blockData.getTweet().getFeeling());
         }
     }
 

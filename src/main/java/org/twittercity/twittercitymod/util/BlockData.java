@@ -1,5 +1,8 @@
 package org.twittercity.twittercitymod.util;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
 import org.twittercity.twittercitymod.tileentity.Feeling;
@@ -12,40 +15,26 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Data object to hold data for to be spawned block
  */
+@Data
+@AllArgsConstructor
+@Builder
 public class BlockData {
 
 	/** the position the block is to be generated to */
-	public final BlockPos pos;
+	private final BlockPos pos;
 	/** The type of block. */
-	public final IBlockState blockState;
+	private final IBlockState blockState;
 	/** Argument passed to World#setblockstate flags */
-	public int flags;
+	private int flags;
 	/** Some blocks(Beds etc.) need to notify neighbors upon spawning */
-	public boolean shouldNotifyNeighbors;
+	private boolean shouldNotifyNeighbors;
 	/** ConstructionPriority of this block */
-	public ConstructionPriority constructionPriority;
+	private ConstructionPriority constructionPriority;
 	/** City ID the block belongs to */
-	public Integer cityId;
+	private Integer cityId;
 	/** The tweet that holds this block */
-	public final Tweet tweet;
+	private final Tweet tweet;
 
-	public BlockData(BlockPos posIn,
-			IBlockState stateIn,
-			int flags,
-			boolean shouldNotifyNeighbors,
-			ConstructionPriority constructionPriority,
-			int cityId,
-			Tweet tweet) {
-
-		this.pos = posIn;
-		this.blockState = stateIn;
-		this.flags = flags;
-		this.shouldNotifyNeighbors = shouldNotifyNeighbors;
-		this.constructionPriority = constructionPriority;
-		this.cityId = cityId;
-		this.tweet = tweet;
-	}
-	
 	public BlockData(NBTTagCompound nbt) {
 		this.pos = nbt.hasKey("blockPosLong") ? BlockPos.fromLong(nbt.getLong("blockPosLong")) : BlockPos.ORIGIN;
 		this.blockState = Block.getStateById(nbt.getInteger("blockStateID"));
