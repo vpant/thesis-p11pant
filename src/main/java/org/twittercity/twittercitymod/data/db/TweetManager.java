@@ -1,11 +1,5 @@
 package org.twittercity.twittercitymod.data.db;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.NoResultException;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,13 +8,19 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.twittercity.twittercitymod.Reference;
 
+import javax.persistence.NoResultException;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class TweetManager {
 	
-	private SessionFactory sessionFactory;
-	private static TweetManager instance = new TweetManager();
+	private final SessionFactory sessionFactory;
+	private static final TweetManager instance = new TweetManager();
 	
 	private TweetManager() {
-		File hibernateConfig = new File((TweetManager.class).getClassLoader().getResource("assets/" + Reference.MOD_ID + "/hibernate.cfg.xml").getFile());
+		File hibernateConfig = new File(Objects.requireNonNull((TweetManager.class).getClassLoader().getResource("assets/" + Reference.MOD_ID + "/hibernate.cfg.xml")).getFile());
 		sessionFactory =  new Configuration().configure(hibernateConfig).buildSessionFactory();
 	}
 	

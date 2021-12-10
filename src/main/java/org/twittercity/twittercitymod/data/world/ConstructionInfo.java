@@ -24,8 +24,8 @@ public class ConstructionInfo {
     private int currentBuildingId, areaArrayFirstLoopCounter = 0, areaArraySecondLoopCounter = 0;
     private int currentBuildingRotation;
     private int currentCityBuildingsCount = 0;
-    private BlockPos constructingBuildingBlockPos = null;
-    private EnumCityBuildDirection buildDirection = null;
+    private BlockPos constructingBuildingBlockPos;
+    private EnumCityBuildDirection buildDirection;
     private BlockPos citiesSquareNorthWestCorner = BlockPos.ORIGIN;
     private List<BlockData> buildLast = new ArrayList<>();
 
@@ -34,8 +34,6 @@ public class ConstructionInfo {
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-
-
         nbt.setBoolean("isCityFinished", this.isCurrentCityFinished);
         nbt.setInteger("currentBuildingID", this.currentBuildingId);
         nbt.setInteger("areaArrayFirstLoopCounter", this.areaArrayFirstLoopCounter);
@@ -77,26 +75,21 @@ public class ConstructionInfo {
                 EnumCityBuildDirection.getCityDirectionByIndex(nbt.getInteger("buildDirectionIndex")) : null;
 
         NBTTagList buildLastBlocks = (NBTTagList) nbt.getTag("buildLastBlocks");
-        buildLast = buildLast == null ? new ArrayList<BlockData>() : buildLast;
+        buildLast = buildLast == null ? new ArrayList<>() : buildLast;
         for(int i = 0; i < buildLastBlocks.tagCount(); i++) {
             BuildLastBlock buildLastBlock = new BuildLastBlock((NBTTagCompound) buildLastBlocks.get(i));
             this.buildLast.add(buildLastBlock.toBlockData());
         }
     }
 
-    public void increaseCurrentCityBuildingsCount() {
-        currentCityBuildingsCount++;
-    }
-
     public void clearBuildLast() {
         buildLast.clear();
     }
 
-
     // Wrapper-helper class for information about blocks that needed to be build last
     private static class BuildLastBlock {
-        private IBlockState state;
-        private BlockPos pos;
+        private final IBlockState state;
+        private final BlockPos pos;
 
         private BuildLastBlock(NBTTagCompound nbt) {
             this.state = Block.getStateById(nbt.getInteger("blockStateID"));

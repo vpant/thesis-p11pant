@@ -16,7 +16,7 @@ public class CityWorldData extends WorldSavedData {
 
 	private static final String DATA_NAME = Reference.MOD_ID + "_CityData";
 	private static CityWorldData instance;
-	
+
 	private List<City> cities = new LinkedList<>();
 	
 	
@@ -67,23 +67,18 @@ public class CityWorldData extends WorldSavedData {
 		cities.add(city);
 		markDirty();
 	}
-	
-//	public void setCity(List<City> cities) {
-//		this.cities = cities;
-//		markDirty();
-//	}
 
 	public City getCity(Integer id) {
 		return cities.stream().filter(city -> id.equals(city.getSettings().getId())).findFirst().orElse(null);
 	}
 	
 	public List<City> getCities() {
-		return this.cities;
+		return cities;
 	}
 
 	public List<City> getUnfinishedCities() {
 		return cities.stream()
-				.filter(city -> !city.isCityCompleted())// && city.areBuildingsFinished())
+				.filter(city -> !city.isCityCompleted())
 				.collect(Collectors.toList());
 	}
 }

@@ -1,93 +1,57 @@
 package org.twittercity.twittercitymod.tickhandlers;
 
-import java.util.Comparator;
-import java.util.List;
-
-import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import org.twittercity.twittercitymod.TwitterCity;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import org.twittercity.twittercitymod.city.BuildingReference;
-import org.twittercity.twittercitymod.city.CitiesManager;
 import org.twittercity.twittercitymod.city.City;
+import org.twittercity.twittercitymod.city.ConstructionOrchestration;
 import org.twittercity.twittercitymod.concurrency.ExecutorProvider;
 import org.twittercity.twittercitymod.concurrency.GetTweetsRunnable;
 import org.twittercity.twittercitymod.concurrency.ITaskBlocker;
 import org.twittercity.twittercitymod.concurrency.ReentrantLockTaskBlocker;
 import org.twittercity.twittercitymod.config.ConfigurationManager;
 import org.twittercity.twittercitymod.data.db.Tweet;
-import org.twittercity.twittercitymod.data.db.USStateDAO;
-import org.twittercity.twittercitymod.data.world.CityWorldData;
 
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
+import java.util.List;
 
 public class TickHandler {
 	// 20 ticks per second
 	private static final int TICKS_TO_MINUTES = 20 * 60;
 	private int searchDatabaseTimer = 0;
 	private final ITaskBlocker taskBlocker = new ReentrantLockTaskBlocker();
-	
-	@SubscribeEvent
+
+	//@SubscribeEvent
 	public void buildFromTweetsQueue(TickEvent.ServerTickEvent event) {
 		if(!BuildingReference.tweetsToBuild.isEmpty()) {
 			int endIndex = BuildingReference.tweetsToBuild.size();
 			int fromIndex = Math.max(endIndex - BuildingReference.tweetsPerTick, 0);
 			List<Tweet> sublistToBuild = BuildingReference.tweetsToBuild.subList(fromIndex, endIndex);
-			City city = findLastBuiltCity();
-			boolean withRemainingBlocks = CitiesManager.getInstance().startBuilding(sublistToBuild, city);
-			if(withRemainingBlocks) { // means that city is finished before run out of tweets
-				TwitterCity.logger.info("Emptying tweetsToBuild");
-				BuildingReference.tweetsToBuild.clear();
-				//sublistToBuild.clear();
-			}
-		} else if (BuildingReference.emptyResultList) {
-			// logic to support returning to unfinished cities to fill with new tweets from that state
-//			ConstructionWorldData cWorldData = ConstructionWorldData.get(DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID));
-//			cWorldData.setStateID(getNextStateId(cWorldData.getLatestStateID()));
-//			BuildingReference.emptyResultList = false;
+			ConstructionOrchestration.getInstance().build(sublistToBuild);
+			sublistToBuild.clear();
 		}
 	}
 	
-	@SubscribeEvent
+	//@SubscribeEvent
 	public void checkForNewTweets(TickEvent.WorldTickEvent event) {
 		if(ConfigurationManager.buildingOptions.pauseNewTweetsCheck.isEnabled()) {
 			return;
 		}
-		
+
 		if(event.side == Side.CLIENT && !BuildingReference.tweetsToBuild.isEmpty()) {
 			return;
 		}
-		WorldServer worldServer = (WorldServer)event.world; 
+		WorldServer worldServer = (WorldServer)event.world;
 		searchDatabaseTimer++;
 		if(ConfigurationManager.buildingOptions.minutesBetweenCheckingForNewTweets * TICKS_TO_MINUTES <= searchDatabaseTimer) {
 
-			City city = findLastBuiltCity();
+			final City city = ConstructionOrchestration.getInstance().findLastBuiltCity();
 
-			int latestRetrievedTweetId = city != null ? city.getSettings().getConstructionInfo().getLatestTweetID() : 0;
-			int latestCityStateId = city != null ? city.getSettings().getState().getId() : 1;
+			final int latestRetrievedTweetId = city != null ? city.getConstructionInfo().getLatestTweetID() : 0;
+			final int latestCityStateId = city != null ? city.getSettings().getState().getId() : 1;
 
 			ExecutorProvider.getExecutorService().execute(new GetTweetsRunnable(taskBlocker, worldServer, latestRetrievedTweetId, latestCityStateId));
 			searchDatabaseTimer = 0;
 		}
-	}
-
-	private City findLastBuiltCity() {
-		World twitterWorld = DimensionManager.getWorld(TwitterCityWorldGenReference.DIM_ID);
-		City city = CityWorldData.get(twitterWorld).getUnfinishedCities().stream().findFirst().orElse(null);
-		if(city == null) {
-			city = CityWorldData.get(twitterWorld).getCities().stream().min(Comparator.comparing(cityElement -> cityElement.getSettings().getId())).orElse(null);
-		}
-
-		return city;
-	}
-
-
-	private int getNextStateId(int currentStateId) {
-		final int lastStateId = USStateDAO.getInstance().getLastStateId();
-		final int nextStateId = currentStateId + 1;
-		return lastStateId >= nextStateId ? nextStateId : 1;
 	}
 }

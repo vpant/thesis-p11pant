@@ -1,13 +1,9 @@
 package org.twittercity.twittercitymod.data.db;
 
-import com.sun.istack.Nullable;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,13 +25,13 @@ public class USState {
     private String stateAbbr;
 
     public USState(NBTTagCompound nbt) {
-        id = nbt.getInteger("id");
+        id = nbt.getInteger("stateId");
         stateName = nbt.getString("stateName");
         stateAbbr = nbt.getString("stateAbbr");
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("id", id);
+        nbt.setInteger("stateId", id);
         nbt.setString("stateName", stateName);
         nbt.setString("stateAbbr", stateAbbr);
 

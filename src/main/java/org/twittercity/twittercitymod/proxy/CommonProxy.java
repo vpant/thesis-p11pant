@@ -1,9 +1,15 @@
 package org.twittercity.twittercitymod.proxy;
 
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.twittercity.twittercitymod.Reference;
 import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.city.BuildingReference;
 import org.twittercity.twittercitymod.city.chunkpregen.PreGenTickHandler;
+import org.twittercity.twittercitymod.commands.TwitterCityCmdDebug;
 import org.twittercity.twittercitymod.commands.TwitterCityCmdTeleport;
 import org.twittercity.twittercitymod.concurrency.ExecutorProvider;
 import org.twittercity.twittercitymod.concurrency.InitRunnable;
@@ -15,16 +21,6 @@ import org.twittercity.twittercitymod.tileentity.TileEntityTwitter;
 import org.twittercity.twittercitymod.worldgen.TwitterCityBiomes;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 import org.twittercity.twittercitymod.worldgen.WorldTypeTwitterCity;
-
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Code executes Both Client and Server side.
@@ -56,6 +52,7 @@ public class CommonProxy {
   
 	public void serverStarting (FMLServerStartingEvent e){
 		e.registerServerCommand(new TwitterCityCmdTeleport());
+		e.registerServerCommand(new TwitterCityCmdDebug());
 	}
 
 	public void serverStopping(FMLServerStoppedEvent e) {

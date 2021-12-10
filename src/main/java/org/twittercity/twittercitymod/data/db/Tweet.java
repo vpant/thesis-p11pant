@@ -1,18 +1,16 @@
 package org.twittercity.twittercitymod.data.db;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
+import org.twittercity.twittercitymod.tileentity.Feeling;
+
+import javax.imageio.ImageIO;
+import javax.persistence.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-
-import javax.imageio.ImageIO;
-import javax.persistence.*;
-
-import org.twittercity.twittercitymod.tileentity.Feeling;
 
 @Entity
 @Table(name = "tweet")
@@ -23,26 +21,26 @@ public class Tweet implements Comparable<Tweet>{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id = - 1;
 	@Column(name = "text")
-	private String text = null;
+	private String text;
 	@Column(name = "author")
-	private String author = null;
+	private String author;
 	@Column(name = "author_account_id")
-	private String authorAccountId = null;
+	private String authorAccountId;
 	@Column(name = "twitter_tweet_id")
-	private String tweetID = null;
+	private String tweetID;
 	@Column(name = "date")
 	//@Temporal(TemporalType.TIMESTAMP)
-	private String date = null;
+	private String date;
 	@Column(name = "profile_pic_url")
-	private String profilePicUrl = null;
+	private String profilePicUrl;
 	@Column(name = "feeling")
 	@Convert(converter = FeelingEnumConverter.class)
-	private Feeling feeling = Feeling.NO_FEELING;
+	private Feeling feeling;
 	@ManyToOne
 	@JoinColumn(name = "state", referencedColumnName = "id")
-	public USState state;
+	private USState state;
 	@Transient
-	private BufferedImage image = null;
+	private BufferedImage image;
 	@Transient
 	private boolean everythingLoaded;
 

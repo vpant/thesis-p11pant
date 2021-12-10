@@ -186,7 +186,7 @@ public class BlockHelper {
         }
     }
 
-    public static boolean isBlockToIgnoreSpawning(Block block) {
+    public static boolean isBlockToIgnore(Block block) {
         return block == Blocks.VINE || BlockHelper.isRepeater(block) || block == Blocks.RAIL || BlockHelper.isMushroom(block);
     }
 
@@ -197,7 +197,7 @@ public class BlockHelper {
         }
 
         EnumFacing enumFacing = BlockHelper.cardinalRotation(blockState.getValue(BlockBed.FACING), rotation);
-        IBlockState iBlockState2 = Blocks.BED.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.valueOf(false)).withProperty(BlockBed.FACING, enumFacing).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
+        IBlockState iBlockState2 = Blocks.BED.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.FALSE).withProperty(BlockBed.FACING, enumFacing).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
         BlockPos blockPos = currentPos.offset(enumFacing);
         world.setBlockState(currentPos, iBlockState2, 10);
         world.setBlockState(blockPos, iBlockState2.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD), 10);
@@ -237,9 +237,10 @@ public class BlockHelper {
     /**
      * Checks if block's neighbors are instance of TCBlock (or it's children)
      *
-     * @param world
-     * @param pos
-     * @return
+     * @param world world instance
+     * @param pos   position of the block
+     *
+     * @return true if neighbor block is instance of TCBlock
      */
     public static boolean isTCBlockNeighbor(World world, BlockPos pos) {
         for (int x = -1; x <= 1; x++) {
