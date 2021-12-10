@@ -21,7 +21,7 @@ public final class CitySettings {
     // BlockPos object to the very first block of this city
     private final BlockPos startingPos;
 
-    // Size in chunks for one city size where the outside paths starts
+    // Size in chunks for one city size where the outside paths start
     private final int chunkLength;
     //City expansion at X and Z axis
     private final int edgeLength;
@@ -29,7 +29,7 @@ public final class CitySettings {
     // Size in blocks of the whole city's side (taking into consideration and edgeLength)
     private final int mapLength;
     // How many the main roads paths will extend left and right
-    // e.g Path has length 1 block by default, with pathExtends = 2 the main roads will have
+    // e.g. Path has length 1 block by default, with pathExtends = 2 the main roads will have
     // 3 blocks length.
     private final int pathExtends;
 
@@ -43,40 +43,40 @@ public final class CitySettings {
     private final boolean hasPaths;
 
     public CitySettings(NBTTagCompound nbt) {
-        this.id = nbt.getInteger("id");
-        this.startingPos = BlockPos.fromLong(nbt.getLong("startingPosLong"));
+        id = nbt.getInteger("id");
+        startingPos = BlockPos.fromLong(nbt.getLong("startingPosLong"));
 
-        this.edgeLength = nbt.getInteger("edgeLength");
-        this.mapLength = nbt.getInteger("mapLength");
-        this.pathExtends = nbt.getInteger("pathExtends");
-        this.groundBlock = Block.getBlockById(nbt.getInteger("groundBlockID"));
-        this.pathBlock = Block.getBlockById(nbt.getInteger("pathBlockID"));
+        edgeLength = nbt.getInteger("edgeLength");
+        mapLength = nbt.getInteger("mapLength");
+        pathExtends = nbt.getInteger("pathExtends");
+        groundBlock = Block.getBlockById(nbt.getInteger("groundBlockID"));
+        pathBlock = Block.getBlockById(nbt.getInteger("pathBlockID"));
 
-        this.cityLength = nbt.getInteger("cityLength");
+        cityLength = nbt.getInteger("cityLength");
 
-        this.hasMainStreets = nbt.getBoolean("hasMainStreets");
-        this.hasPaths = nbt.getBoolean("hasPaths");
+        hasMainStreets = nbt.getBoolean("hasMainStreets");
+        hasPaths = nbt.getBoolean("hasPaths");
 
-        this.chunkLength = nbt.getInteger("chunkLength");
-        this.state = new USState(nbt);
+        chunkLength = nbt.getInteger("chunkLength");
+        state = new USState(nbt);
     }
 
     public NBTTagCompound writeToNBT() {
 
         NBTTagCompound nbt = new NBTTagCompound();
         state.writeToNBT(nbt);
-        nbt.setInteger("id", this.id);
-        nbt.setLong("startingPosLong", this.startingPos.toLong());
-        nbt.setInteger("chunkLength", this.chunkLength);
-        nbt.setInteger("edgeLength", this.edgeLength);
-        nbt.setInteger("pathExtends", this.pathExtends);
-        nbt.setInteger("mapLength", this.mapLength);
-        nbt.setBoolean("hasPaths", this.hasPaths);
-        nbt.setInteger("groundBlockID", Block.getIdFromBlock(this.groundBlock));
-        nbt.setInteger("pathBlockID", Block.getIdFromBlock(this.pathBlock));
-        nbt.setBoolean("hasMainStreets", this.hasMainStreets);
-        nbt.setBoolean("hasPaths", this.hasPaths);
-        nbt.setInteger("cityLength", this.cityLength);
+        nbt.setInteger("id", id);
+        nbt.setLong("startingPosLong", startingPos.toLong());
+        nbt.setInteger("chunkLength", chunkLength);
+        nbt.setInteger("edgeLength", edgeLength);
+        nbt.setInteger("pathExtends", pathExtends);
+        nbt.setInteger("mapLength", mapLength);
+        nbt.setBoolean("hasPaths", hasPaths);
+        nbt.setInteger("groundBlockID", Block.getIdFromBlock(groundBlock));
+        nbt.setInteger("pathBlockID", Block.getIdFromBlock(pathBlock));
+        nbt.setBoolean("hasMainStreets", hasMainStreets);
+        nbt.setBoolean("hasPaths", hasPaths);
+        nbt.setInteger("cityLength", cityLength);
 
         return nbt;
     }
@@ -103,7 +103,7 @@ public final class CitySettings {
     }
 
     /**
-     * Calculates the citySize using this formula <b>citySize = (cityLength - (preferedEdgeLegth * 4)) / 16;</b>
+     * Calculates the citySize using this formula <b>citySize = (cityLength - (preferredEdgeLength * 4)) / 16;</b>
      *
      * @param cityLength Length of the desired city
      * @param edgeLength of the city
