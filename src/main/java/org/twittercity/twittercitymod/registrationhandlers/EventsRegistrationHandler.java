@@ -1,14 +1,5 @@
 package org.twittercity.twittercitymod.registrationhandlers;
 
-import org.twittercity.twittercitymod.Reference;
-import org.twittercity.twittercitymod.blocks.TCBlock;
-import org.twittercity.twittercitymod.config.ConfigurationManager;
-import org.twittercity.twittercitymod.data.db.Tweet;
-import org.twittercity.twittercitymod.gui.TCGuiTweet;
-import org.twittercity.twittercitymod.gui.TCGuiTweetLoading;
-import org.twittercity.twittercitymod.util.BlockHelper;
-import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -21,10 +12,20 @@ import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import org.twittercity.twittercitymod.Reference;
+import org.twittercity.twittercitymod.blocks.TCBlock;
+import org.twittercity.twittercitymod.city.BuildingReference;
+import org.twittercity.twittercitymod.config.ConfigurationManager;
+import org.twittercity.twittercitymod.data.db.Tweet;
+import org.twittercity.twittercitymod.gui.TCGuiTweet;
+import org.twittercity.twittercitymod.gui.TCGuiTweetLoading;
+import org.twittercity.twittercitymod.util.BlockHelper;
+import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class EventsRegistrationHandler {
@@ -77,5 +78,11 @@ public class EventsRegistrationHandler {
 				}
 			}
 		}
+	}
+
+	// Clear lazy spawn block list to avoid persisting along different worlds
+	@SubscribeEvent
+	public static void onWorldUnload(WorldEvent.Unload event) {
+		BuildingReference.tweetsToBuild.clear();
 	}
 }

@@ -1,4 +1,4 @@
-package org.twittercity.twittercitymod.data.world;
+package org.twittercity.twittercitymod.city;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
-import org.twittercity.twittercitymod.city.EnumCityBuildDirection;
 import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
 import org.twittercity.twittercitymod.util.BlockData;
 

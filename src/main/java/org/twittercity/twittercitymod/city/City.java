@@ -3,7 +3,6 @@ package org.twittercity.twittercitymod.city;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import net.minecraft.nbt.NBTTagCompound;
-import org.twittercity.twittercitymod.data.world.ConstructionInfo;
 
 /* Data object represents a city. Cities are always square. */
 @Data

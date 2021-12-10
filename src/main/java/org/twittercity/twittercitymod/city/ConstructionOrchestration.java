@@ -9,7 +9,6 @@ import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.db.USState;
 import org.twittercity.twittercitymod.data.db.USStateDAO;
 import org.twittercity.twittercitymod.data.world.CityWorldData;
-import org.twittercity.twittercitymod.data.world.ConstructionInfo;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import java.util.Comparator;
