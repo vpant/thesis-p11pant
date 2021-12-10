@@ -43,8 +43,6 @@ public class Buildings {
         int remainingBlocksToSpawn = makeBuildings(world, currentCity, tweetsToSpawn.size());
 
         if (currentCity.getConstructionInfo().isCurrentCityFinished()) {
-            //Join roads to path should be after everything is spawned. Meaning in case of lazy
-            // block spawn, join paths to road needs to executed after everything is done spawning.
             cityFinishUp(world, currentCity);
         }
 
