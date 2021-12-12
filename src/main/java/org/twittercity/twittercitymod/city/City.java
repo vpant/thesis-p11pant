@@ -72,4 +72,15 @@ public final class City {
 	public void increaseBuildingCount() {
 		buildingsCount += 1;
 	}
+
+	@Override
+	public String toString() {
+		return "City{" +
+				"settings=" + settings +
+				", buildingsCount=" + buildingsCount +
+				", firstDimSize=" + firstDimSize +
+				", secondDimSize=" + secondDimSize +
+				", isCityCompleted=" + isCityCompleted +
+				'}';
+	}
 }
