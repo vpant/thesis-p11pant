@@ -5,10 +5,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import org.twittercity.twittercitymod.TwitterCity;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.db.USState;
 import org.twittercity.twittercitymod.data.db.USStateDAO;
 import org.twittercity.twittercitymod.data.world.CityWorldData;
+import org.twittercity.twittercitymod.data.world.StateData;
 import org.twittercity.twittercitymod.worldgen.TwitterCityWorldGenReference;
 
 import java.util.Comparator;
@@ -36,10 +38,10 @@ public class ConstructionOrchestration {
                 Buildings.makeInsideCity(twitterWorld, city, tweets)
                 : tweets.size();
 
-        //test - commenting this do not work
+        // extreme lag because for stateId =1  has to create 54 cities in order to build the remaining blocks
+        // maybe just the StateData#currentStateId to the next one
+        // prepare the next city and empty the tweets to be built queue
         if (remainingBlocks > 0) {
-            //build(tweets.subList(remainingBlocks - 1, tweets.size()));
-            //build(tweets.subList(0, remainingBlocks));
             build(tweets.subList(tweets.size() - remainingBlocks, tweets.size()));
         }
     }
@@ -81,6 +83,7 @@ public class ConstructionOrchestration {
         prepareCity(twitterWorld, newCity);
         //Save city
         cityWData.addCity(newCity);
+        TwitterCity.logger.info("New city created: {}", newCity.toString());
         return newCity;
     }
 
@@ -113,7 +116,7 @@ public class ConstructionOrchestration {
                 nextCityLength *= 3;
             }
 
-            cityStateId = getNextStateId(lastBuiltCity.getSettings().getState().getId());
+            cityStateId = StateData.get(twitterWorld).getNextStateId(lastBuiltCity.getSettings().getState().getId());
 
             //Calculate new city's starting position
             startingPos = CitySettings.getNewCityPosition(squareCornerPos.add(newCityBuildDirection.getDirectionVector()), newCityBuildDirection, nextCityLength);
@@ -170,18 +173,11 @@ public class ConstructionOrchestration {
         return cInfo;
     }
 
-    private int getNextStateId(int currentStateId) {
-        final int lastStateId = 3;//USStateDAO.getInstance().getLastStateId();
-        final int nextStateId = currentStateId + 1;
-        return lastStateId >= nextStateId ? nextStateId : 1;
-    }
-
     private City findFirstUnfinishedBuiltCityForStateId(final int stateId) {
         List<City> unfinishedCities = cityWData.getCities();
-        City city1 = unfinishedCities.stream()
+        return unfinishedCities.stream()
                 .filter(unfinishedCity -> unfinishedCity.getSettings().getState().getId().equals(stateId) && !unfinishedCity.isCityCompleted())
                 .min(Comparator.comparing(city -> city.getSettings().getId())).orElse(null);
-        return city1;
     }
 
 

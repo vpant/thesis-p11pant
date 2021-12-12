@@ -18,6 +18,7 @@ import org.twittercity.twittercitymod.blocks.TCBlock;
 import org.twittercity.twittercitymod.city.templatestructures.TemplateStructure;
 import org.twittercity.twittercitymod.data.db.Tweet;
 import org.twittercity.twittercitymod.data.world.CityWorldData;
+import org.twittercity.twittercitymod.data.world.StateData;
 import org.twittercity.twittercitymod.tickhandlers.ConstructionPriority;
 import org.twittercity.twittercitymod.util.BlockData;
 import org.twittercity.twittercitymod.util.BlockHelper;
@@ -210,10 +211,10 @@ public class Buildings {
     private static int insertBuilding(World world, City city, int[][] area, int x1dest, int z1dest, Building building, int rotationFixed, int tcBlocksToSpawn) {
         int sourceX = 0, sourceZ = 0;
         TemplateStructure templateStructure = building.getTemplateStructure(world);
-        //ConstructionWorldData constrData = ConstructionWorldData.get(world);
+
         int rotate = getBuildingRotation(building, area, x1dest, z1dest, rotationFixed);
         BlockPos initialBlockPos = new BlockPos(0, building.getSourceStartY() - 64, 0);
-        BlockPos currentConstructingBlockPos = city.getConstructionInfo().getConstructingBuildingBlockPos(); //constrData.getConstructingBuildingBlockPos();
+        BlockPos currentConstructingBlockPos = city.getConstructionInfo().getConstructingBuildingBlockPos();
         currentConstructingBlockPos = currentConstructingBlockPos == null ? initialBlockPos : currentConstructingBlockPos;
         int x = currentConstructingBlockPos.getX();
         int ySource = currentConstructingBlockPos.getY();
@@ -358,7 +359,7 @@ public class Buildings {
                 if (blockState.getBlock() instanceof TCBlock) {
                     Tweet tweetForThisBlock = tweetsToSpawn.get(tcBlocksToSpawn - 1);
                     bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getSettings().getId(), tweetForThisBlock);
-                    setLatestTweetID(city, tweetForThisBlock.getID());
+                    setLatestTweetID(world, city.getSettings().getState().getId(), tweetForThisBlock.getID());
                     tcBlocksToSpawn--;
                 } else {
                     bd = new BlockData(currentPos, blockState, ConstructionPriority.BUILD_NORMAL, city.getSettings().getId());
@@ -373,8 +374,8 @@ public class Buildings {
         return tcBlocksToSpawn;
     }
 
-    private static void setLatestTweetID(City city, int tweetId) {
-        city.getConstructionInfo().setLatestTweetID(tweetId);
+    private static void setLatestTweetID(final World world, final int stateId, final int tweetId) {
+        StateData.get(world).setLatestTweetIdForStateId(stateId, tweetId);
     }
 
     /*
