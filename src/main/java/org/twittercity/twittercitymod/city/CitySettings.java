@@ -95,10 +95,10 @@ public final class CitySettings {
                 validEdgeLength = randomEdgeLength++;
             }
             citySize = (cityLength - (validEdgeLength * 4)) / 16;
-            TwitterCity.logger.info("Try to find validEdgeLength for cityLength: {}. "
+            TwitterCity.logger.debug("Try to find validEdgeLength for cityLength: {}. "
                     + "The values for now are: citySize = {}, validEdgeLength = {}, towardsNegative = {}", cityLength, citySize, validEdgeLength, towardsNegative);
         }
-        TwitterCity.logger.info("Found it. A valid edgeLength is: {}", validEdgeLength);
+        TwitterCity.logger.debug("Found it. A valid edgeLength is: {}", validEdgeLength);
         return validEdgeLength;
     }
 
