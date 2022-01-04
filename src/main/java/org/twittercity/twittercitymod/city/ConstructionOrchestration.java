@@ -30,7 +30,14 @@ public class ConstructionOrchestration {
         cityWData = CityWorldData.get(twitterWorld);
     }
 
-    public void build(final List<Tweet> tweets) {
+    /**
+     * Builds the required blocks in the appropriate city and returns true if we need to change stateId.
+     *
+     * @param tweets list of {@link Tweet}
+     *
+     * @return true if we need to change state id
+     */
+    public boolean build(final List<Tweet> tweets) {
         final int stateId = tweets.stream().findFirst().map(tweet -> tweet.getState().getId()).orElse(1);
         final City city = findBuildableCity(stateId);
 
@@ -38,12 +45,12 @@ public class ConstructionOrchestration {
                 Buildings.makeInsideCity(twitterWorld, city, tweets)
                 : tweets.size();
 
-        // extreme lag because for stateId =1  has to create 54 cities in order to build the remaining blocks
-        // maybe just the StateData#currentStateId to the next one
-        // prepare the next city and empty the tweets to be built queue
-        if (remainingBlocks > 0) {
-            build(tweets.subList(tweets.size() - remainingBlocks, tweets.size()));
+        if (remainingBlocks > 0 || city.isCityCompleted()) {
+            final int stateIdNew = StateData.get(twitterWorld).getNextStateId(stateId);
+            TwitterCity.logger.debug("Next state id is: {}, remaining blocks: {}, isCityCompleted status: {}",
+                    stateIdNew, remainingBlocks, city.isCityCompleted());
         }
+        return remainingBlocks > 0;
     }
 
     /**
@@ -58,11 +65,11 @@ public class ConstructionOrchestration {
         final City firstUnfinishedBuiltCityForStateId = findFirstUnfinishedBuiltCityForStateId(stateId);
         City validCity;
         if (isCityNotBuildable(firstUnfinishedBuiltCityForStateId)) {
-            validCity = createNewCity();
+            validCity = createNewCity(stateId);
             // should check if new city state id == stateId
-            if (!stateId.equals(validCity.getSettings().getState().getId())) {
-                validCity = findBuildableCity(stateId);
-            }
+            //if (!stateId.equals(validCity.getSettings().getState().getId())) {
+            //    validCity = findBuildableCity(stateId);
+            //}
         } else {
             validCity = firstUnfinishedBuiltCityForStateId;
         }
@@ -74,20 +81,20 @@ public class ConstructionOrchestration {
         return city == null || city.isCityCompleted();
     }
 
-    private City createNewCity() {
+    private City createNewCity(final int stateId) {
         final City lastBuiltCity = findLastBuiltCity();
-        final CitySettings citySettings = getNewCitySettings(lastBuiltCity);
+        final CitySettings citySettings = getNewCitySettings(lastBuiltCity, stateId);
         final ConstructionInfo constructionInfo = getNewCityConstructionInfo(lastBuiltCity);
         final City newCity = new City(citySettings, constructionInfo, Paths.createCityArea(citySettings));
 
         prepareCity(twitterWorld, newCity);
         //Save city
         cityWData.addCity(newCity);
-        TwitterCity.logger.info("New city created: {}", newCity.toString());
+        TwitterCity.logger.debug("New city created: {}", newCity.toString());
         return newCity;
     }
 
-    private CitySettings getNewCitySettings(final City lastBuiltCity) {
+    private CitySettings getNewCitySettings(final City lastBuiltCity, final int cityStateId) {
         int lastCityId = lastBuiltCity != null ? lastBuiltCity.getSettings().getId() : -1;
         // Initial values for first city
         int citySize, edgeLength, pathExtends = 2;
@@ -103,8 +110,6 @@ public class ConstructionOrchestration {
         BlockPos squareCornerPos =
                 lastBuiltCity != null ? lastBuiltCity.getConstructionInfo().getCitiesSquareNorthWestCorner() : new BlockPos(0, 63, 0);
 
-        final int cityStateId;
-
         // Not the first city
         if (lastCityId >= 0) {
             nextCityLength = lastBuiltCity.getSettings().getCityLength();
@@ -116,8 +121,6 @@ public class ConstructionOrchestration {
                 nextCityLength *= 3;
             }
 
-            cityStateId = StateData.get(twitterWorld).getNextStateId(lastBuiltCity.getSettings().getState().getId());
-
             //Calculate new city's starting position
             startingPos = CitySettings.getNewCityPosition(squareCornerPos.add(newCityBuildDirection.getDirectionVector()), newCityBuildDirection, nextCityLength);
             edgeLength = CitySettings.getValidEdgeLengthFromCityLength(nextCityLength);
@@ -126,7 +129,6 @@ public class ConstructionOrchestration {
             citySize = 6;
             edgeLength = 3;
             startingPos = new BlockPos(0, 63, 0);
-            cityStateId = 1;
         }
 
         final USState cityState = USStateDAO.getInstance().getState(cityStateId);

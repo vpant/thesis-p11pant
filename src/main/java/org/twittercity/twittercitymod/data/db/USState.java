@@ -37,10 +37,4 @@ public class USState {
 
         return nbt;
     }
-
-    @Override
-    public String toString() {
-
-        return "";
-    }
 }

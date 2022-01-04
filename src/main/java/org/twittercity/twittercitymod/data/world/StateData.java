@@ -74,13 +74,13 @@ public class StateData extends WorldSavedData {
         markDirty();
     }
 
-    public int getNextStateId(int currentStateId) {
+    public int getNextStateId(int stateId) {
         final int lastStateId = USStateDAO.getInstance().getLastStateId();
-        final int nextStateId = currentStateId + 1;
+        final int nextStateId = stateId + 1;
 
-        final int validNextStateId = lastStateId >= nextStateId ? nextStateId : 1;
+        currentStateId = lastStateId >= nextStateId ? nextStateId : 1;
         markDirty();
 
-        return validNextStateId;
+        return currentStateId;
     }
 }
