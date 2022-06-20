@@ -17,7 +17,7 @@ import java.util.Objects;
 public class TweetManager {
 	
 	private final SessionFactory sessionFactory;
-	private static final TweetManager instance = new TweetManager();
+	private static TweetManager instance;
 	
 	private TweetManager() {
 		File hibernateConfig = new File(Objects.requireNonNull((TweetManager.class).getClassLoader().getResource("assets/" + Reference.MOD_ID + "/hibernate.cfg.xml")).getFile());
@@ -99,7 +99,9 @@ public class TweetManager {
 	}
 	
 	public static TweetManager getInstance() {
-		return instance == null ? new TweetManager() : instance;
+		if(instance == null) {
+            instance = new TweetManager();
+        }
+        return instance;
 	}
-	
 }
