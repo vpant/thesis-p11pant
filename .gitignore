@@ -14,13 +14,12 @@ out
 .idea
 
 # gradle
+build
 .gradle
-gradle*
 
 # other
 eclipse
 run
 
-LICENSE*
-build/*
-CREDITS.*
+# Files from Forge MDK
+forge*changelog.txt
