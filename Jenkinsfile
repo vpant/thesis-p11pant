@@ -9,7 +9,7 @@ agent {
         stage("Build"){
             steps{
                 configFileProvider([configFile(fileId: 'hibernate-cfg-twittercitymod', targetLocation: 'src/main/resources/assets/tc/hibernate.cfg.xml')]) {}  
-                sh 'gradle clean build'
+                sh 'gradle clean build -g gradle-user-home'
             }
         }
     
