@@ -122,4 +122,4 @@ publishing {
 repositories {
     mavenCentral()
 }
-sourceSets { main { output.resourcesDir = output.classesDir } }
+sourceSets { main { output.resourcesDir = output.classesDirs } }
